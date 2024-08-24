@@ -1,8 +1,16 @@
 import React from 'react'
-import { getLayout } from '@/common/components'
+import { getLayout, HeadersMeta } from '@/common/components'
 
 export const ForgotPassword = () => {
-  return <div>Forgot Password</div>
+  return (
+    <div>
+      <HeadersMeta
+        title={'Forgot Password'}
+        description={'Reset your password if you have forgotten it'}
+      />
+      <h2>Forgot Password</h2>
+    </div>
+  )
 }
 
 ForgotPassword.getLayout = getLayout

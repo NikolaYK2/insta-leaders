@@ -1,8 +1,16 @@
 import React from 'react'
-import { getLayout } from '@/common/components'
+import { getLayout, HeadersMeta } from '@/common/components'
 
 export const CreateNewPassword = () => {
-  return <div>Create New Password</div>
+  return (
+    <div>
+      <HeadersMeta
+        title={'Create New Password'}
+        description={'Set a new password for your account'}
+      />
+      <h2>Create New Password</h2>
+    </div>
+  )
 }
 
 CreateNewPassword.getLayout = getLayout
