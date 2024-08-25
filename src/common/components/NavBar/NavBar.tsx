@@ -4,6 +4,7 @@ import Link from 'next/link'
 export const NavBar = () => {
   return (
     <div className="flex justify-center gap-10 mb-10 p-3 bg-gray-600 w-full">
+      <Link href={'/'}>Main</Link>
       <Link href="/signUp">Sign Up</Link>
       <Link href="/signIn">Sign In</Link>
       <Link href="/forgotPassword">Forgot Password</Link>
