@@ -1,0 +1,14 @@
+import React from 'react'
+import { HeadersMeta } from '@/common/components'
+
+export const Favorites = () => {
+  return (
+    <div>
+      <HeadersMeta
+        title={'Favorites'}
+        description={'View and manage your favorite items or content'}
+      />
+      <h2>Favorites</h2>
+    </div>
+  )
+}
