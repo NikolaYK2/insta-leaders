@@ -1,7 +1,8 @@
 import React from 'react'
 import { HeadersMeta } from '@/common/components'
+import { NextPageWithLayout } from '@/pages/_app'
 
-export const Search = () => {
+export const Search: NextPageWithLayout = () => {
   return (
     <div>
       <HeadersMeta

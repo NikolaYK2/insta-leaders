@@ -1,7 +1,8 @@
 import React from 'react'
 import { HeadersMeta } from '@/common/components'
+import { NextPageWithLayout } from '@/pages/_app'
 
-export const CreateNewPassword = () => {
+export const CreateNewPassword: NextPageWithLayout = () => {
   return (
     <div>
       <HeadersMeta
