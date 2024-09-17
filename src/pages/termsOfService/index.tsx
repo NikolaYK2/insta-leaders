@@ -1,4 +1,4 @@
-import { TermsOfService } from '@/features/auth/ui/termsOfService/TermsOfService'
+import { TermsOfService } from '@/features/auth/ui'
 import { getLayout } from '@/common/components'
 
 TermsOfService.getLayout = getLayout
