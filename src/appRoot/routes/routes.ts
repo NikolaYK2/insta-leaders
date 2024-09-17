@@ -4,6 +4,8 @@ export const ROUTES_AUTH = {
   FORGOT_PASSWORD: '/forgotPassword',
   RECOVERY_PASSWORD: '/passwordRecovery',
   CREATE_NEW_PASSWORD: '/createNewPassword',
+  TERMS_OF_SERVICE: '/termsOfService',
+  PRIVACY_POLICY: '/termsOfService',
 }
 
 export const ROUTES_APP = {
