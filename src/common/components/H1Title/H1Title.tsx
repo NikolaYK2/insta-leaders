@@ -4,10 +4,11 @@ import { cn } from '@/common/utils/cn'
 
 type H1TitleProps = {
   title: string
+  className?: string
 }
-export const H1Title = ({ title }: H1TitleProps) => {
+export const H1Title = ({ title, className }: H1TitleProps) => {
   return (
-    <Typography variant={TypographyVariant.h1} className={cn('text-light-100')}>
+    <Typography variant={TypographyVariant.h1} asChild className={cn('text-light-100', className)}>
       <h2>{title}</h2>
     </Typography>
   )
