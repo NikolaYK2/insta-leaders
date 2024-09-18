@@ -9,7 +9,7 @@ type LegalDocumentProps = {
 export const LegalDocument = ({ title, description }: LegalDocumentProps) => {
   return (
     <div className={'flex flex-col justify-center items-center w-full mt-[1.917%]'}>
-      <H1Title title={title} className={'mb-[1.667%]'} />
+      <H1Title className={'mb-[1.667%]'}>{title}</H1Title>
       <Typography
         variant={TypographyVariant.regular_text_14}
         className={'text-center max-w-[958px] '}
