@@ -13,7 +13,7 @@ export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
       <div className="flex flex-1 w-full">
         {/* Sidebar отображается только если пользователь авторизован */}
         {authenticated && <Sidebar />}
-        <main className="flex-1 p-10">
+        <main className="flex-1 p-10 w-1156">
           {children} {/* Основной контент */}
         </main>
       </div>

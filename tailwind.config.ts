@@ -53,6 +53,10 @@ const config: Config = {
           900: '#8D9094',
         },
       },
+      screens: {
+        mobile: '22.5rem', // 360px
+        desktop: '80rem', // 1280px
+      },
     },
   },
   plugins: [],
