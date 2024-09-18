@@ -12,4 +12,4 @@ const authService = instaLeadersApi.injectEndpoints({
   }),
 })
 //пример
-export const { useAuthQuery } = authService
+export const {} = authService
