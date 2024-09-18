@@ -1,6 +1,7 @@
 import { NextPage } from 'next'
 import { PropsWithChildren, ReactElement } from 'react'
 import { NavBar, Sidebar } from '@/common/components'
+import { cn } from '@/common/utils/cn'
 
 export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   const authenticated = true //возможно тут можно выполнять запрос для получения данных о пользователе
@@ -13,7 +14,7 @@ export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
       <div className="flex flex-1 w-full">
         {/* Sidebar отображается только если пользователь авторизован */}
         {authenticated && <Sidebar />}
-        <main className="flex-1 p-10 w-1156">
+        <main className={cn('flex-1 p-10 ')}>
           {children} {/* Основной контент */}
         </main>
       </div>
