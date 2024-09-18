@@ -11,13 +11,18 @@
     "format": "prettier --write src"
   },
   "dependencies": {
-    "@nikolajk2/lib-insta-leaders": "0.0.23",
+    "@nikolajk2/lib-insta-leaders": "0.0.25",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-select": "^2.1.1",
     "@reduxjs/toolkit": "2.2.7",
-    "next": "14.2.6",
+    "clsx": "^2.1.1",
+    "next": "14.2.12",
     "next-redux-wrapper": "8.1.0",
     "react": "18",
     "react-dom": "18",
-    "react-redux": "9.1.2"
+    "react-hook-form": "^7.53.0",
+    "react-redux": "9.1.2",
+    "tailwind-merge": "^2.5.2"
   },
   "devDependencies": {
     "@it-incubator/prettier-config": "0.1.2",
@@ -32,5 +37,5 @@
     "tailwindcss": "3.4.1",
     "typescript": "5"
   },
-  "packageManager": "pnpm@9.8.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
+  "packageManager": "pnpm@9.10.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
 }
