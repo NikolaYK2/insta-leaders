@@ -57,6 +57,10 @@ const config: Config = {
         mobile: '22.5rem', // 360px
         desktop: '80rem', // 1280px
       },
+      width: {
+        '330': '330px',
+        '378': '378px',
+      },
     },
   },
   plugins: [],
