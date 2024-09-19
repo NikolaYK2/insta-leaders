@@ -1,4 +1,3 @@
-import React from 'react'
 import { HeadersMeta } from '@/common/components'
 import { NextPageWithLayout } from '@/pages/_app'
 import {
@@ -9,7 +8,8 @@ import {
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
-import { SignInForm } from '@/features/auth/signIn/ui/signIn/SignInForm/SignInForm'
+import { ROUTES_AUTH } from '@/appRoot/routes/routes'
+import { SignInForm } from './SignInForm/SignInForm'
 
 export const SignIn: NextPageWithLayout = () => {
   return (
@@ -43,7 +43,7 @@ export const SignIn: NextPageWithLayout = () => {
             Don’t have an account?
           </Typography>
           <Button variant={'text'} asChild>
-            <Link href={'/signUp'}>
+            <Link href={ROUTES_AUTH.REGISTRATION}>
               <Typography variant={TypographyVariant.h3}>Sign Up</Typography>
             </Link>
           </Button>

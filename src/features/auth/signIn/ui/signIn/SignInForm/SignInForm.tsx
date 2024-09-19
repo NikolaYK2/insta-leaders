@@ -1,36 +1,43 @@
 import { Button, TextField, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
-import React, { useState } from 'react'
-import { ForgotPassword } from '@/features/auth/signIn/ui/signIn/ForgotPassword'
+import { ToForgotPassword } from '../ToForgotPassword'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
+const LoginSchema = z.object({
+  email: z.string().min(1, 'Required').email('Неверный адрес электронной почты'),
+  password: z.string().min(1, 'Required').min(3, 'Минимум 3 символа'),
+})
+
+type LoginFields = z.infer<typeof LoginSchema>
 export const SignInForm = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFields>({ resolver: zodResolver(LoginSchema) })
 
-  const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value)
-  }
-
-  const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value)
-  }
-
-  const onSubmit = () => {
-    console.log('email: ', email, 'password: ', password)
-  }
+  const onSubmit = handleSubmit(data => {
+    console.log(data)
+  })
 
   return (
-    <form className={'text-left'}>
+    <form className={'text-left'} onSubmit={onSubmit}>
       <TextField
         label={'Email'}
         type={'email'}
         className={'mb-6'}
-        value={email}
-        onChange={onChangeEmail}
+        {...register('email')}
+        errorMessage={errors.email?.message}
       />
-      <TextField label={'Password'} password value={password} onChange={onChangePassword} />
-      <ForgotPassword />
-
-      <Button fullWidth onSubmit={onSubmit}>
+      <TextField
+        label={'Password'}
+        password
+        {...register('password')}
+        errorMessage={errors.password?.message}
+      />
+      <ToForgotPassword />
+      <Button fullWidth>
         <Typography variant={TypographyVariant.h3}>Sign In</Typography>
       </Button>
     </form>

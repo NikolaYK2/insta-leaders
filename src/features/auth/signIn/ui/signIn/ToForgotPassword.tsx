@@ -1,11 +1,12 @@
 import { Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
+import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 
-export const ForgotPassword = () => {
+export const ToForgotPassword = () => {
   return (
-    <Link href={'/forgotPassword'}>
+    <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>
       <Typography
-        className={'text-light-900 mt-9 mb-6 text-right'}
+        className={'text-light-900 hover:text-light-100 mt-9 mb-6 text-right'}
         variant={TypographyVariant.regular_text_14}
       >
         Forgot Password
