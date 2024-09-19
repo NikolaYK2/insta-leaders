@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@nikolajk2/lib-insta-leaders':
-        specifier: 0.0.25
-        version: 0.0.25(@fontsource/inter@5.0.20)(@radix-ui/react-slider@1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@radix-ui/react-slot@1.1.0(@types/react@18.3.4)(react@18.3.1))(@types/react-dom@18.3.0)(@types/react@18.3.4)(clsx@2.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.0.23
+        version: 0.0.23(@fontsource/inter@5.0.20)(@radix-ui/react-slider@1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@radix-ui/react-slot@1.1.0(@types/react@18.3.4)(react@18.3.1))(@types/react-dom@18.3.0)(@types/react@18.3.4)(clsx@2.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -44,6 +44,9 @@ importers:
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.5.2
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@it-incubator/prettier-config':
         specifier: 0.1.2
@@ -264,8 +267,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@nikolajk2/lib-insta-leaders@0.0.25':
-    resolution: {integrity: sha512-i8ZO0EoAs7s0UHYaMhwR6Ftk0idR7ECvUlgRfiIGIbSCnMKgDvOBTJhHHxicUiCyuXzCDLISMuQgpmSoOopFbA==}
+  '@nikolajk2/lib-insta-leaders@0.0.23':
+    resolution: {integrity: sha512-o90PKvqJNi5pmyQ4lSFaE+oCily3bwR3hb8rjdreXaYuamZSW24aGIeAU4Lk/5LMvRWLHmZh2xbZfq/3hU0fog==}
     peerDependencies:
       '@fontsource/inter': 5.0.20
       '@radix-ui/react-slider': 1.2.0
@@ -2413,6 +2416,9 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -2571,7 +2577,7 @@ snapshots:
   '@next/swc-win32-x64-msvc@14.2.12':
     optional: true
 
-  '@nikolajk2/lib-insta-leaders@0.0.25(@fontsource/inter@5.0.20)(@radix-ui/react-slider@1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@radix-ui/react-slot@1.1.0(@types/react@18.3.4)(react@18.3.1))(@types/react-dom@18.3.0)(@types/react@18.3.4)(clsx@2.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@nikolajk2/lib-insta-leaders@0.0.23(@fontsource/inter@5.0.20)(@radix-ui/react-slider@1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@radix-ui/react-slot@1.1.0(@types/react@18.3.4)(react@18.3.1))(@types/react-dom@18.3.0)(@types/react@18.3.4)(clsx@2.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@fontsource/inter': 5.0.20
       '@radix-ui/react-checkbox': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -5026,3 +5032,5 @@ snapshots:
   yaml@2.5.0: {}
 
   yocto-queue@0.1.0: {}
+
+  zod@3.23.8: {}
