@@ -1,12 +1,12 @@
 import { FieldValues, UseControllerProps, useController, Control } from 'react-hook-form'
 import { ComponentPropsWithoutRef } from 'react'
-import { TextField } from '@nikolajk2/lib-insta-leaders'
+import { TextField, TextFieldProps } from '@nikolajk2/lib-insta-leaders'
 
 type Props<T extends FieldValues> = Omit<
   UseControllerProps<T>,
   'shouldUnregister' | 'rules' | 'control' | 'defaultValue'
 > &
-  Omit<ComponentPropsWithoutRef<'input'>, 'onChange' | 'value' | 'onBlur' | 'onTouch'> & {
+  Omit<ComponentPropsWithoutRef<'input'>, 'onChange' | 'value' | 'onBlur' | 'onTouch'> & TextFieldProps & {
     control: Control<T>
   }
 
