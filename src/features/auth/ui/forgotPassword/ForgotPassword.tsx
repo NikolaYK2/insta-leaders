@@ -12,7 +12,9 @@ export const ForgotPassword: NextPageWithLayout = () => {
       />
       <h2 className={'mb-10'}>Forgot Password</h2>
       <Card className={'!w-378 flex flex-col items-center'}>
-        <H1Title className={'mt-[23px]'}>Forgot Password</H1Title>
+        <Typography variant={TypographyVariant.h1}>
+            Forgot Password
+        </Typography>
         <TextField className={'mt-[37px] !w-330'} label={'Email'}></TextField>
         <div>content</div>
         <div>content</div>
