@@ -1,10 +1,10 @@
-import '@/assets/styles/globals.css'
 import '@nikolajk2/lib-insta-leaders/css'
 import type { ReactElement, ReactNode } from 'react'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import { wrapper } from '@/appRoot/store'
+import '@/assets/styles/globals.css'
 //подключение layout
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode

@@ -1,5 +1,10 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
-import { RegistrationProps, RegistrationResponse } from '@/features/auth/api/authService.types'
+import {
+  ConfirmEmailResponse,
+  RegistrationProps,
+  RegistrationResponse,
+} from '@/features/auth/api/authService.types'
+import { LocalStorageUtil } from '@/utils/LocalStorageUtil'
 
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
@@ -16,9 +21,30 @@ const authService = instaLeadersApi.injectEndpoints({
         url: `${AUTH}/registration`,
         body,
       }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        const { data } = await queryFulfilled
+        const email = data.data.email
+        if (!email) return
+        LocalStorageUtil.setEmail(data.data.email)
+      },
+    }),
+    confirmEmail: builder.mutation<ConfirmEmailResponse, string>({
+      query: code => ({
+        method: 'GET',
+        url: `${AUTH}/email-confirmation`,
+        params: { code },
+      }),
+    }),
+    resendEmail: builder.mutation<ConfirmEmailResponse, { email: string }>({
+      query: body => ({
+        method: 'POST',
+        url: `${AUTH}/registration-email-resending`,
+        body,
+      }),
     }),
   }),
   overrideExisting: true,
 })
 //пример
-export const { useRegistrationMutation } = authService
+export const { useRegistrationMutation, useConfirmEmailMutation, useResendEmailMutation } =
+  authService

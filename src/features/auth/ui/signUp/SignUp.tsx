@@ -15,24 +15,41 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { SignUpFields, signUpSchema } from '@/features/auth/ui/signUp/validation'
 import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
+import { useRegistrationMutation } from '@/features/auth/api/authService'
+import { EmailSent } from '@/features/auth/ui'
 
 export const SignUp: NextPageWithLayout = () => {
-  const { handleSubmit, control } = useForm<SignUpFields>({ resolver: zodResolver(signUpSchema) })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+
+  const { handleSubmit, control, getValues } = useForm<SignUpFields>({
+    resolver: zodResolver(signUpSchema),
+  })
 
   const {
     field: { onChange, value, ...field },
-    formState: { errors },
+    formState: { errors, isLoading },
   } = useController({ control, name: 'agreesToTOS' })
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
+  const [signUp] = useRegistrationMutation()
 
-  const onSubmit = handleSubmit(data => {
-    console.log('data: ', data)
+  const onSubmit = handleSubmit(async ({ username: name, password, email, ...rest }) => {
+    try {
+      const res = await signUp({ name, password, email }).unwrap()
+      console.log(res)
+      setShowModal(true)
+    } catch (e) {
+      console.log(e)
+    }
   })
   return (
     <div>
       <HeadersMeta title={'Sign Up'} description={'Create a new account by signing up'} />
+
+      <EmailSent open={showModal} onOpenChange={setShowModal} modal className={'w-[300px]'}>
+        {getValues().email}
+      </EmailSent>
       <Card className={'max-w-[378px] mx-auto p-6 flex flex-col'}>
         <Typography className={'text-center'} variant={TypographyVariant.h1}>
           Sign Up
@@ -70,7 +87,7 @@ export const SignUp: NextPageWithLayout = () => {
           {/* USER PASSWORD*/}
           <div className={'mb-6'}>
             <FormInput
-              type={showPassword ? 'password' : 'text'}
+              type={!showPassword ? 'password' : 'text'}
               onClick={() => setShowPassword(prevState => !prevState)}
               name={'password'}
               label={'Password'}
@@ -88,7 +105,7 @@ export const SignUp: NextPageWithLayout = () => {
           {/* USER PASSWORD CONFIRMATION*/}
           <div className={'mb-5'}>
             <FormInput
-              type={showPasswordConfirmation ? 'password' : 'text'}
+              type={!showPasswordConfirmation ? 'password' : 'text'}
               onClick={() => setShowPasswordConfirmation(prevState => !prevState)}
               name={'passwordConfirmation'}
               label={'Password confirmation'}
@@ -111,14 +128,14 @@ export const SignUp: NextPageWithLayout = () => {
                 I agree to the{' '}
                 <Link
                   href={ROUTES_AUTH.TERMS_OF_SERVICE}
-                  className={'text-blue-500 underline inline-block'}
+                  className={'text-accent-500 underline inline-block'}
                 >
                   Terms of Service
                 </Link>{' '}
                 and{' '}
                 <Link
                   href={ROUTES_AUTH.PRIVACY_POLICY}
-                  className={'text-blue-500 underline inline-block'}
+                  className={'text-accent-500 underline inline-block'}
                 >
                   Privacy Policy
                 </Link>
@@ -129,7 +146,7 @@ export const SignUp: NextPageWithLayout = () => {
                 {errors.agreesToTOS.message}
               </Typography>
             )}
-            <Button>Sign Up</Button>
+            <Button disabled={isLoading}>Sign Up</Button>
           </div>
         </form>
 
@@ -138,7 +155,7 @@ export const SignUp: NextPageWithLayout = () => {
           <Typography variant={TypographyVariant.regular_text_16}>
             Do you have an account?
           </Typography>
-          <Link href={ROUTES_AUTH.LOGIN} className={'text-blue-500'}>
+          <Link href={ROUTES_AUTH.LOGIN} className={'text-accent-500'}>
             Sign In
           </Link>
         </div>

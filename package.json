@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
-    "@nikolajk2/lib-insta-leaders": "0.0.25",
+    "@nikolajk2/lib-insta-leaders": "0.0.45",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-select": "^2.1.1",
     "@reduxjs/toolkit": "2.2.7",
