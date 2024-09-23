@@ -12,3 +12,9 @@ export type RegistrationResponse = {
     name: string
   }
 }
+
+export type ConfirmEmailResponse = {
+  status: string
+  code: number
+  data: string
+}

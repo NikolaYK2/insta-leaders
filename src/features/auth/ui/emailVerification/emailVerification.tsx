@@ -6,6 +6,8 @@ import { NextPageWithLayout } from '@/pages/_app'
 import Image from 'next/image'
 
 export const EmailVerification: NextPageWithLayout = () => {
+  const onRessendEmail = () => {}
+
   return (
     <section className={'flex flex-col items-center justify-center text-center'}>
       <HeadersMeta title={'Email verification'} description={'Email verification link expired'} />
@@ -16,7 +18,9 @@ export const EmailVerification: NextPageWithLayout = () => {
         <Typography variant={TypographyVariant.regular_text_16}>
           Looks like the verification link has expired. Not to worry, we can send the link again
         </Typography>
-        <Button className={'mt-7 mb-7'}>Resend verification link</Button>
+        <Button onClick={onRessendEmail} className={'mt-7 mb-7'}>
+          Resend verification link
+        </Button>
       </div>
       <Image src={img} alt="EmailVerification" width={473} height={532} />
     </section>

@@ -34,9 +34,10 @@ export const SignUp: NextPageWithLayout = () => {
 
   const [signUp] = useRegistrationMutation()
 
-  const onSubmit = handleSubmit(({ username: name, password, email, ...rest }) => {
+  const onSubmit = handleSubmit(async ({ username: name, password, email, ...rest }) => {
     try {
-      signUp({ name, password, email }).unwrap()
+      const res = await signUp({ name, password, email }).unwrap()
+      console.log(res)
       setShowModal(true)
     } catch (e) {
       console.log(e)
@@ -46,7 +47,7 @@ export const SignUp: NextPageWithLayout = () => {
     <div>
       <HeadersMeta title={'Sign Up'} description={'Create a new account by signing up'} />
 
-      <EmailSent open={showModal} onOpenChange={setShowModal} modal>
+      <EmailSent open={showModal} onOpenChange={setShowModal} modal className={'w-[300px]'}>
         {getValues().email}
       </EmailSent>
       <Card className={'max-w-[378px] mx-auto p-6 flex flex-col'}>
