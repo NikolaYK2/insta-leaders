@@ -5,4 +5,5 @@ export const instaLeadersApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://main.sociable-people.com/api' }),
   endpoints: () => ({}),
   reducerPath: 'instaLeadersApi',
+  tagTypes: ['Auth'],
 })

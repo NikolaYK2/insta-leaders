@@ -18,7 +18,6 @@ const authService = instaLeadersApi.injectEndpoints({
       }),
     }),
   }),
-  overrideExisting: true,
 })
 //пример
 export const { useRegistrationMutation } = authService
