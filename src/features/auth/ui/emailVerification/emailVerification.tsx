@@ -1,12 +1,27 @@
+'use client'
+
 import React from 'react'
 import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import img from '../../../../assets/images/signUp/rafiki.png'
 import { HeadersMeta } from '@/common/components'
 import { NextPageWithLayout } from '@/pages/_app'
 import Image from 'next/image'
+import { useResendEmailMutation } from '@/features/auth/api/authService'
+import { LocalStorageUtil } from '@/utils/LocalStorageUtil'
 
 export const EmailVerification: NextPageWithLayout = () => {
-  const onRessendEmail = () => {}
+  const [resendEmail] = useResendEmailMutation()
+  const onResendEmail = async () => {
+    const email = LocalStorageUtil.getEmail()
+
+    try {
+      if (email) {
+        await resendEmail({ email }).unwrap()
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <section className={'flex flex-col items-center justify-center text-center'}>
@@ -18,7 +33,7 @@ export const EmailVerification: NextPageWithLayout = () => {
         <Typography variant={TypographyVariant.regular_text_16}>
           Looks like the verification link has expired. Not to worry, we can send the link again
         </Typography>
-        <Button onClick={onRessendEmail} className={'mt-7 mb-7'}>
+        <Button onClick={onResendEmail} className={'mt-7 mb-7'}>
           Resend verification link
         </Button>
       </div>
