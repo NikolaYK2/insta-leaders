@@ -23,37 +23,31 @@ export const SignUp: NextPageWithLayout = () => {
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
-  const { handleSubmit, control, getValues, reset } = useForm<SignUpFields>({
+  const { handleSubmit, control, getValues } = useForm<SignUpFields>({
     resolver: zodResolver(signUpSchema),
   })
+
   const {
     field: { onChange, value, ...field },
     formState: { errors, isLoading },
   } = useController({ control, name: 'agreesToTOS' })
 
   const [signUp] = useRegistrationMutation()
+
   const onSubmit = handleSubmit(async ({ username: name, password, email, ...rest }) => {
     try {
-      await signUp({ name, password, email }).unwrap()
+      const res = await signUp({ name, password, email }).unwrap()
+      console.log(res)
       setShowModal(true)
     } catch (e) {
       console.log(e)
     }
   })
-
-  const handlerResetForm = () => {
-    reset({
-      username: '',
-      email: '',
-      password: '',
-      passwordConfirmation: '',
-    })
-  }
-
   return (
-    <>
+    <div>
       <HeadersMeta title={'Sign Up'} description={'Create a new account by signing up'} />
-      <EmailSent open={showModal} onOpenChange={setShowModal} modal callback={handlerResetForm}>
+
+      <EmailSent open={showModal} onOpenChange={setShowModal} modal className={'w-[300px]'}>
         {getValues().email}
       </EmailSent>
       <Card className={'max-w-[378px] mx-auto p-6 flex flex-col'}>
@@ -166,6 +160,6 @@ export const SignUp: NextPageWithLayout = () => {
           </Link>
         </div>
       </Card>
-    </>
+    </div>
   )
 }
