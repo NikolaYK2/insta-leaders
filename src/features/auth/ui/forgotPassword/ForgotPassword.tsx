@@ -4,7 +4,7 @@ import { NextPageWithLayout } from '@/pages/_app'
 import { Button, Card, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
 import { useForm } from 'react-hook-form'
-import { useForgotPasswordMutation } from '@/features/auth/api/authService'
+import { useForgotPasswordMutation } from '@/features/auth/ui/forgotPassword/forgotPasswordApi'
 
 export const ForgotPassword: NextPageWithLayout = () => {
   const { handleSubmit, control, getValues } = useForm()

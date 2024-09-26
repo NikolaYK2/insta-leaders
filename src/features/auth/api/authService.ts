@@ -6,7 +6,7 @@ import {
 } from '@/features/auth/api/authService.types'
 import { LocalStorageUtil } from '@/utils/LocalStorageUtil'
 
-const AUTH = 'v1/auth'
+export const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
     //Пример
