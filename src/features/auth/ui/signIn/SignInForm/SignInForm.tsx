@@ -3,6 +3,8 @@ import { ToForgotPassword } from '../ToForgotPassword'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { useLoginMutation } from '@/features/auth/ui/signIn/SignInForm/LoginAPI'
+import { useRouter } from 'next/router'
 
 const LoginSchema = z.object({
   email: z.string().min(1, 'Required').email('Неверный адрес электронной почты'),
@@ -11,6 +13,9 @@ const LoginSchema = z.object({
 
 type LoginFields = z.infer<typeof LoginSchema>
 export const SignInForm = () => {
+  const [login, { data, isError, isLoading }] = useLoginMutation()
+  const router = useRouter()
+
   const {
     register,
     handleSubmit,
@@ -18,8 +23,18 @@ export const SignInForm = () => {
   } = useForm<LoginFields>({ resolver: zodResolver(LoginSchema) })
 
   const onSubmit = handleSubmit(data => {
-    console.log(data)
+    login(data)
+      .unwrap()
+      .then(() => router.push('/'))
   })
+
+  // if (isLoading) {
+  //   return <h1>LOADING....</h1>
+  // }
+
+  // if (error) {
+  //   return <h1>ERROR</h1>
+  // }
 
   return (
     <form className={'text-left'} onSubmit={onSubmit}>
@@ -37,7 +52,7 @@ export const SignInForm = () => {
         errorMessage={errors.password?.message}
       />
       <ToForgotPassword />
-      <Button fullWidth>
+      <Button fullWidth disabled={isLoading}>
         <Typography variant={TypographyVariant.h3}>Sign In</Typography>
       </Button>
     </form>
