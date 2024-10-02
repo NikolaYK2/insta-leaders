@@ -9,7 +9,8 @@ import {
 } from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
-import { SignInForm } from './SignInForm/SignInForm'
+import { SignInForm } from './signInForm/SignInForm'
+import { AuthByGithub } from './authByGithub/AuthByGithub'
 
 export const SignIn: NextPageWithLayout = () => {
   const client_id = '792546249106-u5of55jk4hus635kpd936g5968b62a1c.apps.googleusercontent.com'
@@ -20,7 +21,7 @@ export const SignIn: NextPageWithLayout = () => {
   return (
     <>
       <HeadersMeta title={'Sign In'} description={'Access your account by signing in'} />
-      <div className={'w-[378px]  mx-auto'}>
+      <div className={'max-w-[378px]  mx-auto'}>
         <Card className={'text-center p-6'}>
           <Typography variant={TypographyVariant.h1} asChild>
             <h1>Sign In</h1>
@@ -30,14 +31,7 @@ export const SignIn: NextPageWithLayout = () => {
             <Link className={'flex items-center'} href={linkToGoogleLogin}>
               <DynamicIcon iconId={'GoogleSvgrepoCom1'} width={36} height={36} />
             </Link>
-            <Link
-              className={'flex items-center'}
-              href={
-                'https://github.com/login/oauth/authorize?client_id=Ov23lix6EdcGrBfP7Bee&response_type=code&scope=user&redirect_uri=http://localhost:3000/github&state=50c45fc5314190fc5d117c09dc9ebadf'
-              }
-            >
-              <DynamicIcon iconId={'GithubSvgrepoCom31'} width={36} height={36} color={'none'} />
-            </Link>
+            <AuthByGithub />
           </div>
           <SignInForm />
           <Typography variant={TypographyVariant.regular_text_16} className={'mt-[18px] mb-2'}>

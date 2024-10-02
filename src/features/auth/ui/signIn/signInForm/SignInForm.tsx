@@ -2,16 +2,11 @@ import { Button, TextField, Typography, TypographyVariant } from '@nikolajk2/lib
 import { ToForgotPassword } from '../ToForgotPassword'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { useLoginMutation } from '@/features/auth/ui/signIn/SignInForm/LoginAPI'
 import { useRouter } from 'next/router'
+import { useLoginMutation } from '@/features/auth/api/authService'
+import { LoginFields, LoginSchema } from './signInFormSchema'
+import { ROUTES_APP } from '@/appRoot/routes/routes'
 
-const LoginSchema = z.object({
-  email: z.string().min(1, 'Required').email('Неверный адрес электронной почты'),
-  password: z.string().min(1, 'Required').min(3, 'Минимум 3 символа'),
-})
-
-type LoginFields = z.infer<typeof LoginSchema>
 export const SignInForm = () => {
   const [login, { data, isError, isLoading }] = useLoginMutation()
   const router = useRouter()
@@ -25,7 +20,10 @@ export const SignInForm = () => {
   const onSubmit = handleSubmit(data => {
     login(data)
       .unwrap()
-      .then(() => router.push('/'))
+      .then(data => {
+        localStorage.setItem('accessToken', data.data.accessToken)
+        router.push(ROUTES_APP.HOME)
+      })
   })
 
   // if (isLoading) {
