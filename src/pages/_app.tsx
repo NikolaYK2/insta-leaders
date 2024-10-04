@@ -5,6 +5,7 @@ import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import { wrapper } from '@/appRoot/store'
 import '@/assets/styles/globals.css'
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 //подключение layout
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -20,5 +21,12 @@ export default function MyApp({ Component, ...rest }: AppPropsWithLayout) {
   // Используйте макет, определенный на уровне страницы, если он доступен
   const getLayout = Component.getLayout ?? (page => page)
 
-  return <Provider store={store}>{getLayout(<Component {...props.pageProps} />)}</Provider>
+
+  return (
+    <Provider store={store}>
+      <GoogleReCaptchaProvider reCaptchaKey={'6LeFUDkqAAAAAOgi7HZpHr9q3lqAX1wAfNSRz2Wo'}>
+        {getLayout(<Component {...props.pageProps} />)}
+      </GoogleReCaptchaProvider>
+    </Provider>
+  )
 }
