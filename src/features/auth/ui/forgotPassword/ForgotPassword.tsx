@@ -6,9 +6,18 @@ import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
 import { useForm } from 'react-hook-form'
 import { useForgotPasswordMutation } from '@/features/auth/ui/forgotPassword/forgotPasswordApi'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import {
+  ForgotPasswordZodSchema,
+  ForgotPasswordZodSchemaFields,
+} from '@/features/auth/ui/forgotPassword/forgotPasswordZodSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
+import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 
 export const ForgotPassword: NextPageWithLayout = () => {
-  const { handleSubmit, control } = useForm()
+  const { handleSubmit, control } = useForm<ForgotPasswordZodSchemaFields>({
+    resolver: zodResolver(ForgotPasswordZodSchema),
+  })
   const [sendLink] = useForgotPasswordMutation()
 
   const { executeRecaptcha } = useGoogleReCaptcha() // Use reCAPTCHA v3 hook
@@ -61,8 +70,10 @@ export const ForgotPassword: NextPageWithLayout = () => {
             Send Link
           </Button>
 
-          <Button variant={'text'} className={'mt-[24px] h-[36px]'} fullWidth>
-            Back to Sign In
+          <Button asChild variant={'text'} className={'mt-[24px] h-[36px]'} fullWidth>
+            <Link href={ROUTES_AUTH.LOGIN}>
+              <Typography variant={TypographyVariant.h3}>Back to Sign In</Typography>
+            </Link>
           </Button>
         </form>
       </Card>

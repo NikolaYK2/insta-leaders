@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+const AUTH = 'v1/auth'
+
 export const forgotPasswordApi = createApi({
   reducerPath: 'forgotPasswordApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://main.sociable-people.com/api' }),
@@ -7,7 +9,7 @@ export const forgotPasswordApi = createApi({
     forgotPassword: builder.mutation<any, { email: string; recaptchaValue: string }>({
       query: body => ({
         method: 'POST',
-        url: `v1/auth/password-recovery`,
+        url: `${AUTH}/password-recovery`,
         body,
       }),
     }),
