@@ -32,9 +32,9 @@ export const SignUp: NextPageWithLayout = () => {
   } = useController({ control, name: 'agreesToTOS' })
 
   const [signUp] = useRegistrationMutation()
-  const onSubmit = handleSubmit(async ({ username: name, password, email, ...rest }) => {
+  const onSubmit = handleSubmit(async ({ userName, password, email, ...rest }) => {
     try {
-      await signUp({ name, password, email }).unwrap()
+      await signUp({ userName, password, email }).unwrap()
       setShowModal(true)
     } catch (e) {
       console.log(e)
@@ -43,7 +43,7 @@ export const SignUp: NextPageWithLayout = () => {
 
   const handlerResetForm = () => {
     reset({
-      username: '',
+      userName: '',
       email: '',
       password: '',
       passwordConfirmation: '',
@@ -73,7 +73,7 @@ export const SignUp: NextPageWithLayout = () => {
           {/* USER NAME*/}
           <div className={'mb-6'}>
             <FormInput
-              name={'username'}
+              name={'userName'}
               label={'Username'}
               control={control}
               placeholder={'Epam11'}
