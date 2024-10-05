@@ -1,14 +1,14 @@
 import { Button, TextField, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
-import { ToForgotPassword } from '../ToForgotPassword'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { useLoginMutation } from '@/features/auth/api/authService'
 import { LoginFields, LoginSchema } from './signInFormSchema'
-import { ROUTES_APP } from '@/appRoot/routes/routes'
+import { ROUTES_APP, ROUTES_AUTH } from '@/appRoot/routes/routes'
+import Link from 'next/link'
 
 export const SignInForm = () => {
-  const [login, { data, isError, isLoading }] = useLoginMutation()
+  const [signIn, { data, isError, isLoading }] = useLoginMutation()
   const router = useRouter()
 
   const {
@@ -17,22 +17,18 @@ export const SignInForm = () => {
     formState: { errors },
   } = useForm<LoginFields>({ resolver: zodResolver(LoginSchema) })
 
-  const onSubmit = handleSubmit(data => {
-    login(data)
-      .unwrap()
-      .then(data => {
-        localStorage.setItem('accessToken', data.data.accessToken)
-        router.push(ROUTES_APP.HOME)
-      })
+  const onSubmit = handleSubmit(async data => {
+    try {
+      await signIn(data)
+        .unwrap()
+        .then(data => {
+          localStorage.setItem('accessToken', data.data.accessToken)
+          router.push(ROUTES_APP.CREATE)
+        })
+    } catch (e) {
+      alert('The email or password are incorrect. Try again please')
+    }
   })
-
-  // if (isLoading) {
-  //   return <h1>LOADING....</h1>
-  // }
-
-  // if (error) {
-  //   return <h1>ERROR</h1>
-  // }
 
   return (
     <form className={'text-left'} onSubmit={onSubmit}>
@@ -49,10 +45,25 @@ export const SignInForm = () => {
         {...register('password')}
         errorMessage={errors.password?.message}
       />
-      <ToForgotPassword />
+      <div className={'flex pt-9 pb-6 justify-end'}>
+        <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>
+          <Typography
+            className={'text-light-900 hover:text-light-100'}
+            variant={TypographyVariant.regular_text_14}
+          >
+            Forgot Password
+          </Typography>
+        </Link>
+      </div>
+
       <Button fullWidth disabled={isLoading}>
         <Typography variant={TypographyVariant.h3}>Sign In</Typography>
       </Button>
+      {isError && (
+        <div className={'absolute left-0 bottom-0 bg-amber-200 p-3'}>
+          The email or password are incorrect. Try again please
+        </div>
+      )}
     </form>
   )
 }
