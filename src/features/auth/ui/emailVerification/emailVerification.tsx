@@ -7,13 +7,12 @@ import { HeadersMeta } from '@/common/components'
 import { NextPageWithLayout } from '@/pages/_app'
 import Image from 'next/image'
 import { useResendEmailMutation } from '@/features/auth/api/authService'
-import { LocalStorageUtil } from '@/utils/LocalStorageUtil'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
 export const EmailVerification: NextPageWithLayout = () => {
   const [resendEmail] = useResendEmailMutation()
   const onResendEmail = async () => {
     const email = LocalStorageUtil.getEmail()
-
     try {
       if (email) {
         await resendEmail({ email }).unwrap()

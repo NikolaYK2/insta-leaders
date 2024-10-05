@@ -6,7 +6,7 @@ import {
   RegistrationProps,
   RegistrationResponse,
 } from '@/features/auth/api/authService.types'
-import { LocalStorageUtil } from '@/utils/LocalStorageUtil'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
