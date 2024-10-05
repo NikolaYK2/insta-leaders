@@ -26,7 +26,7 @@ export const SignInForm = () => {
           router.push(ROUTES_APP.CREATE)
         })
     } catch (e) {
-      alert('The email or password are incorrect. Try again please')
+      console.log(e)
     }
   })
 
@@ -43,7 +43,11 @@ export const SignInForm = () => {
         label={'Password'}
         password
         {...register('password')}
-        errorMessage={errors.password?.message}
+        errorMessage={
+          isError
+            ? 'The email or password are incorrect. Try again please'
+            : errors.password?.message
+        }
       />
       <div className={'flex pt-9 pb-6 justify-end'}>
         <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>
@@ -59,11 +63,6 @@ export const SignInForm = () => {
       <Button fullWidth disabled={isLoading}>
         <Typography variant={TypographyVariant.h3}>Sign In</Typography>
       </Button>
-      {isError && (
-        <div className={'absolute left-0 bottom-0 bg-amber-200 p-3'}>
-          The email or password are incorrect. Try again please
-        </div>
-      )}
     </form>
   )
 }
