@@ -1,20 +1,16 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
+  AuthRes,
   ConfirmEmailResponse,
+  ProviderRes,
   RegistrationProps,
   RegistrationResponse,
 } from '@/features/auth/api/authService.types'
-import { LocalStorageUtil } from '@/utils/LocalStorageUtil'
+import { LocalStorageUtil, LocalStorageUtils } from '@/utils/LocalStorageUtil'
 
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
-    //Пример
-    // auth: builder.query<void, void>({
-    //   query: () => ({
-    //     url: `${AUTH}/hello`,
-    //   }),
-    // }),
     registration: builder.mutation<RegistrationResponse, RegistrationProps>({
       query: body => ({
         method: 'POST',
@@ -26,6 +22,25 @@ const authService = instaLeadersApi.injectEndpoints({
         const email = data.data.email
         if (!email) return
         LocalStorageUtil.setEmail(data.data.email)
+      },
+    }),
+    registrationGoogle: builder.query<AuthRes<ProviderRes>, { code: string }>({
+      query: params => ({
+        params,
+        url: `${AUTH}/registration/by-google`,
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+          debugger
+          const userData = data.data.data.user
+
+          if (!userData) return
+          LocalStorageUtils.setValue('userData', userData)
+        } catch (e) {
+          debugger
+          console.error('Error during registration via Google Google', e)
+        }
       },
     }),
     confirmEmail: builder.mutation<ConfirmEmailResponse, string>({
@@ -46,5 +61,9 @@ const authService = instaLeadersApi.injectEndpoints({
   overrideExisting: true,
 })
 //пример
-export const { useRegistrationMutation, useConfirmEmailMutation, useResendEmailMutation } =
-  authService
+export const {
+  useRegistrationMutation,
+  useConfirmEmailMutation,
+  useResendEmailMutation,
+  useRegistrationGoogleQuery,
+} = authService
