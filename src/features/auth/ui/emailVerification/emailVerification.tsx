@@ -12,7 +12,7 @@ import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 export const EmailVerification: NextPageWithLayout = () => {
   const [resendEmail] = useResendEmailMutation()
   const onResendEmail = async () => {
-    const email = LocalStorageUtil.getEmail()
+    const email = LocalStorageUtil.getValue<string>('email')
     try {
       if (email) {
         await resendEmail({ email }).unwrap()

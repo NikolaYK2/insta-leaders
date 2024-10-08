@@ -27,7 +27,7 @@ const authService = instaLeadersApi.injectEndpoints({
         const { data } = await queryFulfilled
         const email = data.data.email
         if (!email) return
-        LocalStorageUtil.setEmail(data.data.email)
+        LocalStorageUtil.setValue<string>('email', data.data.email)
       },
     }),
     confirmEmail: builder.mutation<ConfirmEmailResponse, string>({

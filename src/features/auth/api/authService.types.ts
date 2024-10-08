@@ -9,7 +9,7 @@ export type RegistrationResponse = {
   data: {
     id: number
     email: string
-    name: string
+    userName: string
   }
 }
 
