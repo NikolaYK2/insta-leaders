@@ -3,6 +3,7 @@ type StorageKeys = {
   latestCSRFToken: 'latestCSRFToken'
   userDataGoggle: 'userDataGoggle'
   userData: 'userData'
+  accessToken: 'accessToken'
 }
 type ParamsKey = keyof StorageKeys
 
