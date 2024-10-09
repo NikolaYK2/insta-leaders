@@ -18,3 +18,9 @@ export type ConfirmEmailResponse = {
   code: number
   data: string
 }
+
+export type LogOutResponse = {
+  status: string
+  code: number
+  data: null
+}

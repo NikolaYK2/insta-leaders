@@ -1,6 +1,7 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
   ConfirmEmailResponse,
+  LogOutResponse,
   RegistrationProps,
   RegistrationResponse,
 } from '@/features/auth/api/authService.types'
@@ -42,6 +43,12 @@ const authService = instaLeadersApi.injectEndpoints({
         body,
       }),
     }),
+    logOut: builder.mutation<LogOutResponse, void>({
+      query: () => ({
+        method: 'POST',
+        url: `${AUTH}/logout`,
+      }),
+    }),
     createNewPassword: builder.mutation<any, { newPassword: string; recoveryCode: string }>({
       query: body => ({
         method: 'POST',
@@ -53,5 +60,10 @@ const authService = instaLeadersApi.injectEndpoints({
   overrideExisting: true,
 })
 //пример
-export const { useRegistrationMutation, useConfirmEmailMutation, useResendEmailMutation, useCreateNewPasswordMutation } =
-  authService
+export const {
+  useRegistrationMutation,
+  useConfirmEmailMutation,
+  useResendEmailMutation,
+  useLogOutMutation,
+    useCreateNewPasswordMutation
+} = authService
