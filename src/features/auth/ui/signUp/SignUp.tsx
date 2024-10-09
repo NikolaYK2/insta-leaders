@@ -9,7 +9,7 @@ import {
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
-import { useController, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SignUpFields, signUpSchema } from '@/features/auth/ui/signUp/validation'
 import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
@@ -28,7 +28,7 @@ export const SignUp: NextPageWithLayout = () => {
     control,
     getValues,
     reset,
-    formState: { errors, isLoading },
+    formState: { errors, isLoading, isValid },
   } = useForm<SignUpFields>({
     resolver: zodResolver(signUpSchema),
   })
@@ -159,7 +159,7 @@ export const SignUp: NextPageWithLayout = () => {
                 {errors.agreesToTOS.message}
               </Typography>
             )}
-            <Button disabled={isLoading}>Sign Up</Button>
+            <Button disabled={isLoading || !isValid}>Sign Up</Button>
           </div>
         </form>
 
