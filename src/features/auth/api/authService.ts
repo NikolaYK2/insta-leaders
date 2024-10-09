@@ -59,6 +59,14 @@ const authService = instaLeadersApi.injectEndpoints({
           url: `${AUTH}/registration/by-github?code=${arg.code}`,
         }
       },
+
+    createNewPassword: builder.mutation<any, { newPassword: string; recoveryCode: string }>({
+      query: body => ({
+        method: 'POST',
+        url: `${AUTH}/new-password`,
+        body,
+      }),
+
     }),
   }),
   overrideExisting: true,
@@ -71,3 +79,4 @@ export const {
   useLoginMutation,
   useAuthByGithubQuery,
 } = authService
+
