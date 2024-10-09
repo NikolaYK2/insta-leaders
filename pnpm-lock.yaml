@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@bradgarropy/next-link':
+        specifier: ^1.1.0
+        version: 1.1.0(react@18.3.1)
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.0(react@18.3.1))
@@ -105,6 +108,12 @@ packages:
   '@babel/highlight@7.24.7':
     resolution: {integrity: sha512-EStJpq4OuY8xYfhGVXngigBJRWxftKX9ksiGDnmlY3o7B/V7KIAc9X4oiK87uPJSc/vs5L869bem5fhZa8caZw==}
     engines: {node: '>=6.9.0'}
+
+  '@bradgarropy/next-link@1.1.0':
+    resolution: {integrity: sha512-GtVa4X6xZQCVV+/pSEaDJOfrjbakmtHlrlT0A9aGZfDJacm9JA/kAQn6z1+FHdJFarj2b0Kv+MwE/UlE7Y9sTw==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
 
   '@csstools/css-parser-algorithms@3.0.1':
     resolution: {integrity: sha512-lSquqZCHxDfuTg/Sk2hiS0mcSFCEBuj49JfzPHJogDBT0mGCyY5A1AQzBWngitrp7i1/HAZpIgzF/VjhOEIJIg==}
@@ -2453,6 +2462,10 @@ snapshots:
       chalk: 2.4.2
       js-tokens: 4.0.0
       picocolors: 1.0.1
+
+  '@bradgarropy/next-link@1.1.0(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
 
   '@csstools/css-parser-algorithms@3.0.1(@csstools/css-tokenizer@3.0.1)':
     dependencies:
