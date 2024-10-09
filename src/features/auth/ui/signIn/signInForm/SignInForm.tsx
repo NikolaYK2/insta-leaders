@@ -3,11 +3,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { useLoginMutation } from '@/features/auth/api/authService'
-import { LoginFields, LoginSchema } from './signInFormSchema'
+
 import { ROUTES_APP, ROUTES_AUTH } from '@/appRoot/routes/routes'
 import Link from 'next/link'
 import { FormInput } from '@/common/components'
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
+import { LoginFields, LoginSchema } from '@/features/auth/ui/signIn/SignInForm/signInFormSchema'
 
 export const SignInForm = () => {
   const [signIn, { data, isError, isLoading }] = useLoginMutation()
