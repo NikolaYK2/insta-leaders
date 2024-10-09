@@ -15,16 +15,16 @@ export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Верхняя навигационная панель */}
-      <NavBar />
+      {/*<NavBar />*/}
       <div className=" bg-gray-600 w-full mb-[60px]">
-        {/*<Header>*/}
-        {/*  <Link href={ROUTES_APP.HOME}>Main</Link>*/}
-        {/*  <Link href={ROUTES_AUTH.REGISTRATION}>Sign Up</Link>*/}
-        {/*  <Link href={ROUTES_AUTH.LOGIN}>Sign In</Link>*/}
-        {/*  <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>Forgot Password</Link>*/}
-        {/*  <Link href={ROUTES_AUTH.RECOVERY_PASSWORD}>Password recovery</Link>*/}
-        {/*  <Link href={ROUTES_AUTH.CREATE_NEW_PASSWORD}>Create New Password</Link>*/}
-        {/*</Header>*/}
+        <Header>
+          <Link href={ROUTES_APP.HOME}>Main</Link>
+          <Link href={ROUTES_AUTH.REGISTRATION}>Sign Up</Link>
+          <Link href={ROUTES_AUTH.LOGIN}>Sign In</Link>
+          <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>Forgot Password</Link>
+          <Link href={ROUTES_AUTH.RECOVERY_PASSWORD}>Password recovery</Link>
+          <Link href={ROUTES_AUTH.CREATE_NEW_PASSWORD}>Create New Password</Link>
+        </Header>
       </div>
       <div className="flex flex-1 w-full">
         {/* Sidebar отображается только если пользователь авторизован */}

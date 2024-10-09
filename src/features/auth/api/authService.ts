@@ -11,12 +11,6 @@ import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
-    //Пример
-    // auth: builder.query<void, void>({
-    //   query: () => ({
-    //     url: `${AUTH}/hello`,
-    //   }),
-    // }),
     registration: builder.mutation<RegistrationResponse, RegistrationProps>({
       query: body => ({
         method: 'POST',
@@ -59,14 +53,13 @@ const authService = instaLeadersApi.injectEndpoints({
           url: `${AUTH}/registration/by-github?code=${arg.code}`,
         }
       },
-
+    }),
     createNewPassword: builder.mutation<any, { newPassword: string; recoveryCode: string }>({
       query: body => ({
         method: 'POST',
         url: `${AUTH}/new-password`,
         body,
       }),
-
     }),
   }),
   overrideExisting: true,
@@ -78,5 +71,5 @@ export const {
   useResendEmailMutation,
   useLoginMutation,
   useAuthByGithubQuery,
+  useCreateNewPasswordMutation,
 } = authService
-
