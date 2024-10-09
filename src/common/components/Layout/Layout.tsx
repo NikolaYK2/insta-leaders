@@ -5,6 +5,7 @@ import { cn } from '@/common/utils/cn'
 // import { Header } from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
 import { ROUTES_APP, ROUTES_AUTH } from '@/appRoot/routes/routes'
+import { Header } from '@nikolajk2/lib-insta-leaders'
 
 export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   const authenticated = true //возможно тут можно выполнять запрос для получения данных о пользователе

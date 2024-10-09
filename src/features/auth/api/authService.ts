@@ -1,6 +1,8 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
   ConfirmEmailResponse,
+  LoginArgs,
+  LoginResponse,
   RegistrationProps,
   RegistrationResponse,
 } from '@/features/auth/api/authService.types'
@@ -42,16 +44,39 @@ const authService = instaLeadersApi.injectEndpoints({
         body,
       }),
     }),
+    login: builder.mutation<LoginResponse, LoginArgs>({
+      query: arg => {
+        return {
+          url: `${AUTH}/login`,
+          method: 'POST',
+          body: arg,
+        }
+      },
+    }),
+    authByGithub: builder.query<LoginResponse, { code: string }>({
+      query: arg => {
+        return {
+          url: `${AUTH}/registration/by-github?code=${arg.code}`,
+        }
+      },
+
     createNewPassword: builder.mutation<any, { newPassword: string; recoveryCode: string }>({
       query: body => ({
         method: 'POST',
         url: `${AUTH}/new-password`,
         body,
       }),
+
     }),
   }),
   overrideExisting: true,
 })
 //пример
-export const { useRegistrationMutation, useConfirmEmailMutation, useResendEmailMutation, useCreateNewPasswordMutation } =
-  authService
+export const {
+  useRegistrationMutation,
+  useConfirmEmailMutation,
+  useResendEmailMutation,
+  useLoginMutation,
+  useAuthByGithubQuery,
+} = authService
+
