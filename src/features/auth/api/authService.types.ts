@@ -38,3 +38,9 @@ interface User {
   email: string
   name: string
 }
+
+export type LogOutResponse = {
+  status: string
+  code: number
+  data: null
+}

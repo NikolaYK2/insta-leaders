@@ -1,6 +1,7 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
   ConfirmEmailResponse,
+  LogOutResponse,
   LoginArgs,
   LoginResponse,
   RegistrationProps,
@@ -53,6 +54,13 @@ const authService = instaLeadersApi.injectEndpoints({
           url: `${AUTH}/registration/by-github?code=${arg.code}`,
         }
       },
+
+    logOut: builder.mutation<LogOutResponse, void>({
+      query: () => ({
+        method: 'POST',
+        url: `${AUTH}/logout`,
+      }),
+    }),
     }),
     createNewPassword: builder.mutation<any, { newPassword: string; recoveryCode: string }>({
       query: body => ({
@@ -69,6 +77,10 @@ export const {
   useRegistrationMutation,
   useConfirmEmailMutation,
   useResendEmailMutation,
+  useLogOutMutation,
+    useCreateNewPasswordMutation,
+        useLoginMutation,
+        useAuthByGithubQuery
   useLoginMutation,
   useAuthByGithubQuery,
   useCreateNewPasswordMutation,
