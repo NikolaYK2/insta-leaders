@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { ROUTES_APP } from '@/appRoot/routes/routes'
+import LogOut from '@/features/auth/ui/logOut/logOut'
 
 export const Sidebar = () => {
   return (
@@ -12,6 +13,7 @@ export const Sidebar = () => {
       <Link href={ROUTES_APP.SEARCH}>Search</Link>
       <Link href={ROUTES_APP.STATISTICS}>Statistics</Link>
       <Link href={ROUTES_APP.FAVORITES}>Favorites</Link>
+      <LogOut />
     </div>
   )
 }
