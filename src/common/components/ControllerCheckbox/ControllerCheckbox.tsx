@@ -7,7 +7,11 @@ type Props<T extends FieldValues> = ComponentPropsWithoutRef<typeof Checkbox> & 
   name: FieldPath<T>
 }
 
-export const FormCheckbox = <T extends FieldValues>({ control, name, ...props }: Props<T>) => {
+export const ControllerCheckbox = <T extends FieldValues>({
+  control,
+  name,
+  ...props
+}: Props<T>) => {
   const {
     field: { onChange, value, ...field },
     fieldState: { error },
@@ -16,5 +20,5 @@ export const FormCheckbox = <T extends FieldValues>({ control, name, ...props }:
     name,
   })
 
-  return <Checkbox {...props} onCheckedChange={onChange} checked={value} {...field} />
+  return <Checkbox {...props} onCheckedChange={onChange} checked={Boolean(value)} {...field} />
 }
