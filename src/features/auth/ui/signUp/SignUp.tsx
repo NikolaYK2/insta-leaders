@@ -4,7 +4,6 @@ import { NextPageWithLayout } from '@/pages/_app'
 import {
   Button,
   Card,
-  Checkbox,
   DynamicIcon,
   Typography,
   TypographyVariant,
@@ -17,6 +16,7 @@ import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 import { useRegistrationMutation } from '@/features/auth/api/authService'
 import { EmailSent } from '@/features/auth/ui'
+import { FormCheckbox } from '@/common/components/FormCheckbox'
 
 export const SignUp: NextPageWithLayout = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -129,7 +129,7 @@ export const SignUp: NextPageWithLayout = () => {
           {/* Условия соглашения */}
           <div className={'flex flex-col  space-y-5'}>
             <div className={'flex items-center justify-center text-center'}>
-              <Checkbox checked={value} onCheckedChange={onChange} {...field} />
+              <FormCheckbox name={'agreesToTOS'} control={control} />
               <Typography variant={TypographyVariant.small_text} className={''}>
                 I agree to the{' '}
                 <Link
