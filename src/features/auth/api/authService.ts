@@ -42,9 +42,16 @@ const authService = instaLeadersApi.injectEndpoints({
         body,
       }),
     }),
+    createNewPassword: builder.mutation<any, { newPassword: string; recoveryCode: string }>({
+      query: body => ({
+        method: 'POST',
+        url: `${AUTH}/new-password`,
+        body,
+      }),
+    }),
   }),
   overrideExisting: true,
 })
 //пример
-export const { useRegistrationMutation, useConfirmEmailMutation, useResendEmailMutation } =
+export const { useRegistrationMutation, useConfirmEmailMutation, useResendEmailMutation, useCreateNewPasswordMutation } =
   authService
