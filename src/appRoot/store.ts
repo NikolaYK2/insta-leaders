@@ -7,8 +7,8 @@ import { createNewPasswordApi } from '@/features/auth/ui/createNewPassword/creat
 const makeStore = () =>
   configureStore({
     // reducer: { [instaLeadersApi.reducerPath]: instaLeadersApi.reducer },
-      reducer: combineSlices(instaLeadersApi, forgotPasswordApi, createNewPasswordApi),
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(instaLeadersApi.middleware).concat(forgotPasswordApi.middleware).concat(createNewPasswordApi.middleware),
+      reducer: combineSlices(instaLeadersApi),
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(instaLeadersApi.middleware),
     devTools: true,
   })
 

@@ -13,7 +13,7 @@ import { useController, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
 import { z } from 'zod'
-import { useCreateNewPasswordMutation } from './createNewPasswordApi'
+import { useCreateNewPasswordMutation } from '../../api/authService'
 import { useRouter } from 'next/router'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 
