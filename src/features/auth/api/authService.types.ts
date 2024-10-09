@@ -1,5 +1,5 @@
 export type RegistrationProps = {
-  name: string
+  userName: string
   password: string
   email: string
 }
@@ -9,7 +9,7 @@ export type RegistrationResponse = {
   data: {
     id: number
     email: string
-    name: string
+    userName: string
   }
 }
 

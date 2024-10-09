@@ -4,7 +4,7 @@ import {
   RegistrationProps,
   RegistrationResponse,
 } from '@/features/auth/api/authService.types'
-import { LocalStorageUtil } from '@/utils/LocalStorageUtil'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
@@ -25,7 +25,7 @@ const authService = instaLeadersApi.injectEndpoints({
         const { data } = await queryFulfilled
         const email = data.data.email
         if (!email) return
-        LocalStorageUtil.setEmail(data.data.email)
+        LocalStorageUtil.setValue<string>('email', data.data.email)
       },
     }),
     confirmEmail: builder.mutation<ConfirmEmailResponse, string>({

@@ -32,9 +32,9 @@ export const SignUp: NextPageWithLayout = () => {
   } = useController({ control, name: 'agreesToTOS' })
 
   const [signUp] = useRegistrationMutation()
-  const onSubmit = handleSubmit(async ({ username: name, password, email, ...rest }) => {
+  const onSubmit = handleSubmit(async ({ username: userName, password, email, ...rest }) => {
     try {
-      await signUp({ name, password, email }).unwrap()
+      await signUp({ userName, password, email }).unwrap()
       setShowModal(true)
     } catch (e) {
       console.log(e)
