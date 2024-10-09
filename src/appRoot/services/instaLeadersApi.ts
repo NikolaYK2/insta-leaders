@@ -3,8 +3,8 @@ import { baseQueryWithReauth } from '@/appRoot/services/instaLeadersApiWithReaut
 
 // Define a service using a base URL and expected endpoints
 export const instaLeadersApi = createApi({
-  // baseQuery: baseQueryWithReauth,
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BASE_URL }),
+  baseQuery: baseQueryWithReauth,
+  // baseQuery: fetchBaseQuery({ baseUrl: 'https://main.sociable-people.com/api' }),
   endpoints: () => ({}),
   reducerPath: 'instaLeadersApi',
   tagTypes: ['Auth'],

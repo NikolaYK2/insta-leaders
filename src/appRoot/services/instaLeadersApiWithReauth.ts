@@ -10,7 +10,6 @@ const mutex = new Mutex()
 
 const baseQuery = fetchBaseQuery({
   baseUrl: 'https://main.sociable-people.com/api',
-  credentials: 'include',
   prepareHeaders: headers => {
     const token = LocalStorageUtil.getValue('accessToken')
 
@@ -36,7 +35,7 @@ export const baseQueryWithReauth: BaseQueryFn<
       const release = await mutex.acquire()
       try {
         const refreshResult = (await baseQuery(
-          { url: '/refresh-token', method: 'POST' },
+          { url: '/v1/auth/refresh-token', method: 'POST' },
           api,
           extraOptions
         )) as any
