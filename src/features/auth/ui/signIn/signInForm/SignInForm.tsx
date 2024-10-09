@@ -7,6 +7,7 @@ import { LoginFields, LoginSchema } from './signInFormSchema'
 import { ROUTES_APP, ROUTES_AUTH } from '@/appRoot/routes/routes'
 import Link from 'next/link'
 import { FormInput } from '@/common/components'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
 export const SignInForm = () => {
   const [signIn, { data, isError, isLoading }] = useLoginMutation()
@@ -23,7 +24,7 @@ export const SignInForm = () => {
       await signIn(data)
         .unwrap()
         .then(data => {
-          localStorage.setItem('accessToken', data.data.accessToken)
+          LocalStorageUtil.setValue('accessToken', data.data.accessToken)
           router.push(ROUTES_APP.CREATE)
         })
     } catch (e) {
