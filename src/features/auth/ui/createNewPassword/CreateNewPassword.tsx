@@ -15,6 +15,7 @@ import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
 import { z } from 'zod'
 import { useCreateNewPasswordMutation } from './createNewPasswordApi'
 import { useRouter } from 'next/router'
+import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 
 export const CreateNewPassword: NextPageWithLayout = () => {
   const passwordSchema = z
@@ -56,7 +57,7 @@ export const CreateNewPassword: NextPageWithLayout = () => {
         recoveryCode:  recoveryCode as string, 
       }).unwrap();
       console.log('Password created successfully:', response);
-      router.push('/signin');
+      router.push(ROUTES_AUTH.LOGIN);
     } catch (err) {
       console.error('Failed to create new password:', err);
     }

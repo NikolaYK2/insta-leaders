@@ -7,7 +7,7 @@ export const createNewPasswordApi = createApi({
     createNewPassword: builder.mutation<any, { newPassword: string; recoveryCode: string }>({
       query: body => ({
         method: 'POST',
-        url: `v1/auth/new-password`,
+        url: `/v1/auth/new-password`,
         body,
       }),
     }),

@@ -2,12 +2,13 @@ import {Action, combineSlices, configureStore, ThunkAction} from '@reduxjs/toolk
 import { createWrapper } from 'next-redux-wrapper'
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {forgotPasswordApi} from "@/features/auth/ui/forgotPassword/forgotPasswordApi";
+import { createNewPasswordApi } from '@/features/auth/ui/createNewPassword/createNewPasswordApi';
 
 const makeStore = () =>
   configureStore({
     // reducer: { [instaLeadersApi.reducerPath]: instaLeadersApi.reducer },
-      reducer: combineSlices(instaLeadersApi, forgotPasswordApi),
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(instaLeadersApi.middleware).concat(forgotPasswordApi.middleware),
+      reducer: combineSlices(instaLeadersApi, forgotPasswordApi, createNewPasswordApi),
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(instaLeadersApi.middleware).concat(forgotPasswordApi.middleware).concat(createNewPasswordApi.middleware),
     devTools: true,
   })
 
