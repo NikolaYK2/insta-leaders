@@ -12,7 +12,6 @@ import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 import { SignInForm } from './signInForm/SignInForm'
 import { AuthByGithub } from './authByGithub/AuthByGithub'
 
-
 export const SignIn: NextPageWithLayout = () => {
   const client_id = '792546249106-u5of55jk4hus635kpd936g5968b62a1c.apps.googleusercontent.com'
   const redirect_uri = 'http://localhost:3000/google'
@@ -23,7 +22,6 @@ export const SignIn: NextPageWithLayout = () => {
     <>
       <HeadersMeta title={'Sign In'} description={'Access your account by signing in'} />
       <div className={'max-w-[378px]  mx-auto'}>
-
         <Card className={'text-center p-6'}>
           <Typography variant={TypographyVariant.h1} asChild>
             <h1>Sign In</h1>
@@ -34,8 +32,6 @@ export const SignIn: NextPageWithLayout = () => {
               <DynamicIcon iconId={'GoogleSvgrepoCom1'} width={36} height={36} />
             </Link>
             <AuthByGithub />
-
-          
           </div>
           <SignInForm />
           <Typography variant={TypographyVariant.regular_text_16} className={'mt-[18px] mb-2'}>
