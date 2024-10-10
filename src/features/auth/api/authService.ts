@@ -59,6 +59,7 @@ const authService = instaLeadersApi.injectEndpoints({
       query: () => ({
         method: 'POST',
         url: `${AUTH}/logout`,
+        // credentials: 'include',
       }),
     }),
     createNewPassword: builder.mutation<any, { newPassword: string; recoveryCode: string }>({
