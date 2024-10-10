@@ -13,7 +13,7 @@
   "dependencies": {
     "@bradgarropy/next-link": "^1.1.0",
     "@hookform/resolvers": "^3.9.0",
-    "@nikolajk2/lib-insta-leaders": "0.0.46",
+    "@nikolajk2/lib-insta-leaders": "0.0.47",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-select": "^2.1.1",
     "@reduxjs/toolkit": "2.2.7",
