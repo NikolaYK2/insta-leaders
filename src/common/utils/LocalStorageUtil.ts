@@ -1,13 +1,13 @@
-
 type StorageKeys = {
   email: 'email'
   latestCSRFToken: 'latestCSRFToken'
   userDataGoggle: 'userDataGoggle'
   userData: 'userData'
+  accessToken: 'accessToken'
 }
 type ParamsKey = keyof StorageKeys
 
-export class LocalStorageUtils {
+export class LocalStorageUtil {
   static setValue<T>(key: ParamsKey, value: T): void {
     try {
       localStorage.setItem(key, JSON.stringify(value))

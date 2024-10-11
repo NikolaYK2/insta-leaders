@@ -17,8 +17,12 @@ import { clsx } from 'clsx'
 
 type EmailSentProps = DialogProps & {
   className?: string
+  callback?: () => void
 }
-export const EmailSent = ({ children, className = '', ...props }: EmailSentProps) => {
+export const EmailSent = ({ children, className = '', callback, ...props }: EmailSentProps) => {
+  const handlerClick = () => {
+    callback?.() && callback()
+  }
   return (
     <Modal {...props}>
       <ModalContent className={clsx('max-w-[378px]', className)}>
@@ -32,7 +36,11 @@ export const EmailSent = ({ children, className = '', ...props }: EmailSentProps
             </Typography>
           </ModalDescription>
           <ModalClose className={cn('flex !ml-auto')} asChild>
-            <Button variant={'primary'} className={'bg-accent-500 mt-[18px] w-[96px]'}>
+            <Button
+              variant={'primary'}
+              className={'bg-accent-500 mt-[18px] w-[96px]'}
+              onClick={handlerClick}
+            >
               <Typography variant={TypographyVariant.h3}>OK</Typography>
             </Button>
           </ModalClose>

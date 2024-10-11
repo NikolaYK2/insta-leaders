@@ -4,37 +4,44 @@ import { NextPageWithLayout } from '@/pages/_app'
 import {
   Button,
   Card,
-  Checkbox,
   DynamicIcon,
   Typography,
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
-import { useController, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SignUpFields, signUpSchema } from '@/features/auth/ui/signUp/validation'
 import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 import { useRegistrationMutation } from '@/features/auth/api/authService'
 import { EmailSent } from '@/features/auth/ui'
+import { ControllerCheckbox } from '@/common/components/ControllerCheckbox'
 
 export const SignUp: NextPageWithLayout = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
-  const { handleSubmit, control, getValues, reset } = useForm<SignUpFields>({
+  const {
+    handleSubmit,
+    control,
+    getValues,
+    reset,
+    formState: { errors, isLoading, isValid },
+  } = useForm<SignUpFields>({
     resolver: zodResolver(signUpSchema),
   })
-  const {
-    field: { onChange, value, ...field },
-    formState: { errors, isLoading },
-  } = useController({ control, name: 'agreesToTOS' })
+  // Не нужно так как компоненты контролируемые
+  // const {
+  //   field: { onChange, value, ...field },
+  //   formState: { errors, isLoading },
+  // } = useController({ control, name: 'agreesToTOS' })
 
   const [signUp] = useRegistrationMutation()
-  const onSubmit = handleSubmit(async ({ username: name, password, email, ...rest }) => {
+  const onSubmit = handleSubmit(async ({ userName, password, email, ...rest }) => {
     try {
-      await signUp({ name, password, email }).unwrap()
+      await signUp({ userName, password, email }).unwrap()
       setShowModal(true)
     } catch (e) {
       console.log(e)
@@ -43,7 +50,7 @@ export const SignUp: NextPageWithLayout = () => {
 
   const handlerResetForm = () => {
     reset({
-      username: '',
+      userName: '',
       email: '',
       password: '',
       passwordConfirmation: '',
@@ -73,7 +80,7 @@ export const SignUp: NextPageWithLayout = () => {
           {/* USER NAME*/}
           <div className={'mb-6'}>
             <FormInput
-              name={'username'}
+              name={'userName'}
               label={'Username'}
               control={control}
               placeholder={'Epam11'}
@@ -129,7 +136,7 @@ export const SignUp: NextPageWithLayout = () => {
           {/* Условия соглашения */}
           <div className={'flex flex-col  space-y-5'}>
             <div className={'flex items-center justify-center text-center'}>
-              <Checkbox checked={value} onCheckedChange={onChange} {...field} />
+              <ControllerCheckbox name={'agreesToTOS'} control={control} />
               <Typography variant={TypographyVariant.small_text} className={''}>
                 I agree to the{' '}
                 <Link
@@ -152,7 +159,7 @@ export const SignUp: NextPageWithLayout = () => {
                 {errors.agreesToTOS.message}
               </Typography>
             )}
-            <Button disabled={isLoading}>Sign Up</Button>
+            <Button disabled={isLoading || !isValid}>Sign Up</Button>
           </div>
         </form>
 
