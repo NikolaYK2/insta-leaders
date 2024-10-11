@@ -17,6 +17,8 @@ import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 import { useRegistrationMutation } from '@/features/auth/api/authService'
 import { EmailSent } from '@/features/auth/ui'
 import { ControllerCheckbox } from '@/common/components/ControllerCheckbox'
+import { AuthByGoogle } from '@/features/auth/ui/signIn/authByGoogle/AuthByGoogle'
+import { AuthByGithub } from '@/features/auth/ui/signIn/authByGithub/AuthByGithub'
 
 export const SignUp: NextPageWithLayout = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -68,12 +70,8 @@ export const SignUp: NextPageWithLayout = () => {
           Sign Up
         </Typography>
         <div className={'flex justify-center gap-x-[60px] mb-6 mt-3'}>
-          <button className={'w-9 h-9 cursor-pointer'} onClick={() => alert('hellow')}>
-            <DynamicIcon iconId={'GoogleSvgrepoCom1'} />
-          </button>
-          <button className={'w-9 h-9 cursor-pointer'} onClick={() => alert('hellow')}>
-            <DynamicIcon iconId={'GithubSvgrepoCom31'} />
-          </button>
+          <AuthByGoogle />
+          <AuthByGithub />
         </div>
 
         <form onSubmit={onSubmit}>
