@@ -10,12 +10,12 @@ const mutex = new Mutex()
 
 const baseQuery = fetchBaseQuery({
   baseUrl: 'https://main.sociable-people.com/api',
+  credentials: 'include',
   prepareHeaders: headers => {
     const token = LocalStorageUtil.getValue('accessToken')
 
     if (token) {
       headers.set('Authorization', `Bearer ${token}`)
-      headers.set('credentials', 'include')
     }
     return headers
   },
