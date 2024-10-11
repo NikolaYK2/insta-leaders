@@ -13,7 +13,10 @@ export const AuthByGithub = () => {
   const link = `https://github.com/login/oauth/authorize?client_id=${client_id}&response_type=code&scope=user&redirect_uri=${redirect_uri}&state=${state}`
 
   return (
-    <Link className={'flex items-center hover:text-light-100'} href={link}>
+    <Link
+      className={'flex items-center hover:text-light-100 p-1 border-2 border-transparent'}
+      href={link}
+    >
       <DynamicIcon iconId={'GithubSvgrepoCom31'} width={36} height={36} />
     </Link>
   )
