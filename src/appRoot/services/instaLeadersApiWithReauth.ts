@@ -9,7 +9,8 @@ import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 const mutex = new Mutex()
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'https://main.sociable-people.com/api',
+  //создаем у себя в корне проекта файл .env NEXT_PUBLIC_BASE_URL=адрес нашей API
+  baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
   credentials: 'include',
   prepareHeaders: headers => {
     const token = LocalStorageUtil.getValue('accessToken')
