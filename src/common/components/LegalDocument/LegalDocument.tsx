@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react'
-import { H1Title } from '@/common/components/H1Title/H1Title'
 import { Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 
 type LegalDocumentProps = {
@@ -9,7 +8,9 @@ type LegalDocumentProps = {
 export const LegalDocument = ({ title, description }: LegalDocumentProps) => {
   return (
     <div className={'flex flex-col justify-center items-center w-full mt-[1.917%]'}>
-      <H1Title className={'mb-[1.667%]'}>{title}</H1Title>
+      <Typography variant={TypographyVariant.h1} className={'mb-[1.667%]'}>
+        {title}
+      </Typography>
       <Typography
         variant={TypographyVariant.regular_text_14}
         className={'text-center max-w-[958px] '}
