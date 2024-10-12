@@ -1,22 +1,32 @@
-import React from 'react'
+import React, { useId } from 'react'
 import { NextPageWithLayout } from '@/pages/_app'
 import { Page } from '@/common/components/page'
-import { Typography, Button, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
+import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
+import Link from 'next/link'
+import { ROUTES_APP } from '@/appRoot/routes/routes'
+import { useRouter } from 'next/router'
 
 export const MyProfile: NextPageWithLayout = () => {
+  const id = useId()
+
+  const router = useRouter()
+
+  const handlerClickRedirectSetting = () => {
+    router.push(`${ROUTES_APP.PROFILE}/${id}`)
+  }
   return (
     <Page
       titleMeta={'My Profile'}
       descriptionMeta={'View and edit your personal profile information'}
     >
-      <section className={'flex justify-between h-[204px] mb-12'}>
-        <div className={'border-2 border-cyan-50 max-w-[204px] w-full'}>
+      <section className={'flex justify-between mb-12'}>
+        <div className={'border-2 border-cyan-50 max-w-[204px] h-[204px] w-full'}>
           <div className={'w-full h-full border-2 border-red-800 rounded-full'}></div>
         </div>
         <div className={'border-2 border-cyan-50 w-full max-w-[730px]'}>
           <div className={'flex justify-between items-center border-2 border-red-800 mb-5'}>
             <Typography>URLProfile</Typography>
-            <Button variant={'secondary'}>
+            <Button variant={'secondary'} onClick={handlerClickRedirectSetting}>
               <Typography variant={TypographyVariant.h3}>Profile Settings</Typography>
             </Button>
           </div>
