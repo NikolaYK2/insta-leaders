@@ -29,7 +29,7 @@ export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
       <div className="flex flex-1 max-w-screen-desktop w-full m-auto">
         {/* Sidebar отображается только если пользователь авторизован */}
         {authenticated && <Sidebar />}
-        <main className={cn('flex-1 p-10 mx-auto')}>
+        <main className={cn('flex-1 mx-auto')}>
           {children} {/* Основной контент */}
         </main>
       </div>
