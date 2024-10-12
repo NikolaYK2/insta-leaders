@@ -14,6 +14,8 @@ export const MyProfile: NextPageWithLayout = () => {
         <div className={'border-2 border-cyan-50 max-w-[204px] w-full'}>
           <div className={'w-full h-full border-2 border-red-800 rounded-full'}></div>
         </div>
+      <section className={'flex justify-between h-[204px] mb-12'}>
+        <div className={'border-2 border-cyan-50 max-w-[204px] w-full'}></div>
         <div className={'border-2 border-cyan-50 w-full max-w-[730px]'}>
           <div className={'flex justify-between items-center border-2 border-red-800 mb-5'}>
             <Typography>URLProfile</Typography>
