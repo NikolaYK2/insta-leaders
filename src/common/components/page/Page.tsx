@@ -4,7 +4,7 @@ import { cn } from '@/common/utils/cn'
 
 type PageProps = {
   titleMeta: string
-  descriptionMeta: string
+  descriptionMeta?: string
   className?: string
   children: React.ReactNode
 }
