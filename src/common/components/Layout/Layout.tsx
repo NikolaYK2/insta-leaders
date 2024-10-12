@@ -13,10 +13,10 @@ export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   //пока данные грузятся можно сделать индикатор загрузки
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col w-full items-center">
       {/* Верхняя навигационная панель */}
       {/*<NavBar />*/}
-      <div className=" bg-gray-600 w-full mb-[60px]">
+      <div className="bg-gray-600 w-full mb-[60px]">
         <Header>
           <Link href={ROUTES_APP.HOME}>Main</Link>
           <Link href={ROUTES_AUTH.REGISTRATION}>Sign Up</Link>
@@ -26,10 +26,10 @@ export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
           <Link href={ROUTES_AUTH.CREATE_NEW_PASSWORD}>Create New Password</Link>
         </Header>
       </div>
-      <div className="flex flex-1 max-w-screen-desktop w-full m-auto px-[min(3.2673%,64px)]">
+      <div className="flex flex-1 max-w-screen-desktop w-full px-[min(5%,64px)]">
         {/* Sidebar отображается только если пользователь авторизован */}
         {authenticated && <Sidebar />}
-        <main className={cn('flex-1 mx-auto')}>
+        <main className={cn('flex-1')}>
           {children} {/* Основной контент */}
         </main>
       </div>
