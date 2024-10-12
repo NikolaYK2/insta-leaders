@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { NextPageWithLayout } from '@/pages/_app'
-import { Tabs, TabType, TabContent } from '@nikolajk2/lib-insta-leaders'
+import { TabContent, Tabs, TabType } from '@nikolajk2/lib-insta-leaders'
 import { Page } from '@/common/components/page'
+import { GeneralInformation } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/GeneralInformation'
 
-const tabsTrigger: TabType[] = [
-  { value: 'General information', title: 'General information' },
-  { value: 'Devices', title: 'Devices' },
-  { value: 'Account Management', title: 'Account Management' },
-  { value: 'My payments', title: 'My payments' },
+type TabsTrigger = TabType & {
+  component: ReactNode
+}
+const tabsTrigger: TabsTrigger[] = [
+  { value: 'General information', title: 'General information', component: <GeneralInformation /> },
+  { value: 'Devices', title: 'Devices', component: 'Devices' },
+  { value: 'Account Management', title: 'Account Management', component: 'Account Management' },
+  { value: 'My payments', title: 'My payments', component: 'My payments' },
 ]
 export const settingProfile: NextPageWithLayout = () => {
   return (
@@ -16,9 +20,9 @@ export const settingProfile: NextPageWithLayout = () => {
       descriptionMeta={'Customise your profile: update your personal data '}
     >
       <Tabs fullWidth tabs={tabsTrigger}>
-        {tabsTrigger.map((tab: TabType) => (
+        {tabsTrigger.map(tab => (
           <TabContent key={tab.value} value={tab.value}>
-            {tab.title}
+            {tab.component}
           </TabContent>
         ))}
       </Tabs>
