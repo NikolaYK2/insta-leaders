@@ -26,10 +26,10 @@ export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
           <Link href={ROUTES_AUTH.CREATE_NEW_PASSWORD}>Create New Password</Link>
         </Header>
       </div>
-      <div className="flex flex-1 w-full">
+      <div className="flex flex-1 max-w-screen-desktop w-full m-auto">
         {/* Sidebar отображается только если пользователь авторизован */}
         {authenticated && <Sidebar />}
-        <main className={cn('flex-1 p-10 max-w-screen-desktop mx-auto')}>
+        <main className={cn('flex-1 p-10 mx-auto')}>
           {children} {/* Основной контент */}
         </main>
       </div>
