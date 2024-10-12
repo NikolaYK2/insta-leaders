@@ -19,7 +19,7 @@ export const settingProfile: NextPageWithLayout = () => {
       titleMeta={'Setting profile'}
       descriptionMeta={'Customise your profile: update your personal data '}
     >
-      <Tabs fullWidth tabs={tabsTrigger}>
+      <Tabs fullWidth tabs={tabsTrigger} value={tabsTrigger[0].value}>
         {tabsTrigger.map(tab => (
           <TabContent key={tab.value} value={tab.value}>
             {tab.component}
