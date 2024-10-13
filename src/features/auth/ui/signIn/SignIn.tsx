@@ -1,11 +1,10 @@
-import { HeadersMeta } from '@/common/components'
+import { AuthByGoogle, HeadersMeta } from '@/common/components'
 import { NextPageWithLayout } from '@/pages/_app'
 import { Button, Card, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 import { SignInForm } from './signInForm/SignInForm'
 import { AuthByGithub } from './authByGithub/AuthByGithub'
-import { AuthByGoogle } from '@/features/auth/ui/signIn/authByGoogle/AuthByGoogle'
 
 export const SignIn: NextPageWithLayout = () => {
   return (

@@ -67,6 +67,7 @@ const authService = instaLeadersApi.injectEndpoints({
           if (!data || !data.data.accessToken) return
 
           LocalStorageUtil.setValue('accessToken', data.data.accessToken)
+          LocalStorageUtil.setValue('userId', data.data.user.id)
         } catch (error) {
           console.error('Error during query fulfillment:', error)
         }

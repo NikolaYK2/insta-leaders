@@ -4,6 +4,7 @@ type StorageKeys = {
   userDataGoggle: 'userDataGoggle'
   userData: 'userData'
   accessToken: 'accessToken'
+  userId: 'userId'
 }
 type ParamsKey = keyof StorageKeys
 
