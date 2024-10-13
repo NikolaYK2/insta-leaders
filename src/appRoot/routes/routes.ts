@@ -14,7 +14,7 @@ export const ROUTES_APP = {
   HOME: '/',
   CREATE: '/create',
   PROFILE: '/myProfile',
-  PROFILE_SETTING: '/settingProfile',
+  PROFILE_SETTING: '/setting',
   MESSENGER: '/messenger',
   SEARCH: '/search',
   STATISTICS: '/statistics',
