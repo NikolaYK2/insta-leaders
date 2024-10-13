@@ -9,6 +9,7 @@ import { useGetUsersMeQuery } from '@/features/userHub/api/user/userService'
 export const MyProfile: NextPageWithLayout = () => {
   const router = useRouter()
   const { data } = useGetUsersMeQuery()
+
   const handlerClickRedirectSetting = () => {
     router.push(`${ROUTES_APP.PROFILE}${ROUTES_APP.PROFILE_SETTING}`)
   }
@@ -23,7 +24,7 @@ export const MyProfile: NextPageWithLayout = () => {
         </div>
         <div className={'border-2 border-cyan-50 w-full max-w-[730px]'}>
           <div className={'flex justify-between items-center border-2 border-red-800 mb-5'}>
-            <Typography>URLProfile</Typography>
+            <Typography>{data?.data.userName}</Typography>
             <Button variant={'secondary'} onClick={handlerClickRedirectSetting}>
               <Typography variant={TypographyVariant.h3}>Profile Settings</Typography>
             </Button>
