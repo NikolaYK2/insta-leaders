@@ -28,7 +28,7 @@ export interface LoginResponse {
   data: Data
 }
 
-interface Data {
+export interface Data {
   accessToken: string
   user: User
 }
@@ -44,7 +44,6 @@ export type LogOutResponse = {
   code: number
   data: null
 }
-
 
 export type SendLinkArgs = {
   email: string
@@ -76,7 +75,7 @@ export type ProviderRes = {
   data: Data
 }
 
-export type AuthRes<T = {}> = {
+export type AuthRes<T> = {
   status: string
   code: number
   data: T
