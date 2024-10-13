@@ -1,13 +1,15 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
+  AuthRes,
   ConfirmEmailResponse,
-  LogOutResponse,
+  Data,
   LoginArgs,
   LoginResponse,
+  LogOutResponse,
   RegistrationProps,
   RegistrationResponse,
-  SendLinkResponse,
   SendLinkArgs,
+  SendLinkResponse,
 } from '@/features/auth/api/authService.types'
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
@@ -57,7 +59,18 @@ const authService = instaLeadersApi.injectEndpoints({
         }
       },
     }),
-    authByGoogle: builder.query<LoginResponse, { provider: 'google'; code: string }>({
+    authByGoogle: builder.query<AuthRes<Data>, { provider: 'google'; code: string }>({
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+
+          if (!data || !data.data.accessToken) return
+
+          LocalStorageUtil.setValue('accessToken', data.data.accessToken)
+        } catch (error) {
+          console.error('Error during query fulfillment:', error)
+        }
+      },
       query: params => {
         return {
           url: `${AUTH}/registration/by-provider`,
