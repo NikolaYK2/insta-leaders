@@ -24,7 +24,7 @@ export const MyProfile: NextPageWithLayout = () => {
         </div>
         <div className={'border-2 border-cyan-50 w-full max-w-[730px]'}>
           <div className={'flex justify-between items-center border-2 border-red-800 mb-5'}>
-            <Typography>{data?.data.userName}</Typography>
+            <Typography>{data?.data.userName ?? 'User name'}</Typography>
             <Button variant={'secondary'} onClick={handlerClickRedirectSetting}>
               <Typography variant={TypographyVariant.h3}>Profile Settings</Typography>
             </Button>
@@ -32,34 +32,41 @@ export const MyProfile: NextPageWithLayout = () => {
 
           <div className={'flex flex-row border-2 border-green-500 mb-7'}>
             <div className={'border-2 border-red-800 max-w-[159px] w-full mr-1'}>
-              <Typography variant={TypographyVariant.bold_text_14}>2000</Typography>
-              <Typography variant={TypographyVariant.regular_text_14}>bla bla</Typography>
+              <Typography variant={TypographyVariant.bold_text_14}>2 218</Typography>
+              <Typography variant={TypographyVariant.regular_text_14}>Following</Typography>
             </div>
             <div className={'border-2 border-red-800 max-w-[139px] w-full mr-1'}>
-              <Typography variant={TypographyVariant.bold_text_14}>2000</Typography>
-              <Typography variant={TypographyVariant.regular_text_14}>bla bla</Typography>
+              <Typography variant={TypographyVariant.bold_text_14}>2 358</Typography>
+              <Typography variant={TypographyVariant.regular_text_14}>Following</Typography>
             </div>
             <div className={'border-2 border-red-800'}>
-              <Typography variant={TypographyVariant.bold_text_14}>2000</Typography>
-              <Typography variant={TypographyVariant.regular_text_14}>bla bla</Typography>
+              <Typography variant={TypographyVariant.bold_text_14}>2 764</Typography>
+              <Typography variant={TypographyVariant.regular_text_14}>Publications</Typography>
             </div>
           </div>
+
           <Typography
             variant={TypographyVariant.regular_text_16}
             className={'border-2 border-yellow-400'}
           >
-            bla bla bla bla
-            <Typography
-              asChild
-              variant={TypographyVariant.regular_link}
-              className={'cursor-pointer'}
-            >
-              <span>span span span</span>
-            </Typography>
+            {data?.data.aboutMe ? (
+              <>
+                {data?.data.aboutMe}
+                <Typography
+                  asChild
+                  variant={TypographyVariant.regular_link}
+                  className={'cursor-pointer'}
+                >
+                  <span>span span span</span>
+                </Typography>
+              </>
+            ) : (
+              '...'
+            )}
           </Typography>
         </div>
       </section>
-      <section className={'border-2 border-red-800'}>items</section>
+      <section className={'border-2 border-red-800'}>Posts</section>
     </Page>
   )
 }
