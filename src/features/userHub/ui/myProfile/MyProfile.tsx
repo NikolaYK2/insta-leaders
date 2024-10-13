@@ -1,18 +1,15 @@
-import React, { useId } from 'react'
+import React from 'react'
 import { NextPageWithLayout } from '@/pages/_app'
 import { Page } from '@/common/components/page'
 import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
-import Link from 'next/link'
 import { ROUTES_APP } from '@/appRoot/routes/routes'
 import { useRouter } from 'next/router'
 
 export const MyProfile: NextPageWithLayout = () => {
-  const id = useId()
-
   const router = useRouter()
 
   const handlerClickRedirectSetting = () => {
-    router.push(`${ROUTES_APP.PROFILE}/${id}`)
+    router.push(`${ROUTES_APP.PROFILE}${ROUTES_APP.PROFILE_SETTING}`)
   }
   return (
     <Page
