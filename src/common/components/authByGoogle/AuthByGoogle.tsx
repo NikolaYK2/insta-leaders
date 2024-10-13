@@ -23,7 +23,12 @@ export const AuthByGoogle = () => {
 
   return (
     // Компонент Link из Next.js используется для навигации на внешнюю ссылку аутентификации Google
-    <Link className={'p-1 inline-flex border-2 border-transparent'} href={link}>
+    <Link
+      className={
+        'p-1 inline-flex border-2 border-transparent focus:border-2 focus:border-accent-100'
+      }
+      href={link}
+    >
       <DynamicIcon iconId={'GoogleSvgrepoCom1'} width={36} height={36} />
     </Link>
   )
