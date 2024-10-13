@@ -1,16 +1,21 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
-import { Res, UserData } from '@/features/userHub/api/user/userServiceType'
+import { PostsData, Res, UserData } from '@/features/userHub/api/user/userServiceType'
 
 const USERS = 'v1/users'
 const userService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
     getUsersMe: builder.query<Res<UserData>, void>({
-      query: arg => ({
+      query: () => ({
         url: `${USERS}/me`,
+      }),
+    }),
+    getUsersPosts: builder.query<Res<PostsData>, void>({
+      query: () => ({
+        url: `${USERS}/posts`,
       }),
     }),
   }),
   overrideExisting: true,
 })
 
-export const { useGetUsersMeQuery } = userService
+export const { useGetUsersMeQuery, useGetUsersPostsQuery } = userService
