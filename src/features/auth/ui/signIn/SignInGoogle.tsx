@@ -9,7 +9,6 @@ export const SignInGoogle: NextPageWithLayout = () => {
   const router = useRouter()
 
   const { code, state } = router.query
-
   // Преобразуем значения параметров, если они массивы, берем первый элемент
   // Это важно, так как useRouter.query может возвращать массив строк или строку
   const codeStr = Array.isArray(code) ? code[0] : code
@@ -35,7 +34,7 @@ export const SignInGoogle: NextPageWithLayout = () => {
 
     if (data) {
       router
-        .push(ROUTES_APP.PROFILE) // Переход на страницу профиля пользователя
+        .push(`${ROUTES_APP.PROFILE}/${data.data.user.id}`) // Переход на страницу профиля пользователя
         .then(() => {
           console.log('Redirected to profile') // Лог успешного перенаправления
         })
