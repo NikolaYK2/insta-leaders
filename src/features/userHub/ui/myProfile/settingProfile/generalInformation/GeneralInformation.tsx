@@ -20,7 +20,7 @@ const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
   firstName: z.string().min(1).max(50),
   lastName: z.string().min(1).max(50),
-  dateOfBirth: z.string().optional(),
+  dateOfBirth: z.any().optional(),
   countryCode: z.object({}).optional(),
   cityId: z.object({}).optional(),
   aboutMe: z.string().max(200, 'max litter 200'),
@@ -39,12 +39,10 @@ export const GeneralInformation: NextPageWithLayout = () => {
 
   const { handleSubmit, control, setValue } = useForm<FormType>({
     defaultValues: {
-      userName: usersData?.data.userName ?? '',
+      userName: '',
       firstName: '',
       lastName: '',
-      dateOfBirth: usersData?.data.dateOfBirth
-        ? new Date(usersData?.data.dateOfBirth).toLocaleDateString()
-        : undefined,
+      dateOfBirth: '',
       countryCode: {},
       cityId: {},
       aboutMe: '',
@@ -57,6 +55,16 @@ export const GeneralInformation: NextPageWithLayout = () => {
   }
   useEffect(() => {
     setValue('userName', usersData?.data.userName ?? '')
+    setValue('firstName', usersData?.data.firstName ?? '')
+    setValue('lastName', usersData?.data.lastName ?? '')
+    setValue('aboutMe', usersData?.data.aboutMe ?? '')
+    // Преобразуем дату в формат ISO 8601, если она доступна
+    const formattedDate = usersData?.data.dateOfBirth
+      ? new Date(usersData.data.dateOfBirth).toISOString()
+      : ''
+    setValue('dateOfBirth', formattedDate ?? '')
+    setValue('countryCode', usersData?.data.countryCode ?? {})
+    setValue('cityId', usersData?.data.cityId ?? {})
   }, [usersData])
 
   if (isLoading) {
