@@ -88,16 +88,18 @@ export const MyProfile: NextPageWithLayout = () => {
         </div>
       </section>
       <section className={'flex flex-wrap m-[-8px]'}>
-        {userPosts?.data.photos.map(photo => (
-          <Image
-            className={'flex-[0_1_234px] h-[228px] m-[6px] object-cover'}
-            key={photo.id}
-            src={photo.url}
-            alt={`Picture of ${photo.id}`}
-            width={234}
-            height={228}
-          />
-        ))}
+        {userPosts?.data.photos
+          ? userPosts?.data.photos.map(photo => (
+              <Image
+                className={'flex-[0_1_234px] h-[228px] m-[6px] object-cover'}
+                key={photo.id}
+                src={photo.url}
+                alt={`Picture of ${photo.id}`}
+                width={234}
+                height={228}
+              />
+            ))
+          : ''}
       </section>
     </Page>
   )
