@@ -15,7 +15,6 @@ const userService = instaLeadersApi.injectEndpoints({
       }),
     }),
   }),
-  overrideExisting: true,
 })
 
 export const { useGetUsersMeQuery, useGetUsersPostsQuery } = userService
