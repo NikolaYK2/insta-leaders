@@ -1,24 +1,71 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Page } from '@/common/components/page'
 import {
-  InputDataPicker,
-  Selector,
-  TextField,
-  useSelectedCalendar,
-  SelectItem,
   Button,
+  SelectItem,
+  Selector,
   Typography,
   TypographyVariant,
+  useSelectedCalendar,
 } from '@nikolajk2/lib-insta-leaders'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { FormInput } from '@/common/components'
+import { ControllerInputDataPicker } from '@/common/components/ControllerInputDataPicker/ControllerInputDataPicker'
+import { useGetUsersMeQuery } from '@/features/userHub/api/user/userService'
+import { NextPageWithLayout } from '@/pages/_app'
 
-const textFields = [{ label: 'Username*' }, { label: 'First Name*' }, { label: 'Last Name*' }]
-export const GeneralInformation = () => {
-  const { selectedDate, setSelectedDate } = useSelectedCalendar()
+const profileSchema = z.object({
+  userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
+  firstName: z.string().min(1).max(50),
+  lastName: z.string().min(1).max(50),
+  dateOfBirth: z.string().optional(),
+  countryCode: z.object({}).optional(),
+  cityId: z.object({}).optional(),
+  aboutMe: z.string().max(200, 'max litter 200'),
+})
+type FormType = z.infer<typeof profileSchema>
+const textFields = [
+  { label: 'User Name*', name: 'userName' },
+  { label: 'First Name*', name: 'firstName' },
+  { label: 'Last Name*', name: 'lastName' },
+] as const
 
+export const GeneralInformation: NextPageWithLayout = () => {
+  const { data: usersData, isLoading } = useGetUsersMeQuery()
+  console.log(usersData)
+  const { selectedDate } = useSelectedCalendar()
+
+  const { handleSubmit, control, setValue } = useForm<FormType>({
+    defaultValues: {
+      userName: usersData?.data.userName ?? '',
+      firstName: '',
+      lastName: '',
+      dateOfBirth: usersData?.data.dateOfBirth
+        ? new Date(usersData?.data.dateOfBirth).toLocaleDateString()
+        : undefined,
+      countryCode: {},
+      cityId: {},
+      aboutMe: '',
+    },
+    resolver: zodResolver(profileSchema),
+  })
+
+  const onSubmit: SubmitHandler<FormType> = data => {
+    console.log(data)
+  }
+  useEffect(() => {
+    setValue('userName', usersData?.data.userName ?? '')
+  }, [usersData])
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
   return (
     <Page titleMeta={'General information'} descriptionMeta={'info'} className={'px-0'}>
       <div className={'flex justify-between'}>
-        <div className={'border-2 border-red-800 mr-1'}>
+        <div className={'border-2 border-red-800 mr-1 max-w-[196px] w-full'}>
           <div
             className={
               'w-[192px] h-[192px] border-2 border-cyan-50 rounded-full mb-[30px] mt-[25px]'
@@ -28,15 +75,21 @@ export const GeneralInformation = () => {
             <Typography variant={TypographyVariant.h3}>Add a Profile Photo</Typography>
           </Button>
         </div>
-        <form className={'flex flex-col max-w-[740px] w-full'}>
+        <form className={'flex flex-col max-w-[740px] w-full'} onSubmit={handleSubmit(onSubmit)}>
           {textFields.map(field => (
-            <TextField className={'mb-6 w-full'} key={field.label} label={field.label} />
+            <FormInput
+              className={'mb-6 w-full'}
+              key={field.label}
+              label={field.label}
+              name={field.name}
+              control={control}
+            />
           ))}
-          <InputDataPicker
+          <ControllerInputDataPicker
+            name={'dateOfBirth'}
+            label={'Date of birth'}
+            control={control}
             selected={selectedDate}
-            onSelect={setSelectedDate}
-            labelInput={'Date of birth'}
-            sideOffsetContent={-19}
           />
           <div className={'flex justify-between mt-9'}>
             <Selector className={'max-w-[358px] mr-1'} defaultValue={'1'}>
