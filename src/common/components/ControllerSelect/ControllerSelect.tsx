@@ -6,6 +6,10 @@ import { SelectProps } from '@radix-ui/react-select'
 type Props<T extends FieldValues> = Omit<UseControllerProps<T>, 'rules' | 'shouldUnregister'> &
   SelectProps & {
     control: Control<T>
+    className?: string
+    placeholder?: string
+    label?: string
+    labelColor?: string
   }
 
 export const ControllerSelect = <T extends FieldValues>({
@@ -13,13 +17,23 @@ export const ControllerSelect = <T extends FieldValues>({
   name,
   defaultValue,
   children,
+  className,
+  placeholder,
   ...props
 }: Props<T>) => {
   const {
     field: { value, name: nameSelect, onChange },
   } = useController({ control, name, defaultValue })
   return (
-    <Selector value={value} onValueChange={onChange} name={nameSelect} {...props}>
+    <Selector
+      value={value}
+      defaultValue={defaultValue}
+      onValueChange={onChange}
+      name={nameSelect}
+      placeholder={placeholder}
+      {...props}
+      className={className}
+    >
       {children}
     </Selector>
   )
