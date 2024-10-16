@@ -3,7 +3,6 @@ import { Page } from '@/common/components/page'
 import {
   Button,
   SelectItem,
-  Selector,
   Typography,
   TypographyVariant,
   useSelectedCalendar,
@@ -11,63 +10,81 @@ import {
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FormInput } from '@/common/components'
+import { ControllerSelect, FormInput } from '@/common/components'
 import { ControllerInputDataPicker } from '@/common/components/ControllerInputDataPicker/ControllerInputDataPicker'
 import { useGetUsersMeQuery } from '@/features/userHub/api/user/userService'
 import { NextPageWithLayout } from '@/pages/_app'
+import { useGeCitiesQuery, useGetCountriesQuery } from '@/features/userHub/api/geo/geoService'
+import { useDebounce } from '@/common/hooks'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
   firstName: z.string().min(1).max(50),
   lastName: z.string().min(1).max(50),
   dateOfBirth: z.any().optional(),
-  countryCode: z.object({}).optional(),
-  cityId: z.object({}).optional(),
+  countryCode: z.string().optional(),
+  cityId: z.string().optional(),
   aboutMe: z.string().max(200, 'max litter 200'),
+  search: z.string().max(200, 'max litter 200'),
 })
 type FormType = z.infer<typeof profileSchema>
 const textFields = [
-  { label: 'User Name*', name: 'userName' },
-  { label: 'First Name*', name: 'firstName' },
-  { label: 'Last Name*', name: 'lastName' },
+  { label: 'User Name', name: 'userName' },
+  { label: 'First Name', name: 'firstName' },
+  { label: 'Last Name', name: 'lastName' },
 ] as const
 
 export const GeneralInformation: NextPageWithLayout = () => {
-  const { data: usersData, isLoading } = useGetUsersMeQuery()
-  console.log(usersData)
-  const { selectedDate } = useSelectedCalendar()
+  const { data: usersData, isLoading: isLoadingUserData } = useGetUsersMeQuery()
+  const { data: countries } = useGetCountriesQuery()
 
-  const { handleSubmit, control, setValue } = useForm<FormType>({
+  const { selectedDate } = useSelectedCalendar()
+  const { handleSubmit, control, getValues, watch, reset } = useForm<FormType>({
     defaultValues: {
       userName: '',
       firstName: '',
       lastName: '',
       dateOfBirth: '',
-      countryCode: {},
-      cityId: {},
+      countryCode: '',
+      cityId: '',
       aboutMe: '',
+      search: '',
     },
     resolver: zodResolver(profileSchema),
   })
+
+  const debounceSearch = useDebounce(watch('search'), 500)
+
+  const { data: citiesData, isLoading: isLoadingCities } = useGeCitiesQuery(
+    {
+      pageSize: 10,
+      pageNumber: 1,
+      countryCode: watch('countryCode') ?? '',
+      searchNameTerm: debounceSearch,
+    },
+    { skip: !getValues('countryCode') }
+  )
+  const cities = citiesData?.data.cities
 
   const onSubmit: SubmitHandler<FormType> = data => {
     console.log(data)
   }
   useEffect(() => {
-    setValue('userName', usersData?.data.userName ?? '')
-    setValue('firstName', usersData?.data.firstName ?? '')
-    setValue('lastName', usersData?.data.lastName ?? '')
-    setValue('aboutMe', usersData?.data.aboutMe ?? '')
-    // Преобразуем дату в формат ISO 8601, если она доступна
-    const formattedDate = usersData?.data.dateOfBirth
-      ? new Date(usersData.data.dateOfBirth).toISOString()
-      : ''
-    setValue('dateOfBirth', formattedDate ?? '')
-    setValue('countryCode', usersData?.data.countryCode ?? {})
-    setValue('cityId', usersData?.data.cityId ?? {})
-  }, [usersData])
+    if (usersData) {
+      reset({
+        aboutMe: usersData?.data.aboutMe ?? '',
+        cityId: String(usersData?.data.cityId) ?? '',
+        countryCode: usersData?.data.countryCode ?? '',
+        dateOfBirth: usersData?.data.dateOfBirth ?? '',
+        firstName: usersData?.data.firstName ?? '',
+        search: '',
+        lastName: usersData?.data.lastName ?? '',
+        userName: usersData?.data.userName ?? '',
+      })
+    }
+  }, [usersData, reset])
 
-  if (isLoading) {
+  if (isLoadingUserData) {
     return <div>Loading...</div>
   }
   return (
@@ -83,6 +100,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
             <Typography variant={TypographyVariant.h3}>Add a Profile Photo</Typography>
           </Button>
         </div>
+
         <form className={'flex flex-col max-w-[740px] w-full'} onSubmit={handleSubmit(onSubmit)}>
           {textFields.map(field => (
             <FormInput
@@ -91,24 +109,63 @@ export const GeneralInformation: NextPageWithLayout = () => {
               label={field.label}
               name={field.name}
               control={control}
+              required
             />
           ))}
+
           <ControllerInputDataPicker
             name={'dateOfBirth'}
             label={'Date of birth'}
             control={control}
             selected={selectedDate}
           />
-          <div className={'flex justify-between mt-9'}>
-            <Selector className={'max-w-[358px] mr-1'} defaultValue={'1'}>
-              <SelectItem value={'1'} />
-            </Selector>
-            <Selector className={'max-w-[358px]'} defaultValue={'1'}>
-              <SelectItem value={'1'} />
-            </Selector>
+
+          <div className={'flex flex-wrap justify-between mt-4'}>
+            <ControllerSelect
+              label={'Select your country'}
+              className={'max-w-[358px] w-full'}
+              name={'countryCode'}
+              control={control}
+              placeholder={'Country'}
+            >
+              {countries?.data?.countries?.map(country => (
+                <SelectItem className={'w-[356px] '} key={country.code} value={country.code}>
+                  {country.name}
+                </SelectItem>
+              ))}
+            </ControllerSelect>
+
+            <ControllerSelect
+              label={'Select your city'}
+              className={'max-w-[358px] w-full relative'}
+              name={'cityId'}
+              control={control}
+              placeholder={'City'}
+            >
+              {cities && (
+                <FormInput
+                  search
+                  name={'search'}
+                  control={control}
+                  className={'sticky top-0 z-50 bg-dark-300'}
+                />
+              )}
+              {cities ? (
+                cities.map(city => (
+                  <SelectItem className={'w-[355px]'} key={city.id} value={String(city.id)}>
+                    {city.name}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem key={'not found'} value={'not found'} disabled>
+                  select country first
+                </SelectItem>
+              )}
+            </ControllerSelect>
           </div>
 
           <textarea className={'w-full mt-9 bg-dark-300 text-light-100'} />
+
           <div className={'border-[1px] border-dark-300 my-7'} />
           <Button className={'ml-auto'}>
             <Typography variant={TypographyVariant.h3}>Save Changes</Typography>
