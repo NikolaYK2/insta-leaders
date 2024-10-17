@@ -157,7 +157,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
                   </SelectItem>
                 ))
               ) : (
-                <SelectItem key={'not found'} value={'not found'} disabled>
+                <SelectItem className={'w-[356px]'} key={'not found'} value={'not found'} disabled>
                   select country first
                 </SelectItem>
               )}
