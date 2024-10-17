@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { HeadersMeta } from '@/common/components'
+import { AuthByGoogle, HeadersMeta } from '@/common/components'
 import { NextPageWithLayout } from '@/pages/_app'
 import {
   Button,
@@ -17,7 +17,6 @@ import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 import { useRegistrationMutation } from '@/features/auth/api/authService'
 import { EmailSent } from '@/features/auth/ui'
 import { ControllerCheckbox } from '@/common/components/ControllerCheckbox'
-import { AuthByGoogle } from '@/features/auth/ui/signIn/authByGoogle/AuthByGoogle'
 import { AuthByGithub } from '@/features/auth/ui/signIn/authByGithub/AuthByGithub'
 
 export const SignUp: NextPageWithLayout = () => {
