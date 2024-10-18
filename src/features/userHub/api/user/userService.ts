@@ -8,13 +8,22 @@ const userService = instaLeadersApi.injectEndpoints({
       query: () => ({
         url: `${USERS}/me`,
       }),
+      providesTags: ['User'],
     }),
     getUsersPosts: builder.query<Res<PostsData>, void>({
       query: () => ({
         url: `${USERS}/posts`,
       }),
     }),
+    updateProfile: builder.mutation<Res<UserData>, Omit<UserData, 'id' | 'email' | 'avatar'>>({
+      query: data => ({
+        url: `${USERS}/me`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 })
 
-export const { useGetUsersMeQuery, useGetUsersPostsQuery } = userService
+export const { useGetUsersMeQuery, useGetUsersPostsQuery, useUpdateProfileMutation } = userService
