@@ -6,6 +6,7 @@ import { cn } from '@/common/utils/cn'
 import Link from 'next/link'
 import { ROUTES_APP, ROUTES_AUTH } from '@/appRoot/routes/routes'
 import { Header } from '@nikolajk2/lib-insta-leaders'
+import { Alert } from '@/common/components/Alert'
 
 export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   const authenticated = true //возможно тут можно выполнять запрос для получения данных о пользователе
@@ -13,7 +14,8 @@ export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   //пока данные грузятся можно сделать индикатор загрузки
 
   return (
-    <div className="flex min-h-screen flex-col w-full items-center">
+    <div className="flex min-h-screen flex-col">
+      <Alert />
       {/* Верхняя навигационная панель */}
       {/*<NavBar />*/}
       <div className="bg-gray-600 w-full mb-[60px]">
@@ -26,10 +28,10 @@ export const Layout: NextPage<PropsWithChildren> = ({ children }) => {
           <Link href={ROUTES_AUTH.CREATE_NEW_PASSWORD}>Create New Password</Link>
         </Header>
       </div>
-      <div className="flex flex-1 max-w-screen-desktop w-full px-[min(5%,64px)]">
+      <div className="flex flex-1 max-w-screen-desktop w-full m-auto px-[min(3.2673%,64px)]">
         {/* Sidebar отображается только если пользователь авторизован */}
         {authenticated && <Sidebar />}
-        <main className={cn('flex-1')}>
+        <main className={cn('flex-1 mx-auto')}>
           {children} {/* Основной контент */}
         </main>
       </div>
