@@ -7,12 +7,15 @@ import {
   TypographyVariant,
   useSelectedCalendar,
 } from '@nikolajk2/lib-insta-leaders'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ControllerSelect, FormInput } from '@/common/components'
 import { ControllerInputDataPicker } from '@/common/components/ControllerInputDataPicker/ControllerInputDataPicker'
-import { useGetUsersMeQuery } from '@/features/userHub/api/user/userService'
+import {
+  useGetUsersMeQuery,
+  useUpdateProfileMutation,
+} from '@/features/userHub/api/user/userService'
 import { NextPageWithLayout } from '@/pages/_app'
 import { useGeCitiesQuery, useGetCountriesQuery } from '@/features/userHub/api/geo/geoService'
 import { useDebounce } from '@/common/hooks'
@@ -26,7 +29,7 @@ const profileSchema = z.object({
   countryCode: z.string().optional(),
   cityId: z.string().optional(),
   aboutMe: z.string().max(200, 'max litter 200'),
-  search: z.string().max(200, 'max litter 200'),
+  search: z.string().max(200, 'max litter 200').optional(),
 })
 type FormType = z.infer<typeof profileSchema>
 const textFields = [
@@ -38,6 +41,7 @@ const textFields = [
 export const GeneralInformation: NextPageWithLayout = () => {
   const { data: usersData, isLoading: isLoadingUserData } = useGetUsersMeQuery()
   const { data: countries } = useGetCountriesQuery()
+  const [changeProfile, { data, isError, isLoading }] = useUpdateProfileMutation()
 
   const { selectedDate } = useSelectedCalendar()
   const { handleSubmit, control, getValues, watch, reset } = useForm<FormType>({
@@ -67,9 +71,37 @@ export const GeneralInformation: NextPageWithLayout = () => {
   )
   const cities = citiesData?.data.cities
 
-  const onSubmit: SubmitHandler<FormType> = data => {
-    console.log(data)
-  }
+  const onSubmit = handleSubmit(async data => {
+    try {
+      const test = {
+        userName: data.userName,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        dateOfBirth: '2000-09-29T09:18:40.523Z',
+        countryCode: data.countryCode || '',
+        cityId: 1,
+        aboutMe: data.aboutMe || '',
+      }
+      await changeProfile(test)
+    } catch (e) {
+      console.log(e)
+    }
+  })
+
+  // const onSubmit: SubmitHandler<FormType> = data => {
+  //   console.log(data)
+  //   try {
+  //     await changeProfile({ ...data })
+  //       .unwrap()
+  //       .then(data => {
+  //         LocalStorageUtil.setValue('accessToken', data.data.accessToken)
+  //         router.push(ROUTES_APP.CREATE)
+  //       })
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
+
   useEffect(() => {
     if (usersData) {
       reset({
@@ -102,7 +134,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
           </Button>
         </div>
 
-        <form className={'flex flex-col max-w-[740px] w-full'} onSubmit={handleSubmit(onSubmit)}>
+        <form className={'flex flex-col max-w-[740px] w-full'} onSubmit={onSubmit}>
           {textFields.map(field => (
             <FormInput
               className={'mb-6 w-full'}
@@ -175,7 +207,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
           />
 
           <div className={'border-[1px] border-dark-300 my-7'} />
-          <Button className={'ml-auto'}>
+          <Button className={'ml-auto'} disabled={isLoading}>
             <Typography variant={TypographyVariant.h3}>Save Changes</Typography>
           </Button>
         </form>
