@@ -16,6 +16,7 @@ import { useGetUsersMeQuery } from '@/features/userHub/api/user/userService'
 import { NextPageWithLayout } from '@/pages/_app'
 import { useGeCitiesQuery, useGetCountriesQuery } from '@/features/userHub/api/geo/geoService'
 import { useDebounce } from '@/common/hooks'
+import { FormTextarea } from '@/common/components/ControllerTextarea'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -29,9 +30,9 @@ const profileSchema = z.object({
 })
 type FormType = z.infer<typeof profileSchema>
 const textFields = [
-  { label: 'User Name', name: 'userName' },
-  { label: 'First Name', name: 'firstName' },
-  { label: 'Last Name', name: 'lastName' },
+  { label: 'User Name', name: 'userName', placeholder: 'Your nickname.' },
+  { label: 'First Name', name: 'firstName', placeholder: 'Your name' },
+  { label: 'Last Name', name: 'lastName', placeholder: 'Your surname' },
 ] as const
 
 export const GeneralInformation: NextPageWithLayout = () => {
@@ -109,6 +110,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
               label={field.label}
               name={field.name}
               control={control}
+              placeholder={field.placeholder}
               required
             />
           ))}
@@ -164,7 +166,13 @@ export const GeneralInformation: NextPageWithLayout = () => {
             </ControllerSelect>
           </div>
 
-          <textarea className={'w-full mt-9 bg-dark-300 text-light-100'} />
+          <FormTextarea
+            className={'mt-7'}
+            name={'aboutMe'}
+            label={'About Me'}
+            control={control}
+            placeholder={'Write about yourself'}
+          />
 
           <div className={'border-[1px] border-dark-300 my-7'} />
           <Button className={'ml-auto'}>
