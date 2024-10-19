@@ -49,9 +49,13 @@ export const MyProfile: NextPageWithLayout = () => {
         <div className={'w-full max-w-[730px]'}>
           <div className={'flex justify-between items-center mb-5'}>
             <Typography>{userMe?.data.userName ?? 'User name'}</Typography>
-            <Button variant={'secondary'} onClick={handlerClickRedirectSetting}>
-              <Typography variant={TypographyVariant.h3}>Profile Settings</Typography>
-            </Button>
+            {userMe?.data.id &&
+              router.query.id &&
+              userMe?.data.id === Number(router.query.id) && ( //являешься ли владельцем профиля
+                <Button variant={'secondary'} onClick={handlerClickRedirectSetting}>
+                  <Typography variant={TypographyVariant.h3}>Profile Settings</Typography>
+                </Button>
+              )}
           </div>
 
           <div className={'flex flex-row mb-7'}>
