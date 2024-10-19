@@ -17,6 +17,8 @@ import { NextPageWithLayout } from '@/pages/_app'
 import { useGeCitiesQuery, useGetCountriesQuery } from '@/features/userHub/api/geo/geoService'
 import { useDebounce } from '@/common/hooks'
 import { FormTextarea } from '@/common/components/ControllerTextarea'
+import Link from 'next/link'
+import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -38,8 +40,8 @@ const textFields = [
 export const GeneralInformation: NextPageWithLayout = () => {
   const { data: usersData, isLoading: isLoadingUserData } = useGetUsersMeQuery()
   const { data: countries } = useGetCountriesQuery()
-
   const { selectedDate } = useSelectedCalendar()
+
   const { handleSubmit, control, getValues, watch, reset } = useForm<FormType>({
     defaultValues: {
       userName: '',
@@ -55,6 +57,11 @@ export const GeneralInformation: NextPageWithLayout = () => {
   })
 
   const debounceSearch = useDebounce(watch('search'), 500)
+
+  const dateOfBirth = new Date(watch('dateOfBirth'))
+  const age = Math.floor(
+    (new Date().getTime() - dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
+  )
 
   const { data: citiesData, isLoading: isLoadingCities } = useGeCitiesQuery(
     {
@@ -120,6 +127,27 @@ export const GeneralInformation: NextPageWithLayout = () => {
             label={'Date of birth'}
             control={control}
             selected={selectedDate}
+            error={
+              age < 13 ? (
+                <div className={'flex'}>
+                  <Typography variant={TypographyVariant.small_text}>
+                    A user under 13 cannot create a profile.
+                  </Typography>
+                  <Typography
+                    className={'text-danger-500 ml-1'}
+                    variant={TypographyVariant.small_link}
+                  >
+                    <Link
+                      href={{ pathname: ROUTES_AUTH.PRIVACY_POLICY, query: { from: 'profile' } }}
+                    >
+                      Privacy Policy
+                    </Link>
+                  </Typography>
+                </div>
+              ) : (
+                ''
+              )
+            }
           />
 
           <div className={'flex flex-wrap justify-between mt-4'}>
