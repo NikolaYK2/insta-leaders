@@ -58,10 +58,13 @@ export const GeneralInformation: NextPageWithLayout = () => {
 
   const debounceSearch = useDebounce(watch('search'), 500)
 
-  const dateOfBirth = new Date(watch('dateOfBirth'))
-  const age = Math.floor(
-    (new Date().getTime() - dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
-  )
+  const dateOfBirth = watch('dateOfBirth')
+  const isValidDate = dateOfBirth && !isNaN(new Date(dateOfBirth).getTime())
+  const age = isValidDate
+    ? Math.floor(
+        (new Date().getTime() - new Date(dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000)
+      )
+    : null
 
   const { data: citiesData, isLoading: isLoadingCities } = useGeCitiesQuery(
     {
@@ -128,13 +131,14 @@ export const GeneralInformation: NextPageWithLayout = () => {
             control={control}
             selected={selectedDate}
             error={
-              age < 13 ? (
-                <div className={'flex'}>
+              age !== null &&
+              age < 13 && (
+                <div className="flex">
                   <Typography variant={TypographyVariant.small_text}>
                     A user under 13 cannot create a profile.
                   </Typography>
                   <Typography
-                    className={'text-danger-500 ml-1'}
+                    className="text-danger-500 ml-1"
                     variant={TypographyVariant.small_link}
                   >
                     <Link
@@ -144,8 +148,6 @@ export const GeneralInformation: NextPageWithLayout = () => {
                     </Link>
                   </Typography>
                 </div>
-              ) : (
-                ''
               )
             }
           />
