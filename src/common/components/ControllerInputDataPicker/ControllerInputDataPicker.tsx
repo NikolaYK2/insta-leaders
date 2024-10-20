@@ -26,7 +26,7 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
     name,
   })
 
-  const { localValue, handleSelect } = useDebounceValueHandler({
+  const { valueDebounce, handleSelect } = useDebounceValueHandler({
     initialValue: selected,
     onChange,
     delay: 500,
@@ -34,7 +34,7 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
 
   return (
     <InputDataPicker
-      selected={localValue} // Мгновенное обновление UI с локальным состоянием
+      selected={valueDebounce} // Мгновенное обновление UI с локальным состоянием
       onSelect={handleSelect}
       labelInput={label}
       error={error}
