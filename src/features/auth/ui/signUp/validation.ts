@@ -13,7 +13,7 @@ export const signUpSchema = z
       .min(6, 'Minimum number of characters 6')
       .max(20, 'Maximum number of characters 20'),
     passwordConfirmation: z.string(),
-    agreesToTOS: z.literal(true, {
+    agreesToTOS: z.boolean().refine(val => val, {
       message: 'You have to accept our terms of service',
     }),
   })
