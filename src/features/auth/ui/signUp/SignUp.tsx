@@ -32,6 +32,13 @@ export const SignUp: NextPageWithLayout = () => {
     formState: { errors, isLoading, isValid },
   } = useForm<SignUpFields>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      userName: '',
+      password: '',
+      passwordConfirmation: '',
+      agreesToTOS: false,
+      email: '',
+    },
   })
   // Не нужно так как компоненты контролируемые
   // const {
