@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 import { DataType, InputDataPicker, TextFieldProps } from '@nikolajk2/lib-insta-leaders'
-import { useDebounce } from '@/common/hooks'
+import { useDebounceValueHandler } from '@/common/hooks/useDebounceValueHandler'
 
 type ControllerInputDataPickerProps<TFieldValues extends FieldValues> =
   UseControllerProps<TFieldValues> &
@@ -26,32 +26,15 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
     name,
   })
 
-  // Локальное состояние для управления выбранной датой
-  const [localSelected, setLocalSelected] = useState<DataType>(selected)
-
-  // Используем хук useDebounce, чтобы уменьшить частоту обновлений выбранного значения в форме
-  const debouncedSelected = useDebounce(localSelected, 500)
-
-  // Синхронизируем локальное состояние с пропсами, когда они изменяются
-  useEffect(() => {
-    setLocalSelected(selected)
-  }, [selected])
-
-  // Обновляем значение в форме через дебаунс
-  useEffect(() => {
-    if (debouncedSelected) {
-      onChange(debouncedSelected)
-    }
-  }, [debouncedSelected, onChange])
-
-  // Обработчик изменения выбранной даты, который немедленно обновляет локальное состояние
-  const handleSelect = (date: DataType) => {
-    setLocalSelected(date)
-  }
+  const { localValue, handleSelect } = useDebounceValueHandler({
+    initialValue: selected,
+    onChange,
+    delay: 500,
+  })
 
   return (
     <InputDataPicker
-      selected={localSelected} // Мгновенное обновление UI с локальным состоянием
+      selected={localValue} // Мгновенное обновление UI с локальным состоянием
       onSelect={handleSelect}
       labelInput={label}
       error={error}
