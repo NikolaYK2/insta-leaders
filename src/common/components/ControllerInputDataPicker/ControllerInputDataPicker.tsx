@@ -1,7 +1,7 @@
 import React from 'react'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 import { DataType, InputDataPicker, TextFieldProps } from '@nikolajk2/lib-insta-leaders'
-import { useDebounceValueHandler } from '@/common/hooks/useDebounceValueHandler'
+import { useDebounceValueHandler } from '@/common/hooks'
 
 type ControllerInputDataPickerProps<TFieldValues extends FieldValues> =
   UseControllerProps<TFieldValues> &
