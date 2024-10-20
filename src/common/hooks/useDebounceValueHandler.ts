@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from 'react'
 // Определяем тип возвращаемого значения хука, который включает
 // локальное значение состояния и функцию для обработки изменений значения
 type UseDebounceValueHandlerResult<T> = {
-  localValue: T
+  valueDebounce: T
   handleSelect: (value: T) => void
 }
 // Определяем тип параметров, которые принимает хук
@@ -19,8 +19,7 @@ export const useDebounceValueHandler = <T>({
   delay, // Задержка дебаунса в миллисекундах
 }: UseDebounceValueHandlerParams<T>): UseDebounceValueHandlerResult<T> => {
   // Состояние для отслеживания текущего значения
-  const [localValue, setLocalValue] = useState<T>(initialValue)
-
+  const [valueDebounce, setValueDebounce] = useState<T>(initialValue)
   // useRef для хранения таймера дебаунса, чтобы можно было его очистить при необходимости
   const debounceTimer = useRef<number | null>(null)
 
@@ -28,7 +27,7 @@ export const useDebounceValueHandler = <T>({
   const handleSelect = useCallback(
     (value: T) => {
       // Обновляем локальное состояние немедленно
-      setLocalValue(value)
+      setValueDebounce(value)
 
       // Если таймер уже существует, очищаем его, чтобы избежать выполнения предыдущей отложенной функции
       if (debounceTimer.current) {
@@ -44,5 +43,5 @@ export const useDebounceValueHandler = <T>({
   )
 
   // Возвращаем текущее значение и функцию handleSelect
-  return { localValue, handleSelect }
+  return { valueDebounce, handleSelect }
 }
