@@ -42,7 +42,7 @@ export const baseQueryWithReauth: BaseQueryFn<
           extraOptions
         )) as any
         if (refreshResult.data) {
-          LocalStorageUtil.setValue('accessToken', refreshResult.data.accessToken)
+          LocalStorageUtil.setValue('accessToken', refreshResult.data.data.accessToken)
           // retry the initial query
           result = await baseQuery(args, api, extraOptions)
         } else {

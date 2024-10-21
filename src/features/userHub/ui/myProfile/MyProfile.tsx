@@ -44,9 +44,9 @@ export const MyProfile: NextPageWithLayout = () => {
     return <div>Loading...</div>
   }
 
-  if (isErrorUserMe) {
-    return <div>Error loading data. Please try again later.</div>
-  }
+  // if (isErrorUserMe) {
+  //   return <div>Error loading data. Please try again later.</div>
+  // }
 
   const handlerClickRedirectSetting = () => {
     router.push(`${ROUTES_APP.PROFILE}${ROUTES_APP.PROFILE_SETTING}`)
