@@ -7,7 +7,7 @@ export const ROUTES_AUTH = {
   RECOVERY_PASSWORD: '/passwordRecovery',
   CREATE_NEW_PASSWORD: '/createNewPassword',
   TERMS_OF_SERVICE: '/termsOfService',
-  PRIVACY_POLICY: '/termsOfService',
+  PRIVACY_POLICY: '/privacyPolicy',
 }
 
 export const ROUTES_APP = {

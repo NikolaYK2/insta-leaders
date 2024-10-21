@@ -20,6 +20,8 @@ import { NextPageWithLayout } from '@/pages/_app'
 import { useGeCitiesQuery, useGetCountriesQuery } from '@/features/userHub/api/geo/geoService'
 import { useDebounce } from '@/common/hooks'
 import { FormTextarea } from '@/common/components/ControllerTextarea'
+import Link from 'next/link'
+import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -29,7 +31,7 @@ const profileSchema = z.object({
   countryCode: z.string().optional(),
   cityId: z.string().optional(),
   aboutMe: z.string().max(200, 'max litter 200'),
-  search: z.string().max(200, 'max litter 200').optional(),
+  search: z.string().max(200, 'max litter 200'),
 })
 type FormType = z.infer<typeof profileSchema>
 const textFields = [
@@ -44,6 +46,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
   const [changeProfile, { data, isError, isLoading }] = useUpdateProfileMutation()
 
   const { selectedDate } = useSelectedCalendar()
+
   const { handleSubmit, control, getValues, watch, reset } = useForm<FormType>({
     defaultValues: {
       userName: '',
@@ -59,6 +62,14 @@ export const GeneralInformation: NextPageWithLayout = () => {
   })
 
   const debounceSearch = useDebounce(watch('search'), 500)
+
+  const dateOfBirth = watch('dateOfBirth')
+  const isValidDate = dateOfBirth && !isNaN(new Date(dateOfBirth).getTime())
+  const age = isValidDate
+    ? Math.floor(
+        (new Date().getTime() - new Date(dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000)
+      )
+    : null
 
   const { data: citiesData, isLoading: isLoadingCities } = useGeCitiesQuery(
     {
@@ -152,6 +163,26 @@ export const GeneralInformation: NextPageWithLayout = () => {
             label={'Date of birth'}
             control={control}
             selected={selectedDate}
+            error={
+              age !== null &&
+              age < 13 && (
+                <div className="flex">
+                  <Typography variant={TypographyVariant.small_text}>
+                    A user under 13 cannot create a profile.
+                  </Typography>
+                  <Typography
+                    className="text-danger-500 ml-1"
+                    variant={TypographyVariant.small_link}
+                  >
+                    <Link
+                      href={{ pathname: ROUTES_AUTH.PRIVACY_POLICY, query: { from: 'profile' } }}
+                    >
+                      Privacy Policy
+                    </Link>
+                  </Typography>
+                </div>
+              )
+            }
           />
 
           <div className={'flex flex-wrap justify-between mt-4'}>
