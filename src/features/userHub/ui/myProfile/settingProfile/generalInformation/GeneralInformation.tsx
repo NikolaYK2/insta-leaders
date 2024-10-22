@@ -30,7 +30,7 @@ const profileSchema = z.object({
   dateOfBirth: z.any().optional(),
   countryCode: z.string().optional(),
   cityId: z.string().optional(),
-  aboutMe: z.string().max(200, 'max litter 200'),
+  aboutMe: z.string().max(200, 'max litter 200').min(1, 'min litter 1'),
   search: z.string().max(200, 'max litter 200'),
 })
 type FormType = z.infer<typeof profileSchema>
@@ -88,30 +88,16 @@ export const GeneralInformation: NextPageWithLayout = () => {
         userName: data.userName,
         firstName: data.firstName,
         lastName: data.lastName,
-        dateOfBirth: '2000-09-29T09:18:40.523Z',
+        dateOfBirth: new Date(data.dateOfBirth).toISOString(),
+        aboutMe: data.aboutMe,
         countryCode: data.countryCode || '',
-        cityId: 1,
-        aboutMe: data.aboutMe || '',
+        cityId: Number(data.cityId),
       }
       await changeProfile(test)
     } catch (e) {
       console.log(e)
     }
   })
-
-  // const onSubmit: SubmitHandler<FormType> = data => {
-  //   console.log(data)
-  //   try {
-  //     await changeProfile({ ...data })
-  //       .unwrap()
-  //       .then(data => {
-  //         LocalStorageUtil.setValue('accessToken', data.data.accessToken)
-  //         router.push(ROUTES_APP.CREATE)
-  //       })
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
 
   useEffect(() => {
     if (usersData) {
