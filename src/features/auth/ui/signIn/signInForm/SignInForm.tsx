@@ -1,18 +1,14 @@
 import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
-import { useLoginMutation } from '@/features/auth/api/authService'
-
-import { ROUTES_APP, ROUTES_AUTH } from '@/appRoot/routes/routes'
+import { useSignInMutation } from '@/features/auth/api/authService'
+import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 import Link from 'next/link'
 import { FormInput } from '@/common/components'
-import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 import { LoginFields, LoginSchema } from '@/features/auth/ui/signIn/SignInForm/signInFormSchema'
 
 export const SignInForm = () => {
-  const [signIn, { data, isError, isLoading }] = useLoginMutation()
-  const router = useRouter()
+  const [signIn, { data, isError, isLoading, error }] = useSignInMutation()
 
   const {
     handleSubmit,
@@ -21,16 +17,24 @@ export const SignInForm = () => {
   } = useForm<LoginFields>({ resolver: zodResolver(LoginSchema) })
 
   const onSubmit = handleSubmit(async data => {
-    try {
-      await signIn(data)
-        .unwrap()
-        .then(data => {
-          LocalStorageUtil.setValue('accessToken', data.data.accessToken)
-          router.push(ROUTES_APP.CREATE)
-        })
-    } catch (e) {
-      console.log(e)
-    }
+    // try {
+    //   await signIn(data)
+    //     .unwrap()
+    //     .then(data => {
+    //       LocalStorageUtil.setValue('accessToken', data.data.accessToken)
+    //       LocalStorageUtil.setValue('userId', data.data.user.id)
+    //       // const id = data.data.user.id
+    //       const payload = data.data.accessToken.split('.')[1]
+    //       const id = JSON.parse(atob(payload)).userId
+    //       Router.push(ROUTES_APP.PROFILE + `/${id}`)
+    //     })
+    //     .catch(err => console.log(err.data.message))
+    // } catch (e) {
+    //   console.log(e)
+    // }
+    signIn(data)
+      .unwrap()
+      .catch(err => console.log(err))
   })
 
   return (
