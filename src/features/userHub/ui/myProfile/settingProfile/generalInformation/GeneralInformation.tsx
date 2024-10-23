@@ -198,15 +198,23 @@ export const GeneralInformation: NextPageWithLayout = () => {
                   search
                   name={'search'}
                   control={control}
-                  className={'sticky top-0 z-50 bg-dark-300'}
+                  className={'sticky top-0 left-0 z-50 bg-dark-300 w-[356px]'}
                 />
               )}
               {cities ? (
-                cities.map(city => (
-                  <SelectItem className={'w-[355px]'} key={city.id} value={String(city.id)}>
-                    {city.name}
-                  </SelectItem>
-                ))
+                <>
+                  {cities.length < 1 ? (
+                    <SelectItem value={'not city'} className={'px-3 py-[6px]'} disabled>
+                      not country
+                    </SelectItem>
+                  ) : (
+                    cities.map(city => (
+                      <SelectItem className={'w-[355px]'} key={city.id} value={String(city.id)}>
+                        {city.name}
+                      </SelectItem>
+                    ))
+                  )}
+                </>
               ) : (
                 <SelectItem className={'w-[356px]'} key={'not found'} value={'not found'} disabled>
                   select country first
