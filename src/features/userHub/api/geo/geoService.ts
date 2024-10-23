@@ -1,6 +1,6 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import { Res } from '@/features/userHub/api/user/userServiceType'
-import { Cities, CitiesParams, Countries } from '@/features/userHub/api/geo/GeoServiceType'
+import { Citi, Cities, CitiesParams, Countries } from '@/features/userHub/api/geo/GeoServiceType'
 
 const GEO = 'v1/geo/countries'
 const geoService = instaLeadersApi.injectEndpoints({
@@ -16,7 +16,12 @@ const geoService = instaLeadersApi.injectEndpoints({
         url: `${GEO}/${countryCode}/cities`,
       }),
     }),
+    geCiti: builder.query<Res<Citi>, { countryCode: string; cityId: string }>({
+      query: ({ countryCode, cityId }) => ({
+        url: `${GEO}/${countryCode}/cities/${cityId}`,
+      }),
+    }),
   }),
 })
 
-export const { useGetCountriesQuery, useGeCitiesQuery } = geoService
+export const { useGetCountriesQuery, useGeCitiesQuery, useGeCitiQuery } = geoService

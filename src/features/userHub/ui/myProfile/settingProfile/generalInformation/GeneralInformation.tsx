@@ -17,7 +17,11 @@ import {
   useUpdateProfileMutation,
 } from '@/features/userHub/api/user/userService'
 import { NextPageWithLayout } from '@/pages/_app'
-import { useGeCitiesQuery, useGetCountriesQuery } from '@/features/userHub/api/geo/geoService'
+import {
+  useGeCitiesQuery,
+  useGeCitiQuery,
+  useGetCountriesQuery,
+} from '@/features/userHub/api/geo/geoService'
 import { useDebounce } from '@/common/hooks'
 import { FormTextarea } from '@/common/components/ControllerTextarea'
 import Link from 'next/link'
@@ -41,10 +45,10 @@ const textFields = [
 ] as const
 
 export const GeneralInformation: NextPageWithLayout = () => {
-  const { data: usersData, isLoading: isLoadingUserData } = useGetUsersMeQuery()
+  const { data: userMe, isLoading: loadingUserMe } = useGetUsersMeQuery()
   const { data: countries } = useGetCountriesQuery()
-  const [changeProfile, { data, isError, isLoading }] = useUpdateProfileMutation()
 
+  const [changeProfile, { data, isError, isLoading }] = useUpdateProfileMutation()
   const { selectedDate } = useSelectedCalendar()
 
   const { handleSubmit, control, getValues, watch, reset } = useForm<FormType>({
@@ -60,6 +64,14 @@ export const GeneralInformation: NextPageWithLayout = () => {
     },
     resolver: zodResolver(profileSchema),
   })
+  console.log(userMe, 'me')
+  const { data: citi, isLoading: loadingCiti } = useGeCitiQuery(
+    {
+      countryCode: userMe?.data.countryCode ?? '',
+      cityId: String(userMe?.data.cityId) ?? '',
+    },
+    { skip: !userMe }
+  )
 
   const debounceSearch = useDebounce(watch('search'), 500)
 
@@ -81,8 +93,10 @@ export const GeneralInformation: NextPageWithLayout = () => {
     { skip: !getValues('countryCode') }
   )
   const cities = citiesData?.data.cities
-
+  console.log(userMe, 'userMe')
+  console.log(citi, 'citi')
   const onSubmit = handleSubmit(async data => {
+    console.log(data)
     try {
       const test = {
         userName: data.userName,
@@ -98,23 +112,22 @@ export const GeneralInformation: NextPageWithLayout = () => {
       console.log(e)
     }
   })
-
   useEffect(() => {
-    if (usersData) {
+    if (userMe) {
       reset({
-        aboutMe: usersData?.data.aboutMe ?? '',
-        cityId: String(usersData?.data.cityId) ?? '',
-        countryCode: usersData?.data.countryCode ?? '',
-        dateOfBirth: usersData?.data.dateOfBirth ?? '',
-        firstName: usersData?.data.firstName ?? '',
+        aboutMe: userMe?.data.aboutMe ?? '',
+        cityId: citi?.data.name ?? '',
+        countryCode: userMe?.data.countryCode ?? '',
+        dateOfBirth: userMe?.data.dateOfBirth ?? '',
+        firstName: userMe?.data.firstName ?? '',
         search: '',
-        lastName: usersData?.data.lastName ?? '',
-        userName: usersData?.data.userName ?? '',
+        lastName: userMe?.data.lastName ?? '',
+        userName: userMe?.data.userName ?? '',
       })
     }
-  }, [usersData, reset])
-
-  if (isLoadingUserData) {
+  }, [userMe, reset, citi])
+  console.log(getValues(), 'form')
+  if (loadingUserMe || loadingCiti) {
     return <div>Loading...</div>
   }
   return (
