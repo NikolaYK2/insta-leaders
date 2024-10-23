@@ -10,6 +10,7 @@ import {
   Typography,
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
+import { AddProfilePhoto } from '../addProfileFoto/AddProfilePhoto'
 
 const textFields = [{ label: 'Username*' }, { label: 'First Name*' }, { label: 'Last Name*' }]
 export const GeneralInformation = () => {
@@ -19,14 +20,15 @@ export const GeneralInformation = () => {
     <Page titleMeta={'General information'} descriptionMeta={'info'} className={'px-0'}>
       <div className={'flex justify-between'}>
         <div className={'border-2 border-red-800 mr-1'}>
-          <div
+       <AddProfilePhoto />
+          {/* <div
             className={
               'w-[192px] h-[192px] border-2 border-cyan-50 rounded-full mb-[30px] mt-[25px]'
             }
           ></div>
           <Button variant={'outline'}>
             <Typography variant={TypographyVariant.h3}>Add a Profile Photo</Typography>
-          </Button>
+          </Button> */}
         </div>
         <form className={'flex flex-col max-w-[740px] w-full'}>
           {textFields.map(field => (
