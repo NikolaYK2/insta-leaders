@@ -1,6 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'sociable-people.storage.yandexcloud.net',
+        pathname: '/**'//** - означает что будет какая угодна картинка
+      },
+      {
+        protocol: 'https',
+        hostname: 'storage.yandexcloud.net',
+        pathname: '/**'//** - означает что будет какая угодна картинка
+      }
+    ]
+  },
   async redirects() {
     return [
       {
