@@ -12,6 +12,8 @@ import {
   SendLinkResponse,
 } from '@/features/auth/api/authService.types'
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
+import { ROUTES_APP } from '@/appRoot/routes/routes'
+import Router from 'next/router'
 
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
@@ -43,12 +45,28 @@ const authService = instaLeadersApi.injectEndpoints({
         body,
       }),
     }),
-    login: builder.mutation<LoginResponse, LoginArgs>({
+    signIn: builder.mutation<LoginResponse, LoginArgs>({
       query: arg => {
         return {
           url: `${AUTH}/login`,
           method: 'POST',
           body: arg,
+        }
+      },
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+
+          if (!data || !data.data.accessToken) return
+
+          LocalStorageUtil.setValue('accessToken', data.data.accessToken)
+          LocalStorageUtil.setValue('userId', data.data.user.id)
+          const payload = data.data.accessToken.split('.')[1]
+          const id = JSON.parse(atob(payload)).userId
+
+          await Router.push(ROUTES_APP.PROFILE + `/${id}`)
+        } catch (error) {
+          console.error('Error during query fulfillment:', error)
         }
       },
     }),
@@ -110,7 +128,7 @@ export const {
   useResendEmailMutation,
   useLogOutMutation,
   useCreateNewPasswordMutation,
-  useLoginMutation,
+  useSignInMutation,
   useAuthByGithubQuery,
   useForgotPasswordMutation,
   useAuthByGoogleQuery,

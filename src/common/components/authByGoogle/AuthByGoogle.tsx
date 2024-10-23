@@ -12,7 +12,7 @@ export const AuthByGoogle = () => {
   const redirect_uri = 'http://localhost:3000/google' // Локальный URI, используемый для разработки, его нужно заменить на production URI при развертывании
 
   // Генерируем уникальное значение для защиты от CSRF-атак
-  const state = crypto.randomUUID() // Используем встроенный метод crypto.randomUUID(), чтобы создать уникальный токен
+  const state = process.env.NEXT_PUBLIC_GOOGLE_STATE // Используем встроенный метод crypto.randomUUID(), чтобы создать уникальный токен
 
   // Сохраняем сгенерированный токен в локальное хранилище, чтобы использовать его позже для проверки на сервере
   LocalStorageUtils.setValue('latestCSRFToken', state) // Используем утилиту для записи токена в LocalStorage

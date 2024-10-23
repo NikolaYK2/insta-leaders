@@ -13,7 +13,7 @@ const tabsTrigger: TabsTrigger[] = [
   { value: 'Account Management', title: 'Account Management', component: 'Account Management' },
   { value: 'My payments', title: 'My payments', component: 'My payments' },
 ]
-export const settingProfile: NextPageWithLayout = () => {
+export const SettingProfile: NextPageWithLayout = () => {
   return (
     <Page
       titleMeta={'Setting profile'}

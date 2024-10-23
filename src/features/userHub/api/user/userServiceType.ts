@@ -1,3 +1,4 @@
+//common-----------
 export type Res<T> = {
   status: string
   code: number
@@ -14,14 +15,17 @@ export type UserData = {
   countryCode: string
   cityId: number
   aboutMe: string
+  avatar: string
 }
-
-export type Avatar = {
-  avatarUrl: string
+// posts----------------
+export type PostsDataPhotos = {
+  id: number
+  url: string
 }
-
-export type DeleteAvatartResponse = {
-  status: string
-  code: number
-  data: null
+export type PostsData = {
+  id: number
+  text: string
+  location: string
+  userId: number
+  photos: PostsDataPhotos[]
 }
