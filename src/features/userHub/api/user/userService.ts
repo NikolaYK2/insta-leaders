@@ -11,12 +11,14 @@ const userService = instaLeadersApi.injectEndpoints({
     }),
 
     getAvatar: builder.query<Res<Avatar>, void>({
+      // providesTags: ['User'],
       query: () => ({
         method: 'GET',
         url: `${USERS}/me/avatar`,
       }),
     }),
     uploadAvatar: builder.mutation<Res<Avatar>, FormData>({
+      // invalidatesTags: ['User'],
       query: (formData: FormData) => ({
         body: formData,
         method: 'POST',
