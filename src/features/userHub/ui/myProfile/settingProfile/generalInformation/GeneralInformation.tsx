@@ -20,13 +20,14 @@ import {
 import { NextPageWithLayout } from '@/pages/_app'
 import {
   useGeCitiesQuery,
-  useGeCitiQuery,
+  useGeCityQuery,
   useGetCountriesQuery,
 } from '@/features/userHub/api/geo/geoService'
 import { useDebounce } from '@/common/hooks'
 import { FormTextarea } from '@/common/components/ControllerTextarea'
 import Link from 'next/link'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
+import { deepNotEqual } from '@/utils/deepNotEqual'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -39,6 +40,7 @@ const profileSchema = z.object({
   search: z.string().max(200, 'max litter 200'),
 })
 type FormType = z.infer<typeof profileSchema>
+// Определение текстовых полей для формы с метками, именами и подсказками
 const textFields = [
   { label: 'User Name', name: 'userName', placeholder: 'Your nickname.' },
   { label: 'First Name', name: 'firstName', placeholder: 'Your name' },
@@ -50,6 +52,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
   const { data: countries } = useGetCountriesQuery()
 
   const [changeProfile, { data, isError, isLoading }] = useUpdateProfileMutation()
+  // Получение выбранной даты с помощью кастомного хука
   const { selectedDate } = useSelectedCalendar()
 
   const { handleSubmit, control, getValues, watch, reset } = useForm<FormType>({
@@ -66,7 +69,8 @@ export const GeneralInformation: NextPageWithLayout = () => {
     resolver: zodResolver(profileSchema),
   })
 
-  const { data: city, isLoading: loadingCity } = useGeCitiQuery(
+  // Получение данных о городе на основе страны и ID города пользователя, пропуск, если countryCode недоступен
+  const { data: city, isLoading: loadingCity } = useGeCityQuery(
     {
       countryCode: userMe?.data.countryCode ?? '',
       cityId: String(userMe?.data.cityId) ?? '',
@@ -74,8 +78,10 @@ export const GeneralInformation: NextPageWithLayout = () => {
     { skip: !getValues('countryCode') }
   )
 
+  // Дебаунс ввода для поиска, чтобы предотвратить избыточные вызовы API
   const debounceSearch = useDebounce(watch('search'), 500)
 
+  // Отслеживание ввода даты рождения для вычисления возраста, если дата валидна
   const dateOfBirth = watch('dateOfBirth')
   const isValidDate = dateOfBirth && !isNaN(new Date(dateOfBirth).getTime())
   const age = isValidDate
@@ -84,6 +90,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
       )
     : null
 
+  // Получение списка городов на основе выбранной страны и поискового термина, пропуск, если countryCode недоступен
   const { data: citiesData, isLoading: isLoadingCities } = useGeCitiesQuery(
     {
       pageSize: 10,
@@ -96,38 +103,42 @@ export const GeneralInformation: NextPageWithLayout = () => {
   const cities = citiesData?.data.cities
 
   const onSubmit = handleSubmit(async data => {
-    console.log(data)
-    try {
-      const test = {
-        userName: data.userName,
-        firstName: data.firstName,
-        lastName: data.lastName,
+    if (userMe) {
+      const { search, ...restData } = data // Исключение поля поиска из данных для отправки
+      const transformedData = {
+        ...restData,
         dateOfBirth: new Date(data.dateOfBirth).toISOString(),
-        aboutMe: data.aboutMe,
-        countryCode: data.countryCode || '',
+        countryCode: data.countryCode ?? '',
         cityId: Number(data.cityId),
       }
-      await changeProfile(test)
-    } catch (e) {
-      console.log(e)
+
+      // Извлечение полей, которые не должны обновляться, из userMe
+      const { avatar, id, email, ...restUserMe } = userMe.data
+      const initialValues = {
+        ...restUserMe,
+        cityId: Number(userMe.data.cityId),
+        dateOfBirth: userMe.data.dateOfBirth,
+      }
+
+      try {
+        // Обновление профиля только если есть изменения между начальными и текущими значениями
+        if (deepNotEqual(transformedData, initialValues)) await changeProfile(transformedData)
+      } catch (e) {
+        console.log(e)
+      }
     }
   })
+  // Сброс значений формы при изменении данных userMe
   useEffect(() => {
     if (userMe) {
       reset({
-        aboutMe: userMe?.data.aboutMe ?? '',
-        cityId: String(userMe?.data.cityId) ?? '',
-        countryCode: userMe?.data.countryCode ?? '',
-        dateOfBirth: formatDate({ date: userMe?.data.dateOfBirth, dateFormat: 'MM.dd.yyy' }) ?? '',
-        firstName: userMe?.data.firstName ?? '',
+        ...userMe.data,
         search: city?.data.name,
-        lastName: userMe?.data.lastName ?? '',
-        userName: userMe?.data.userName ?? '',
+        cityId: String(userMe.data.cityId),
       })
     }
   }, [userMe, reset, city])
 
-  console.log(userMe, 'me')
   if (loadingUserMe || loadingCity) {
     return <div>Loading...</div>
   }
@@ -163,6 +174,10 @@ export const GeneralInformation: NextPageWithLayout = () => {
             label={'Date of birth'}
             control={control}
             selected={selectedDate}
+            defaultValue={formatDate({
+              date: userMe?.data.dateOfBirth ?? '',
+              dateFormat: 'MM.dd.yyy',
+            })}
             error={
               age !== null &&
               age < 13 && (

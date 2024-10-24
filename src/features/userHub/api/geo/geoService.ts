@@ -16,7 +16,7 @@ const geoService = instaLeadersApi.injectEndpoints({
         url: `${GEO}/${countryCode}/cities`,
       }),
     }),
-    geCiti: builder.query<Res<Citi>, { countryCode: string; cityId: string }>({
+    geCity: builder.query<Res<Citi>, { countryCode: string; cityId: string }>({
       query: ({ countryCode, cityId }) => ({
         url: `${GEO}/${countryCode}/cities/${cityId}`,
       }),
@@ -24,4 +24,4 @@ const geoService = instaLeadersApi.injectEndpoints({
   }),
 })
 
-export const { useGetCountriesQuery, useGeCitiesQuery, useGeCitiQuery } = geoService
+export const { useGetCountriesQuery, useGeCitiesQuery, useGeCityQuery } = geoService
