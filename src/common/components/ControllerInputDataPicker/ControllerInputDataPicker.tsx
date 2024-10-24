@@ -18,9 +18,10 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
   label,
   error,
   disabled,
+  defaultValue,
 }: ControllerInputDataPickerProps<TFieldValues>) => {
   const {
-    field: { onChange, value },
+    field: { onChange },
   } = useController({
     control,
     name,
@@ -37,7 +38,7 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
       selected={valueDebounce} // Мгновенное обновление UI с локальным состоянием
       onSelect={handleSelect}
       labelInput={label}
-      defaultValue={value}
+      defaultValue={defaultValue}
       error={error}
       disabled={disabled}
     />
