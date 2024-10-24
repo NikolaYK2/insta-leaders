@@ -6,6 +6,7 @@ import {
   Typography,
   TypographyVariant,
   useSelectedCalendar,
+  formatDate,
 } from '@nikolajk2/lib-insta-leaders'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -64,13 +65,13 @@ export const GeneralInformation: NextPageWithLayout = () => {
     },
     resolver: zodResolver(profileSchema),
   })
-  console.log(userMe, 'me')
-  const { data: citi, isLoading: loadingCiti } = useGeCitiQuery(
+
+  const { data: city, isLoading: loadingCity } = useGeCitiQuery(
     {
       countryCode: userMe?.data.countryCode ?? '',
       cityId: String(userMe?.data.cityId) ?? '',
     },
-    { skip: !userMe }
+    { skip: !getValues('countryCode') }
   )
 
   const debounceSearch = useDebounce(watch('search'), 500)
@@ -93,8 +94,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
     { skip: !getValues('countryCode') }
   )
   const cities = citiesData?.data.cities
-  console.log(userMe, 'userMe')
-  console.log(citi, 'citi')
+
   const onSubmit = handleSubmit(async data => {
     console.log(data)
     try {
@@ -116,18 +116,19 @@ export const GeneralInformation: NextPageWithLayout = () => {
     if (userMe) {
       reset({
         aboutMe: userMe?.data.aboutMe ?? '',
-        cityId: citi?.data.name ?? '',
+        cityId: String(userMe?.data.cityId) ?? '',
         countryCode: userMe?.data.countryCode ?? '',
-        dateOfBirth: userMe?.data.dateOfBirth ?? '',
+        dateOfBirth: formatDate({ date: userMe?.data.dateOfBirth, dateFormat: 'MM.dd.yyy' }) ?? '',
         firstName: userMe?.data.firstName ?? '',
-        search: '',
+        search: city?.data.name,
         lastName: userMe?.data.lastName ?? '',
         userName: userMe?.data.userName ?? '',
       })
     }
-  }, [userMe, reset, citi])
-  console.log(getValues(), 'form')
-  if (loadingUserMe || loadingCiti) {
+  }, [userMe, reset, city])
+
+  console.log(userMe, 'me')
+  if (loadingUserMe || loadingCity) {
     return <div>Loading...</div>
   }
   return (
@@ -184,16 +185,16 @@ export const GeneralInformation: NextPageWithLayout = () => {
             }
           />
 
-          <div className={'flex flex-wrap justify-between mt-4'}>
+          <div className={'flex flex-wrap justify-between'}>
             <ControllerSelect
               label={'Select your country'}
-              className={'max-w-[358px] w-full'}
+              className={'max-w-[358px] w-full first:mt-3'}
               name={'countryCode'}
               control={control}
               placeholder={'Country'}
             >
               {countries?.data?.countries?.map(country => (
-                <SelectItem className={'w-[356px] '} key={country.code} value={country.code}>
+                <SelectItem className={'w-[356px]'} key={country.code} value={country.code}>
                   {country.name}
                 </SelectItem>
               ))}
@@ -201,10 +202,11 @@ export const GeneralInformation: NextPageWithLayout = () => {
 
             <ControllerSelect
               label={'Select your city'}
-              className={'max-w-[358px] w-full relative'}
+              className={'max-w-[358px] w-full relative last:mt-3'}
               name={'cityId'}
               control={control}
               placeholder={'City'}
+              value={watch('cityId') || city?.data?.name || ''}
             >
               {cities && (
                 <FormInput
