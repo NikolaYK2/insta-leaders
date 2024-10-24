@@ -5,7 +5,7 @@ import { useDebounceValueHandler } from '@/common/hooks'
 
 type ControllerInputDataPickerProps<TFieldValues extends FieldValues> =
   UseControllerProps<TFieldValues> &
-    Omit<TextFieldProps, 'id' | 'onChange'> & {
+    Omit<TextFieldProps, 'id' | 'onChange' | 'value'> & {
       error?: React.ReactNode
       selected: DataType
       label: string
@@ -20,7 +20,7 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
   disabled,
 }: ControllerInputDataPickerProps<TFieldValues>) => {
   const {
-    field: { onChange },
+    field: { onChange, value },
   } = useController({
     control,
     name,
@@ -37,6 +37,7 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
       selected={valueDebounce} // Мгновенное обновление UI с локальным состоянием
       onSelect={handleSelect}
       labelInput={label}
+      defaultValue={value}
       error={error}
       disabled={disabled}
     />
