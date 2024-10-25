@@ -9,6 +9,7 @@ import {
   ModalTitle,
   Typography,
   TypographyVariant,
+  DynamicIcon,
 } from '@nikolajk2/lib-insta-leaders'
 
 import { cn } from '@/common/utils/cn'
@@ -26,8 +27,11 @@ export const EmailSent = ({ children, className = '', callback, ...props }: Emai
   return (
     <Modal {...props}>
       <ModalContent className={clsx('max-w-[378px]', className)}>
-        <ModalTitle>
+        <ModalTitle className={'flex justify-between'}>
           <Typography variant={TypographyVariant.h1}>Email sent</Typography>
+          <ModalClose asChild>
+            <DynamicIcon iconId={'Close'} width={28} height={28} />
+          </ModalClose>
         </ModalTitle>
         <ModalContentItem>
           <ModalDescription asChild>
