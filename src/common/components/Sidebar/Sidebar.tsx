@@ -16,7 +16,7 @@ export const Sidebar: NextPageWithLayout = () => {
   }, [])
 
   return (
-    <div className="flex flex-col align-sub max-w-[156px] w-full text-white border-r-[1px] border-dark-300">
+    <div className="flex flex-col align-sub max-w-[156px] mr-[24px] w-full text-white border-r-[1px] border-dark-300">
       <Link href={ROUTES_APP.HOME}>Home</Link>
       <Link href={ROUTES_APP.CREATE}>Create</Link>
       <Link href={`${ROUTES_APP.PROFILE}/${userId}`}>My Profile</Link>
