@@ -10,7 +10,7 @@ type PageProps = {
 }
 export const Page = ({ titleMeta, descriptionMeta, className, children }: PageProps) => {
   return (
-    <section className={cn('pt-[36px] pl-[24px]', className)}>
+    <section className={cn('flex flex-col pt-[36px] w-full', className)}>
       <HeadersMeta title={titleMeta} description={descriptionMeta} />
       {children}
     </section>
