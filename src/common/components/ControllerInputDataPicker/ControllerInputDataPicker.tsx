@@ -41,6 +41,7 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
       defaultValue={defaultValue}
       error={error}
       disabled={disabled}
+      sideOffsetContent={-21}
     />
   )
 }
