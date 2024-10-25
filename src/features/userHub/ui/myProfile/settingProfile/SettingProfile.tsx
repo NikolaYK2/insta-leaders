@@ -16,6 +16,7 @@ const tabsTrigger: TabsTrigger[] = [
 export const SettingProfile: NextPageWithLayout = () => {
   return (
     <Page
+      className={'flex w-full'}
       titleMeta={'Setting profile'}
       descriptionMeta={'Customise your profile: update your personal data '}
     >
