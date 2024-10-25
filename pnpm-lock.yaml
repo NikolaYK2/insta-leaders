@@ -15,8 +15,8 @@ importers:
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.0(react@18.3.1))
       '@nikolajk2/lib-insta-leaders':
-        specifier: ^0.0.65
-        version: 0.0.65(@fontsource/inter@5.0.20)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^0.0.70
+        version: 0.0.70(@fontsource/inter@5.0.20)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -290,8 +290,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@nikolajk2/lib-insta-leaders@0.0.65':
-    resolution: {integrity: sha512-N3Gd0eFlfepenR9LSCkX4VyHv5xZSvW5qX0QDEx2TcfcOYoL6/wIGxEBNy1VhHyRjkXnd9mIFZqs7S+DfSnHnA==}
+  '@nikolajk2/lib-insta-leaders@0.0.70':
+    resolution: {integrity: sha512-n1lcc3yjCilUJK4X9JfFKCCRN9Y4E4qx5SSQC1FqMrj76h5d5ZOGIvtc/MlzWzlzdeRj39PIxg9xTNyvVv4BUg==}
     peerDependencies:
       '@fontsource/inter': 5.0.20
       react: 18.3.1
@@ -2617,7 +2617,7 @@ snapshots:
   '@next/swc-win32-x64-msvc@14.2.12':
     optional: true
 
-  '@nikolajk2/lib-insta-leaders@0.0.65(@fontsource/inter@5.0.20)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@nikolajk2/lib-insta-leaders@0.0.70(@fontsource/inter@5.0.20)(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@fontsource/inter': 5.0.20
       '@radix-ui/react-checkbox': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
