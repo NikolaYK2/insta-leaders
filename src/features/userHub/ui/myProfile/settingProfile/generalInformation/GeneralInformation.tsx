@@ -2,11 +2,11 @@ import React, { useEffect } from 'react'
 import { Page } from '@/common/components/page'
 import {
   Button,
+  formatDate,
   SelectItem,
   Typography,
   TypographyVariant,
   useSelectedCalendar,
-  formatDate,
 } from '@nikolajk2/lib-insta-leaders'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -95,7 +95,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
     {
       pageSize: 10,
       pageNumber: 1,
-      countryCode: watch('countryCode') ?? '',
+      countryCode: getValues('countryCode') ?? '',
       searchNameTerm: debounceSearch,
     },
     { skip: !getValues('countryCode') }
@@ -144,7 +144,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
   }
   return (
     <Page titleMeta={'General information'} descriptionMeta={'info'} className={'px-0'}>
-      <div className={'flex justify-between'}>
+      <div className={'flex justify-between flex-wrap'}>
         <div className={'border-2 border-red-800 mr-1 max-w-[196px] w-full'}>
           <div
             className={
@@ -159,7 +159,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
         <form className={'flex flex-col max-w-[740px] w-full'} onSubmit={onSubmit}>
           {textFields.map(field => (
             <FormInput
-              className={'mb-6 w-full'}
+              className={'mb-6'}
               key={field.label}
               label={field.label}
               name={field.name}
