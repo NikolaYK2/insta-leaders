@@ -128,6 +128,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
       }
     }
   })
+
   // Сброс значений формы при изменении данных userMe
   useEffect(() => {
     if (userMe) {
@@ -174,10 +175,12 @@ export const GeneralInformation: NextPageWithLayout = () => {
             label={'Date of birth'}
             control={control}
             selected={selectedDate}
-            defaultValue={formatDate({
-              date: userMe?.data.dateOfBirth ?? '',
-              dateFormat: 'MM.dd.yyy',
-            })}
+            defaultValue={
+              formatDate({
+                date: userMe?.data.dateOfBirth ?? '',
+                dateFormat: 'MM.dd.yyy',
+              }) ?? ''
+            }
             error={
               age !== null &&
               age < 13 && (
