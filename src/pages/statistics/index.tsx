@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
 import { Statistics } from '@/features/userHub/ui'
+import { PrivateLayout } from '@/common/components/Layout/PrivatLayout'
 
-Statistics.getLayout = getLayout
+Statistics.getLayout = PrivateLayout
 export default Statistics

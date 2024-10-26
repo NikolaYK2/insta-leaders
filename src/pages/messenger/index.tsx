@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
 import { Messenger } from '@/features/userHub/ui'
+import { PrivateLayout } from '@/common/components/Layout/PrivatLayout'
 
-Messenger.getLayout = getLayout
+Messenger.getLayout = PrivateLayout
 export default Messenger

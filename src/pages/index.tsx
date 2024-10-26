@@ -1,5 +1,5 @@
 import { HeadersMeta } from '@/common/components'
-import { getLayout } from '@/common/components/Layout/Layout'
+import { getLayout } from '@/common/components/Layout/BaseLayout'
 
 function Home() {
   return (

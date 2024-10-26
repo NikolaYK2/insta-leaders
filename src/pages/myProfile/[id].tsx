@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
 import { MyProfile } from '@/features/userHub/ui'
+import { PrivateLayout } from '@/common/components/Layout/PrivatLayout'
 
-MyProfile.getLayout = getLayout
+MyProfile.getLayout = PrivateLayout
 export default MyProfile
