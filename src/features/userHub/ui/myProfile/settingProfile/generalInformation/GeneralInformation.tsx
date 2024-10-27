@@ -8,6 +8,7 @@ import {
   TypographyVariant,
   useSelectedCalendar,
 } from '@nikolajk2/lib-insta-leaders'
+import { AddProfilePhoto } from '../addProfileFoto/AddProfilePhoto'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -147,14 +148,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
     <Page titleMeta={'General information'} descriptionMeta={'info'} className={'px-0'}>
       <div className={'flex justify-between flex-wrap'}>
         <div className={'border-2 border-red-800 mr-1 max-w-[196px] w-full'}>
-          <div
-            className={
-              'w-[192px] h-[192px] border-2 border-cyan-50 rounded-full mb-[30px] mt-[25px]'
-            }
-          ></div>
-          <Button variant={'outline'}>
-            <Typography variant={TypographyVariant.h3}>Add a Profile Photo</Typography>
-          </Button>
+          <AddProfilePhoto />
         </div>
 
         <form className={'flex flex-col max-w-[740px] w-full'} onSubmit={onSubmit}>

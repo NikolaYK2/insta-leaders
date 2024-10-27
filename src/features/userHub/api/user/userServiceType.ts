@@ -29,3 +29,12 @@ export type PostsData = {
   userId: number
   photos: PostsDataPhotos[]
 }
+
+export type Avatar = {
+  avatarUrl: string
+}
+export type DeleteAvatartResponse = {
+  status: string
+  code: number
+  data: null
+}

@@ -61,6 +61,14 @@ const config: Config = {
         '330': '330px',
         '378': '378px',
       },
+      visibility: {
+        visible: 'visible',
+        invisible: 'hidden',
+      },
+      opacity: {
+        0: '0',
+        100: '1',
+      },
     },
   },
   plugins: [],
