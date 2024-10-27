@@ -6,6 +6,7 @@ import { ROUTES_APP } from '@/appRoot/routes/routes'
 import { useRouter } from 'next/router'
 import { useGetUsersMeQuery, useGetUsersPostsQuery } from '@/features/userHub/api/user/userService'
 import Image from 'next/image'
+import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
 
 const testPosts = [
   //временные данные для теста
@@ -44,10 +45,6 @@ export const MyProfile: NextPageWithLayout = () => {
     return <div>Loading...</div>
   }
 
-  // if (isErrorUserMe) {
-  //   return <div>Error loading data. Please try again later.</div>
-  // }
-
   const handlerClickRedirectSetting = () => {
     router.push(`${ROUTES_APP.PROFILE}${ROUTES_APP.PROFILE_SETTING}`)
   }
@@ -63,7 +60,7 @@ export const MyProfile: NextPageWithLayout = () => {
     >
       <section className={'flex justify-between flex-wrap mb-12'}>
         <div className={'max-w-[204px] h-[204px] w-full'}>
-          <div className={'w-full h-full border-2 border-red-800 rounded-full'}></div>
+          <PhotoPreview image={userMe?.data.avatar ?? null} size={204} />
         </div>
         <div className={'w-full max-w-[730px]'}>
           <div className={'flex justify-between items-center mb-5'}>
@@ -111,17 +108,18 @@ export const MyProfile: NextPageWithLayout = () => {
         </div>
       </section>
       <section className={'flex flex-wrap m-[-8px]'}>
-        {userPosts?.data.photos &&
-          userPosts.data.photos.map(photo => (
-            <Image
-              className={'flex-[0_1_234px] h-[228px] m-[6px] object-cover'}
-              key={photo.id}
-              src={photo.url}
-              alt={`Picture of ${photo.id}`}
-              width={234}
-              height={228}
-            />
-          ))}
+        {testPosts.map(photo => (
+          // {userPosts?.data.photos &&
+          //   userPosts.data.photos.map(photo => (
+          <Image
+            className={'flex-[0_1_234px] h-[228px] m-[6px] object-cover'}
+            key={photo.id}
+            src={photo.url}
+            alt={`Picture of ${photo.id}`}
+            width={234}
+            height={228}
+          />
+        ))}
       </section>
     </Page>
   )
