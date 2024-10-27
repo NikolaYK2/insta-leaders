@@ -46,8 +46,13 @@ export const useProfilePhoto = () => {
     setImage(null)
   }
 
+  const handleOpenModal = () => {
+    setIsOpen(true)
+  }
+
   return {
     handleDeletePhoto,
+    handleOpenModal,
     image,
     isLoading,
     isSubmitting,
@@ -60,6 +65,10 @@ export const useProfilePhoto = () => {
 export const usePhotoPreview = (onDeletePhoto: () => void) => {
   const [isOpen, setIsOpen] = useState(false)
   const [deleteAvatar] = useDeleteAvatarMutation()
+
+  const handleOpenModal = () => {
+    setIsOpen(true)
+  }
 
   const handleConfirmation = async () => {
     try {
@@ -75,7 +84,7 @@ export const usePhotoPreview = (onDeletePhoto: () => void) => {
 
   return {
     handleConfirmation,
-
+    handleOpenModal,
     isOpen,
   }
 }

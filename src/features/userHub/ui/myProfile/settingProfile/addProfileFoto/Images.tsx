@@ -36,13 +36,11 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
   const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB in bytes
   const ALLOWED_FORMATS = ['image/jpeg', 'image/png']
 
-  useEffect(() => {
-    if (isOpen) {
-      setSelectedImage(null)
-      setError(null)
-      setIsSaved(false)
-    }
-  }, [isOpen])
+  const reset = () => {
+    setSelectedImage(null)
+    setError(null)
+    setIsSaved(false)
+  }
 
   const handleClick = () => {
     fileInputRef.current?.click()
@@ -93,7 +91,7 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
     handleFileChange,
     handleSave,
     isSaved,
-    isOpen,
     selectedImage,
+    reset,
   }
 }

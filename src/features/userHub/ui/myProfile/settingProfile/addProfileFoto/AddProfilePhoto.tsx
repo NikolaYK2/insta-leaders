@@ -1,17 +1,5 @@
 import React, { ComponentPropsWithoutRef } from 'react'
-import {
-  ModalContent,
-  Button,
-  Modal,
-  ModalTrigger,
-  ModalTitle,
-  ModalContentItem,
-  ModalDescription,
-  ModalClose,
-  Typography,
-  TypographyVariant,
-  DynamicIcon,
-} from '@nikolajk2/lib-insta-leaders'
+import { DynamicIcon } from '@nikolajk2/lib-insta-leaders'
 import Image from 'next/image'
 import { ConfirmationModal, ModalAddPhoto } from './modalAddPhoto'
 import { usePhotoPreview, useProfilePhoto } from './AddPhotoHooks'
@@ -19,7 +7,7 @@ import { usePhotoPreview, useProfilePhoto } from './AddPhotoHooks'
 export type GeneralInfoProps = ComponentPropsWithoutRef<'div'>
 
 export const AddProfilePhoto = () => {
-  const { handleDeletePhoto, image, isLoading, isOpen, isSubmitting, onSubmit, setImage } =
+  const { handleDeletePhoto, image, isLoading, isOpen, isSubmitting, handleOpenModal, setImage } =
     useProfilePhoto()
 
   return (

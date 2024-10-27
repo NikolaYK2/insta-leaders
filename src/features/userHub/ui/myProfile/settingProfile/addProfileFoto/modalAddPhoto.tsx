@@ -21,8 +21,16 @@ type ModalAddPhotoProps = {
 }
 
 export const ModalAddPhoto = ({ isOpen, setImage }: ModalAddPhotoProps) => {
-  const { error, fileInputRef, handleClick, handleFileChange, handleSave, isSaved, selectedImage } =
-    useModalAddPhoto({ isOpen, setImage })
+  const {
+    error,
+    fileInputRef,
+    reset,
+    handleClick,
+    handleFileChange,
+    handleSave,
+    isSaved,
+    selectedImage,
+  } = useModalAddPhoto({ isOpen, setImage })
 
   return (
     <Modal>
@@ -31,17 +39,22 @@ export const ModalAddPhoto = ({ isOpen, setImage }: ModalAddPhotoProps) => {
           <Typography variant={TypographyVariant.h3}>Add a Profile Photo</Typography>
         </Button>
       </ModalTrigger>
-      <ModalContent className={'w-full max-w-[492px]'}>
+      <ModalContent btnClose={false} className={'w-full max-w-[492px]'}>
         <ModalTitle className={'text-light-100'}>
           <Typography variant={TypographyVariant.h2}>Add a Profile Photo</Typography>
+          <ModalClose style={{ left: 0 }}>
+            <Button variant={'text'}>
+              <DynamicIcon iconId={'CloseOutline'} width={24} onClick={reset} />
+            </Button>
+          </ModalClose>
         </ModalTitle>
         <ModalContentItem className={'flex flex-col gap-6 items-center w-full p-6 pb-24'}>
           <div
-            className={`w-full max-w-xs max-h-fit p-1.25 px-10.25 text-center invisible opacity-0 bg-danger-500 ${
-              error ? 'visible opacity-100' : ''
+            className={`w-full max-w-xs max-h-fit p-1.25 px-10.25 text-center visible opacity-0 bg-danger-500 ${
+              error ? 'visible opacity-100' : 'invisible opacity-0'
             }`}
           >
-            <Typography variant={TypographyVariant.bold_text_16}>Error!{error}</Typography>
+            <Typography variant={TypographyVariant.bold_text_14}>Error!{error}</Typography>
           </div>
 
           <div>
