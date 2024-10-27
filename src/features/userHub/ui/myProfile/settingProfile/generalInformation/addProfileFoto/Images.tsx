@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, useRef, useState } from 'react'
 
 export function prepareImageForUpload(dataUrl: string, fieldName: string = 'file'): FormData {
   // Create FormData
