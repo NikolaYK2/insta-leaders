@@ -6,8 +6,9 @@ import { useRouter } from 'next/router'
 export type GoBackProps = {
   backToTitle?: string
   backToRedirect?: string
+  className?: string
 }
-export const GoBack = ({ backToRedirect, backToTitle }: GoBackProps) => {
+export const GoBack = ({ backToRedirect, backToTitle, className }: GoBackProps) => {
   const router = useRouter()
 
   const handleGoBack = () => {
@@ -15,7 +16,7 @@ export const GoBack = ({ backToRedirect, backToTitle }: GoBackProps) => {
   }
 
   return (
-    <Button variant={'text'} className={cn('!p-0 !text-light-100')} onClick={handleGoBack}>
+    <Button variant={'text'} className={cn('p-0 text-light-100', className)} onClick={handleGoBack}>
       <DynamicIcon iconId={'ArrowBackOutline'} width={24} height={24} />
       <Typography variant={TypographyVariant.regular_text_14}>
         Back to <span className={'capitalize'}>{backToTitle}</span>
