@@ -62,7 +62,7 @@ export const useProfilePhoto = () => {
   }
 }
 
-export const usePhotoPreview = (onDeletePhoto: () => void) => {
+export const usePhotoPreview = (onDeletePhoto?: () => void) => {
   const [isOpen, setIsOpen] = useState(false)
   const [deleteAvatar] = useDeleteAvatarMutation()
 
@@ -74,7 +74,7 @@ export const usePhotoPreview = (onDeletePhoto: () => void) => {
     try {
       await deleteAvatar().unwrap()
       setIsOpen(false)
-      onDeletePhoto()
+      onDeletePhoto?.()
       // need to use Alert
       console.log('Photo deleted successfully')
     } catch (error: unknown) {

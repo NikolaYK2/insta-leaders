@@ -25,12 +25,12 @@ export const AddProfilePhoto = () => {
 
 type PhotoPreviewProps = {
   image: null | string
-  onDeletePhoto: () => void
-  preview: string
+  onDeletePhoto?: () => void
+  preview?: string
   size: number
 }
 
-export const PhotoPreview = ({ image, onDeletePhoto, preview, size }: PhotoPreviewProps) => {
+export const PhotoPreview = ({ image, onDeletePhoto, size }: PhotoPreviewProps) => {
   const { handleConfirmation } = usePhotoPreview(onDeletePhoto)
 
   return (
@@ -40,7 +40,7 @@ export const PhotoPreview = ({ image, onDeletePhoto, preview, size }: PhotoPrevi
           'relative overflow-hidden flex items-center justify-center w-[192px] h-[192px] m-0 p-0 bg-dark-500 rounded-full'
         }
       >
-        {image && !image.indexOf('null') ? (
+        {image && !image.includes('null') ? (
           <div
             className={'absolute overflow-hidden flex items-center justify-center w-full h-full'}
           >
@@ -49,7 +49,6 @@ export const PhotoPreview = ({ image, onDeletePhoto, preview, size }: PhotoPrevi
               alt={'Uploaded'}
               height={size}
               src={image}
-              // src={'https://storage.yandexcloud.net/sociable-people/users/100/avatar.png'}
               width={size}
             />
           </div>
@@ -59,7 +58,7 @@ export const PhotoPreview = ({ image, onDeletePhoto, preview, size }: PhotoPrevi
           </span>
         )}
       </div>
-      {image && !image.indexOf('null') && <ConfirmationModal confirmation={handleConfirmation} />}
+      {image && !image?.includes('null') && <ConfirmationModal confirmation={handleConfirmation} />}
     </div>
   )
 }
