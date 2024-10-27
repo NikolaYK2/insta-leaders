@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { AuthByGoogle, HeadersMeta } from '@/common/components'
+import { AuthByGoogle } from '@/common/components'
 import { NextPageWithLayout } from '@/pages/_app'
 import {
   Button,
@@ -18,6 +18,7 @@ import { useRegistrationMutation } from '@/features/auth/api/authService'
 import { EmailSent } from '@/features/auth/ui'
 import { ControllerCheckbox } from '@/common/components/ControllerCheckbox'
 import { AuthByGithub } from '@/features/auth/ui/signIn/authByGithub/AuthByGithub'
+import { Page } from '@/common/components/page'
 
 export const SignUp: NextPageWithLayout = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -40,11 +41,6 @@ export const SignUp: NextPageWithLayout = () => {
       email: '',
     },
   })
-  // Не нужно так как компоненты контролируемые
-  // const {
-  //   field: { onChange, value, ...field },
-  //   formState: { errors, isLoading },
-  // } = useController({ control, name: 'agreesToTOS' })
 
   const [signUp] = useRegistrationMutation()
   const onSubmit = handleSubmit(async ({ userName, password, email, ...rest }) => {
@@ -66,8 +62,7 @@ export const SignUp: NextPageWithLayout = () => {
   }
 
   return (
-    <>
-      <HeadersMeta title={'Sign Up'} description={'Create a new account by signing up'} />
+    <Page titleMeta={'Sign Up'} descriptionMeta={'Create a new account by signing up'}>
       <EmailSent open={showModal} onOpenChange={setShowModal} modal callback={handlerResetForm}>
         {getValues().email}
       </EmailSent>
@@ -177,6 +172,6 @@ export const SignUp: NextPageWithLayout = () => {
           </Link>
         </div>
       </Card>
-    </>
+    </Page>
   )
 }

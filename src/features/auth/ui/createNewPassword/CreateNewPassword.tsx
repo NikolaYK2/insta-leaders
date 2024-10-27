@@ -1,6 +1,4 @@
-
 import React, { useState } from 'react'
-import { HeadersMeta } from '@/common/components'
 import { NextPageWithLayout } from '@/pages/_app'
 import {
   Button,
@@ -16,63 +14,67 @@ import { z } from 'zod'
 import { useCreateNewPasswordMutation } from '../../api/authService'
 import { useRouter } from 'next/router'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
+import { Page } from '@/common/components/page'
 
 export const CreateNewPassword: NextPageWithLayout = () => {
   const passwordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(6, 'Minimum number of characters 6')
-      .max(20, 'Maximum number of characters 20'),
-    passwordConfirmation: z.string(),
-  })
-  .refine(value => value.password === value.passwordConfirmation, {
-    message: 'Passwords must match',
-    path: ['passwordConfirmation'],
-  })
+    .object({
+      password: z
+        .string()
+        .min(6, 'Minimum number of characters 6')
+        .max(20, 'Maximum number of characters 20'),
+      passwordConfirmation: z.string(),
+    })
+    .refine(value => value.password === value.passwordConfirmation, {
+      message: 'Passwords must match',
+      path: ['passwordConfirmation'],
+    })
 
   type PasswordFields = z.infer<typeof passwordSchema>
-  const { handleSubmit, control } = useForm<PasswordFields>({ resolver: zodResolver(passwordSchema) })
-  
+  const { handleSubmit, control } = useForm<PasswordFields>({
+    resolver: zodResolver(passwordSchema),
+  })
+
   const {
     field: { onChange: onChangePassword, value: passwordValue, ...passwordField },
-    formState: { errors: passwordErrors,  },
-  } = useController({ name: 'password', control });
+    formState: { errors: passwordErrors },
+  } = useController({ name: 'password', control })
 
   const {
-    field: { onChange: onChangePasswordConfirmation, value: passwordConfirmationValue, ...passwordConfirmationField },
+    field: {
+      onChange: onChangePasswordConfirmation,
+      value: passwordConfirmationValue,
+      ...passwordConfirmationField
+    },
     formState: { errors: passwordConfirmationErrors },
-  } = useController({ name: 'passwordConfirmation', control });
-
+  } = useController({ name: 'passwordConfirmation', control })
 
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
-  const [createNewPassword, { isLoading, isError, error }] = useCreateNewPasswordMutation();
-  const router = useRouter();
-  const { recoveryCode } = router.query;
+  const [createNewPassword, { isLoading, isError, error }] = useCreateNewPasswordMutation()
+  const router = useRouter()
+  const { recoveryCode } = router.query
   const onSubmit = handleSubmit(async data => {
     try {
       const response = await createNewPassword({
         newPassword: data.password,
-        recoveryCode:  recoveryCode as string, 
-      }).unwrap();
-      console.log('Password created successfully:', response);
-      router.push(ROUTES_AUTH.LOGIN);
+        recoveryCode: recoveryCode as string,
+      }).unwrap()
+      console.log('Password created successfully:', response)
+      router.push(ROUTES_AUTH.LOGIN)
     } catch (err) {
-      console.error('Failed to create new password:', err);
+      console.error('Failed to create new password:', err)
     }
-  });
-  
+  })
+
   return (
-    <div>
-      <HeadersMeta title={'Sign Up'} description={'Create a new account by signing up'} />
+    <Page titleMeta={'Sign Up'} descriptionMeta={'Create a new account by signing up'}>
       <Card className={'max-w-[378px] mx-auto p-6 flex flex-col'}>
         <Typography className={'text-center'} variant={TypographyVariant.h1}>
-        Create New Password
+          Create New Password
         </Typography>
 
         <form onSubmit={onSubmit}>
-
           {/* USER PASSWORD*/}
           <div className={'mb-6'}>
             <FormInput
@@ -109,10 +111,12 @@ export const CreateNewPassword: NextPageWithLayout = () => {
             />
           </div>
           <div className={'flex flex-col  space-y-5'}>
-          <Button className={' font-semibold text-base' } type='submit' disabled={isLoading}>Create New Password</Button>
+            <Button className={' font-semibold text-base'} type="submit" disabled={isLoading}>
+              Create New Password
+            </Button>
           </div>
-          </form>
-          </Card>
-          </div>
+        </form>
+      </Card>
+    </Page>
   )
 }
