@@ -27,7 +27,11 @@ const nextConfig = {
         destination: '/createNewPassword', // короткий путь
         permanent: true, // false означает временный редирект
       },
-
+      {
+        source: '/',
+        destination: '/signIn',
+        permanent: true,
+      },
     ];
   },
 };
