@@ -136,16 +136,6 @@ export const GeneralInformation: NextPageWithLayout = () => {
       <div className={'flex justify-between'}>
         <div className={'border-2 border-red-800 mr-1'}>
           <AddProfilePhoto />
-          {/* <div
-        <div className={'border-2 border-red-800 mr-1 max-w-[196px] w-full'}>
-          <div
-            className={
-              'w-[192px] h-[192px] border-2 border-cyan-50 rounded-full mb-[30px] mt-[25px]'
-            }
-          ></div>
-          <Button variant={'outline'}>
-            <Typography variant={TypographyVariant.h3}>Add a Profile Photo</Typography>
-          </Button> */}
         </div>
 
         <form className={'flex flex-col max-w-[740px] w-full'} onSubmit={onSubmit}>

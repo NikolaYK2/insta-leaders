@@ -1,6 +1,11 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
-import { Avatar, Res, UserData, DeleteAvatartResponse } from './userServiceType'
-import { PostsData, Res, UserData } from '@/features/userHub/api/user/userServiceType'
+import {
+  Avatar,
+  DeleteAvatartResponse,
+  PostsData,
+  Res,
+  UserData,
+} from '@/features/userHub/api/user/userServiceType'
 
 const USERS = 'v1/users'
 const userService = instaLeadersApi.injectEndpoints({
@@ -12,14 +17,14 @@ const userService = instaLeadersApi.injectEndpoints({
     }),
 
     getAvatar: builder.query<Res<Avatar>, void>({
-      // providesTags: ['User'],
+      providesTags: ['User'],
       query: () => ({
         method: 'GET',
         url: `${USERS}/me/avatar`,
       }),
     }),
     uploadAvatar: builder.mutation<Res<Avatar>, FormData>({
-      // invalidatesTags: ['User'],
+      invalidatesTags: ['User'],
       query: (formData: FormData) => ({
         body: formData,
         method: 'POST',
@@ -31,7 +36,7 @@ const userService = instaLeadersApi.injectEndpoints({
         method: 'DELETE',
         url: `${USERS}/me/avatar`,
       }),
-      providesTags: ['User'],
+      invalidatesTags: ['User'],
     }),
     getUsersPosts: builder.query<Res<PostsData>, void>({
       query: () => ({
@@ -54,5 +59,6 @@ export const {
   useDeleteAvatarMutation,
   useGetAvatarQuery,
   useUploadAvatarMutation,
+  useGetUsersPostsQuery,
+  useUpdateProfileMutation,
 } = userService
-export const { useGetUsersMeQuery, useGetUsersPostsQuery, useUpdateProfileMutation } = userService
