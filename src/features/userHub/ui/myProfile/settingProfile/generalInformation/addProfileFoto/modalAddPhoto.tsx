@@ -1,19 +1,18 @@
 import Image from 'next/image'
 import {
-  ModalTrigger,
-  TypographyVariant,
-  ModalTitle,
-  ModalContentItem,
   Button,
+  DynamicIcon,
   Modal,
   ModalClose,
   ModalContent,
-  Typography,
-  DynamicIcon,
+  ModalContentItem,
   ModalDescription,
+  ModalTitle,
+  ModalTrigger,
+  Typography,
+  TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
 import { useModalAddPhoto } from './Images'
-import { Alert } from '@/common/components/Alert'
 
 type ModalAddPhotoProps = {
   isOpen: boolean
@@ -34,14 +33,16 @@ export const ModalAddPhoto = ({ isOpen, setImage }: ModalAddPhotoProps) => {
 
   return (
     <Modal>
-      <ModalTrigger asChild>
+      <ModalTrigger asChild className={'mobile:w-full'}>
         <Button variant={'outline'}>
           <Typography variant={TypographyVariant.h3}>Add a Profile Photo</Typography>
         </Button>
       </ModalTrigger>
-      <ModalContent btnClose={false} className={'w-full max-w-[492px]'}>
+      <ModalContent className={'w-full max-w-[492px]'}>
         <ModalTitle className={'text-light-100'}>
-          <Typography variant={TypographyVariant.h2}>Add a Profile Photo</Typography>
+          <Typography className={'mobile: w-full'} variant={TypographyVariant.h2}>
+            Add a Profile Photo
+          </Typography>
           <ModalClose style={{ left: 0 }}>
             <Button variant={'text'}>
               <DynamicIcon iconId={'CloseOutline'} width={24} onClick={reset} />
@@ -96,7 +97,7 @@ type PhotoPreviewProps = {
   size: number
 }
 
-const PhotoPreview = ({ image, preview, size }: PhotoPreviewProps) => {
+const PhotoPreview = ({ image, size }: PhotoPreviewProps) => {
   return (
     <div
       className={
