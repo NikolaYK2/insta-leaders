@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
 import { PasswordRecovery } from '@/features/auth/ui'
+import { PublicLayout } from '@/common/components/Layout/PublicLayout'
 
-PasswordRecovery.getLayout = getLayout
+PasswordRecovery.getLayout = PublicLayout
 export default PasswordRecovery

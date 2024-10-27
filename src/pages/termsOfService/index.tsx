@@ -1,5 +1,5 @@
 import { TermsOfService } from '@/features/auth/ui'
-import { getLayout } from '@/common/components'
+import { PublicLayout } from '@/common/components/Layout/PublicLayout'
 
-TermsOfService.getLayout = getLayout
+TermsOfService.getLayout = PublicLayout
 export default TermsOfService

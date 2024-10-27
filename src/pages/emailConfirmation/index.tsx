@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
 import { EmailConfirmation } from '@/features/auth/ui/emailConfirmation/emailConfirmation'
+import { PublicLayout } from '@/common/components/Layout/PublicLayout'
 
-EmailConfirmation.getLayout = getLayout
+EmailConfirmation.getLayout = PublicLayout
 export default EmailConfirmation

@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
 import { SignInGoogle } from '@/features/auth/ui'
+import { PublicLayout } from '@/common/components/Layout/PublicLayout'
 
-SignInGoogle.getLayout = getLayout
+SignInGoogle.getLayout = PublicLayout
 export default SignInGoogle

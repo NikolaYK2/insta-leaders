@@ -1,5 +1,5 @@
 import { HeadersMeta } from '@/common/components'
-import { getLayout } from '@/common/components/Layout/BaseLayout'
+import { PublicLayout } from '@/common/components/Layout/PublicLayout'
 
 function Home() {
   return (
@@ -10,5 +10,5 @@ function Home() {
   )
 }
 
-Home.getLayout = getLayout
+Home.getLayout = PublicLayout
 export default Home

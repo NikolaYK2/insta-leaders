@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
 import { SignIn } from '@/features/auth/ui'
+import { PublicLayout } from '@/common/components/Layout/PublicLayout'
 
-SignIn.getLayout = getLayout
+SignIn.getLayout = PublicLayout
 export default SignIn
