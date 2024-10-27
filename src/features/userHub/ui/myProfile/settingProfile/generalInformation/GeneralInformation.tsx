@@ -28,6 +28,8 @@ import { FormTextarea } from '@/common/components/ControllerTextarea'
 import Link from 'next/link'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 import { deepNotEqual } from '@/utils/deepNotEqual'
+import { AddProfilePhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
+import { cn } from '@/common/utils/cn'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -144,20 +146,17 @@ export const GeneralInformation: NextPageWithLayout = () => {
     return <div>Loading...</div>
   }
   return (
-    <Page titleMeta={'General information'} descriptionMeta={'info'} className={'px-0'}>
+    <Page titleMeta={'General information'} descriptionMeta={'info'} className={'pt-0'}>
       <div className={'flex justify-between flex-wrap'}>
-        <div className={'border-2 border-red-800 mr-1 max-w-[196px] w-full'}>
-          <div
-            className={
-              'w-[192px] h-[192px] border-2 border-cyan-50 rounded-full mb-[30px] mt-[25px]'
-            }
-          ></div>
-          <Button variant={'outline'}>
-            <Typography variant={TypographyVariant.h3}>Add a Profile Photo</Typography>
-          </Button>
+        <div
+          className={cn(
+            'flex mr-1 max-w-[196px] w-full notePad:max-w-full justify-center mt-[3.04%]'
+          )}
+        >
+          <AddProfilePhoto />
         </div>
 
-        <form className={'flex flex-col max-w-[740px] w-full'} onSubmit={onSubmit}>
+        <form className={'flex flex-col max-w-[740px] w-full mt-[36px]'} onSubmit={onSubmit}>
           {textFields.map(field => (
             <FormInput
               className={'mb-6'}

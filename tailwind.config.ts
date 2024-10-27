@@ -54,12 +54,21 @@ const config: Config = {
         },
       },
       screens: {
-        mobile: '22.5rem', // 360px
+        mobile: { max: '22.5rem' }, // 360px
+        notePad: { max: '48rem' }, // 768px
         desktop: '80rem', // 1280px
       },
       width: {
         '330': '330px',
         '378': '378px',
+      },
+      visibility: {
+        visible: 'visible',
+        invisible: 'hidden',
+      },
+      opacity: {
+        0: '0',
+        100: '1',
       },
     },
   },
