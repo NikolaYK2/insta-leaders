@@ -5,9 +5,28 @@ import LogOut from '@/features/auth/ui/logOut/logOut'
 import { NextPageWithLayout } from '@/pages/_app'
 
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
+import { cn } from '@/common/utils/cn'
 
+type Routs = {
+  href: string
+  label: string
+  style?: string
+}
+const routs: Routs[] = [
+  { href: ROUTES_APP.CREATE, label: 'Create' },
+  { href: ROUTES_APP.PROFILE, label: 'My Profile' },
+  { href: ROUTES_APP.MESSENGER, label: 'Messenger' },
+  { href: ROUTES_APP.SEARCH, label: 'Search', style: 'mb-[38.66%]' },
+  { href: ROUTES_APP.STATISTICS, label: 'Statistics' },
+  { href: ROUTES_APP.FAVORITES, label: 'Favorites' },
+]
 export const Sidebar: NextPageWithLayout = () => {
   const [userId, setUserId] = useState<string | null>(null)
+
+  //проверяет, если href равен ROUTES_APP.PROFILE так как в profile нужно передать id
+  const getHref = (href: string) => {
+    return href === ROUTES_APP.PROFILE ? `${href}/${userId}` : href
+  }
 
   useEffect(() => {
     const storedUserId = LocalStorageUtil.getValue('userId') as string | null
@@ -16,15 +35,15 @@ export const Sidebar: NextPageWithLayout = () => {
   }, [])
 
   return (
-    <div className="flex flex-col align-sub max-w-[156px] mr-[24px] w-full text-white border-r-[1px] border-dark-300">
-      <Link href={ROUTES_APP.HOME}>Home</Link>
-      <Link href={ROUTES_APP.CREATE}>Create</Link>
-      <Link href={`${ROUTES_APP.PROFILE}/${userId}`}>My Profile</Link>
-      <Link href={ROUTES_APP.MESSENGER}>Messenger</Link>
-      <Link href={ROUTES_APP.SEARCH}>Search</Link>
-      <Link href={ROUTES_APP.STATISTICS}>Statistics</Link>
-      <Link href={ROUTES_APP.FAVORITES}>Favorites</Link>
-      <LogOut />
-    </div>
+    <nav className="relative max-w-[156px] min-h-screen mr-[24px] w-full text-white border-r-[1px] border-dark-300 notePad:hidden">
+      <section className={'sticky top-[60px] pt-[74px] flex flex-col max-h-full mr-4'}>
+        {routs.map(rout => (
+          <Link className={cn('mb-[17.4%]', rout.style)} href={getHref(rout.href)} key={rout.label}>
+            {rout.label}
+          </Link>
+        ))}
+        <LogOut />
+      </section>
+    </nav>
   )
 }
