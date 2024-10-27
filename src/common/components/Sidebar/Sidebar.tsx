@@ -35,7 +35,7 @@ export const Sidebar: NextPageWithLayout = () => {
   }, [])
 
   return (
-    <nav className="relative max-w-[156px] min-h-screen mr-[24px] w-full text-white border-r-[1px] border-dark-300 notePad:hidden">
+    <nav className="max-w-[156px] min-h-screen mr-[24px] w-full text-white border-r-[1px] border-dark-300 notePad:hidden">
       <section className={'sticky top-[60px] pt-[74px] flex flex-col max-h-full mr-4'}>
         {routs.map(rout => (
           <Link className={cn('mb-[17.4%]', rout.style)} href={getHref(rout.href)} key={rout.label}>
