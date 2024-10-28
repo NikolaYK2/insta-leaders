@@ -1,9 +1,11 @@
 import { Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
-import React from 'react'
 
-export const RenderAgeError = (age: number | null) => {
+type Props = {
+  age: number | null
+}
+export const RenderAgeError = ({ age }: Props) => {
   if (age !== null && age < 13) {
     return (
       <div className="flex">
