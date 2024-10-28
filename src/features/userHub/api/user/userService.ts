@@ -11,6 +11,7 @@ const USERS = 'v1/users'
 const userService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
     getUsersMe: builder.query<Res<UserData>, void>({
+      providesTags: ['User'],
       query: () => ({
         url: `${USERS}/me`,
       }),
