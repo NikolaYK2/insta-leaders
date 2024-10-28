@@ -6,19 +6,22 @@ import { NextPageWithLayout } from '@/pages/_app'
 
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 import { cn } from '@/common/utils/cn'
+import { DynamicIcon, IconId } from '@nikolajk2/lib-insta-leaders'
 
 type Routs = {
   href: string
   label: string
   style?: string
+  icon: IconId
 }
 const routs: Routs[] = [
-  { href: ROUTES_APP.CREATE, label: 'Create' },
-  { href: ROUTES_APP.PROFILE, label: 'My Profile' },
-  { href: ROUTES_APP.MESSENGER, label: 'Messenger' },
-  { href: ROUTES_APP.SEARCH, label: 'Search', style: 'mb-[38.66%]' },
-  { href: ROUTES_APP.STATISTICS, label: 'Statistics' },
-  { href: ROUTES_APP.FAVORITES, label: 'Favorites' },
+  { href: ROUTES_APP.HOME, label: 'Home', icon: 'HomeOutline' },
+  { href: ROUTES_APP.CREATE, label: 'Create', icon: 'PlusSquareOutline' },
+  { href: ROUTES_APP.PROFILE, label: 'My Profile', icon: 'PersonOutline' },
+  { href: ROUTES_APP.MESSENGER, label: 'Messenger', icon: 'MessageCircle' },
+  { href: ROUTES_APP.SEARCH, label: 'Search', style: 'mb-[38.66%]', icon: 'Search' },
+  { href: ROUTES_APP.STATISTICS, label: 'Statistics', icon: 'TrendingUpOutline' },
+  { href: ROUTES_APP.FAVORITES, label: 'Favorites', icon: 'BookmarkOutline', style: 'mb-[129.5%]' },
 ]
 export const Sidebar: NextPageWithLayout = () => {
   const [userId, setUserId] = useState<string | null>(null)
@@ -36,9 +39,16 @@ export const Sidebar: NextPageWithLayout = () => {
 
   return (
     <nav className="max-w-[156px] min-h-screen mr-[24px] w-full text-white border-r-[1px] border-dark-300 notePad:hidden">
-      <section className={'sticky top-[60px] pt-[74px] flex flex-col max-h-full mr-4'}>
+      <section
+        className={'sticky top-[60px] pt-[74px] flex flex-col max-h-full justify-between mr-4'}
+      >
         {routs.map(rout => (
-          <Link className={cn('mb-[17.4%]', rout.style)} href={getHref(rout.href)} key={rout.label}>
+          <Link
+            className={cn('flex mb-[17.4%]', rout.style)}
+            href={getHref(rout.href)}
+            key={rout.label}
+          >
+            <DynamicIcon className={' mr-[19px]'} iconId={rout.icon} width={24} height={24} />
             {rout.label}
           </Link>
         ))}
