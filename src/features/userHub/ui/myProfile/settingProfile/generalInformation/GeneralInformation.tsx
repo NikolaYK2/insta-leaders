@@ -104,6 +104,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
   )
   const cities = citiesData?.data.cities
 
+  //проверить
   const onSubmit = handleSubmit(async data => {
     if (userMe) {
       const { search, ...restData } = data // Исключение поля поиска из данных для отправки

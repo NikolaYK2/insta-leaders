@@ -50,6 +50,7 @@ export const MyProfile: NextPageWithLayout = () => {
   }
 
   const profileId = Number(router.query.id)
+
   if (isNaN(profileId)) {
     return <div>Invalid profile ID</div>
   }
