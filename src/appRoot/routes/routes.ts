@@ -11,7 +11,7 @@ export const ROUTES_AUTH = {
 }
 
 export const ROUTES_APP = {
-  HOME: '/',
+  HOME: '/home',
   CREATE: '/create',
   PROFILE: '/myProfile',
   PROFILE_SETTING: '/setting',
