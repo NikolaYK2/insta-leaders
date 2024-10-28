@@ -1,7 +1,7 @@
 import { HeadersMeta } from '@/common/components'
 import { PublicLayout } from '@/common/components/Layout/PublicLayout'
 
-function Home() {
+function Main() {
   return (
     <>
       <HeadersMeta title={'Create Next App'} />
@@ -10,5 +10,5 @@ function Home() {
   )
 }
 
-Home.getLayout = PublicLayout
-export default Home
+Main.getLayout = PublicLayout
+export default Main
