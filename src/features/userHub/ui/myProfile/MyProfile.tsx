@@ -68,7 +68,7 @@ export const MyProfile: NextPageWithLayout = () => {
             <Typography>{userMe?.data.userName ?? 'User name'}</Typography>
             {userMe?.data.id &&
               router.query.id &&
-              userMe?.data.id === Number(router.query.id) && ( //являешься ли владельцем профиля
+              userMe?.data.id === profileId && ( //являешься ли владельцем профиля
                 <Button variant={'secondary'} onClick={handlerClickRedirectSetting}>
                   <Typography variant={TypographyVariant.h3}>Profile Settings</Typography>
                 </Button>
