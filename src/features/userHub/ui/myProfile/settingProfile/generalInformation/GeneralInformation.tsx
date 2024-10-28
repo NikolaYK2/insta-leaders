@@ -25,11 +25,11 @@ import {
 } from '@/features/userHub/api/geo/geoService'
 import { useDebounce } from '@/common/hooks'
 import { FormTextarea } from '@/common/components/ControllerTextarea'
-import Link from 'next/link'
-import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 import { AddProfilePhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
 import { cn } from '@/common/utils/cn'
 import { deepNotEqual } from '@/common/utils/deepNotEqual'
+import { calculateAge } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/lib'
+import { RenderAgeError } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/renderAgeError/RenderAgeError'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -38,7 +38,7 @@ const profileSchema = z.object({
   dateOfBirth: z.any().optional(),
   countryCode: z.string().optional(),
   cityId: z.string().optional(),
-  aboutMe: z.string().max(200, 'max litter 200').min(1, 'min litter 1'),
+  aboutMe: z.string().max(200, 'max litter 200'),
   search: z.string().max(200, 'max litter 200'),
 })
 type FormType = z.infer<typeof profileSchema>
@@ -85,12 +85,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
 
   // Отслеживание ввода даты рождения для вычисления возраста, если дата валидна
   const dateOfBirth = watch('dateOfBirth')
-  const isValidDate = dateOfBirth && !isNaN(new Date(dateOfBirth).getTime())
-  const age = isValidDate
-    ? Math.floor(
-        (new Date().getTime() - new Date(dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000)
-      )
-    : null
+  const age = calculateAge(dateOfBirth)
 
   // Получение списка городов на основе выбранной страны и поискового термина, пропуск, если countryCode недоступен
   const { data: citiesData, isLoading: isLoadingCities } = useGeCitiesQuery(
@@ -181,26 +176,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
                 dateFormat: 'MM.dd.yyy',
               }) ?? ''
             }
-            error={
-              age !== null &&
-              age < 13 && (
-                <div className="flex">
-                  <Typography variant={TypographyVariant.small_text}>
-                    A user under 13 cannot create a profile.
-                  </Typography>
-                  <Typography
-                    className="text-danger-500 ml-1"
-                    variant={TypographyVariant.small_link}
-                  >
-                    <Link
-                      href={{ pathname: ROUTES_AUTH.PRIVACY_POLICY, query: { from: 'profile' } }}
-                    >
-                      Privacy Policy
-                    </Link>
-                  </Typography>
-                </div>
-              )
-            }
+            error={RenderAgeError(age)}
           />
 
           <div className={'flex flex-wrap justify-between'}>
@@ -265,7 +241,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
           />
 
           <div className={'border-[1px] border-dark-300 my-7'} />
-          <Button className={'ml-auto'} disabled={isLoading}>
+          <Button className={'ml-auto'} disabled={isLoading || (age !== null && age < 13)}>
             <Typography variant={TypographyVariant.h3}>Save Changes</Typography>
           </Button>
         </form>
