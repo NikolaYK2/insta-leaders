@@ -6,5 +6,5 @@ export const instaLeadersApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
   reducerPath: 'instaLeadersApi',
-  tagTypes: ['Auth', 'User'],
+  tagTypes: ['Auth', 'User', 'Post'],
 })
