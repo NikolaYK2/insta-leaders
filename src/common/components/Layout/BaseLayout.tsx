@@ -22,7 +22,7 @@ export const BaseLayout: NextPage<PropsWithChildren> = ({ children }) => {
     <div className="flex min-h-screen flex-col pt-[60px] px-[min(3.2673%,64px)]">
       <Alert />
 
-      <Header className={'bg-dark-700 w-full z-50'}>
+      <Header className={'fixed bg-dark-700 w-full z-10'}>
         <div className={'flex justify-between max-w-screen-desktop w-full m-auto'}>
           <div className={'flex'}>
             <Typography variant={TypographyVariant.large}>S</Typography>
@@ -42,12 +42,16 @@ export const BaseLayout: NextPage<PropsWithChildren> = ({ children }) => {
           {/*  <Link href={ROUTES_AUTH.CREATE_NEW_PASSWORD}>Create New Password</Link>*/}
           {/*</div>*/}
           <Selector
-            className={'max-w-[163px] w-full'}
+            className={'!relative max-w-[163px] w-full'}
             value={selectedLanguage}
             onValueChange={setSelectedLanguage}
           >
             {selectLanguage.map(language => (
-              <SelectItem className={'w-[161px]'} key={language.icon} value={language.title}>
+              <SelectItem
+                className={'!relative w-[161px]'}
+                key={language.icon}
+                value={language.title}
+              >
                 <div className={'flex'}>
                   <DynamicIcon className={'mr-3'} iconId={language.icon} width={20} />
                   <Typography variant={TypographyVariant.regular_text_16}>
