@@ -27,9 +27,9 @@ import { useDebounce } from '@/common/hooks'
 import { FormTextarea } from '@/common/components/ControllerTextarea'
 import Link from 'next/link'
 import { ROUTES_AUTH } from '@/appRoot/routes/routes'
-import { deepNotEqual } from '@/utils/deepNotEqual'
 import { AddProfilePhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
 import { cn } from '@/common/utils/cn'
+import { deepNotEqual } from '@/common/utils/deepNotEqual'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),

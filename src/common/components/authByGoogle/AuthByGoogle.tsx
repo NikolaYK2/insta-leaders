@@ -1,7 +1,7 @@
 import React from 'react'
 import { DynamicIcon } from '@nikolajk2/lib-insta-leaders'
-import { LocalStorageUtils } from '@/utils/LocalStorageUtil'
 import Link from 'next/link'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
 export const AuthByGoogle = () => {
   // Идентификатор клиента, выданный Google, который используется для OAuth аутентификации
@@ -15,7 +15,7 @@ export const AuthByGoogle = () => {
   const state = process.env.NEXT_PUBLIC_GOOGLE_STATE // Используем встроенный метод crypto.randomUUID(), чтобы создать уникальный токен
 
   // Сохраняем сгенерированный токен в локальное хранилище, чтобы использовать его позже для проверки на сервере
-  LocalStorageUtils.setValue('latestCSRFToken', state) // Используем утилиту для записи токена в LocalStorage
+  LocalStorageUtil.setValue('latestCSRFToken', state) // Используем утилиту для записи токена в LocalStorage
 
   // Формируем ссылку для аутентификации через Google
   // Содержит все необходимые параметры для OAuth 2.0: client_id, response_type, scope, redirect_uri и state

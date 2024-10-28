@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { NextPageWithLayout } from '@/pages/_app'
 import { useRouter } from 'next/router'
 import { ROUTES_APP } from '@/appRoot/routes/routes'
-import { LocalStorageUtils } from '@/utils/LocalStorageUtil'
 import { useAuthByGoogleQuery } from '@/features/auth/api/authService'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
 export const SignInGoogle: NextPageWithLayout = () => {
   const router = useRouter()
@@ -27,7 +27,7 @@ export const SignInGoogle: NextPageWithLayout = () => {
 
     // Проверка, совпадает ли state с сохраненным значением
     // Это важно для защиты от CSRF-атак
-    if (stateStr !== LocalStorageUtils.getValue('latestCSRFToken')) {
+    if (stateStr !== LocalStorageUtil.getValue('latestCSRFToken')) {
       alert('Invalid state parameter. Possible CSRF attack.')
       return // Останавливаем выполнение, если проверка не прошла
     }
