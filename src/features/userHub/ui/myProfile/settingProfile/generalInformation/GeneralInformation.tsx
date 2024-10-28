@@ -176,7 +176,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
                 dateFormat: 'MM.dd.yyy',
               }) ?? ''
             }
-            error={RenderAgeError(age)}
+            error={<RenderAgeError age={age} />}
           />
 
           <div className={'flex flex-wrap justify-between'}>
