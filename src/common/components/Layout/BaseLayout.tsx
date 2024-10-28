@@ -19,12 +19,16 @@ export const BaseLayout: NextPage<PropsWithChildren> = ({ children }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>(selectLanguage[1].title)
 
   return (
-    <div className="flex min-h-screen flex-col pt-[60px] px-[min(3.2673%,64px)]">
+    <div className="flex min-h-screen w-full mx-auto flex-col pt-[60px]">
       <Alert />
 
-      <Header className={'fixed bg-dark-700 w-full z-10'}>
-        <div className={'flex justify-between max-w-screen-desktop w-full m-auto'}>
-          <div className={'flex'}>
+      <Header className={'fixed bg-dark-700 w-full z-10 p-0'}>
+        <div
+          className={
+            'flex justify-between max-w-screen-desktop w-full m-auto px-[min(3.2673%,64px)]'
+          }
+        >
+          <div className={'relative flex'}>
             <Typography variant={TypographyVariant.large}>S</Typography>
             <Typography
               className={'transform translate-y-[6px] translate-x-[-6.4px] text-accent-500'}
@@ -63,7 +67,7 @@ export const BaseLayout: NextPage<PropsWithChildren> = ({ children }) => {
           </Selector>
         </div>
       </Header>
-      <div className="flex flex-1 max-w-screen-desktop w-full m-auto">
+      <div className="flex flex-1 max-w-screen-desktop w-full m-auto px-[min(3.2673%,64px)]">
         <main className={cn('flex-1 mx-auto w-full')}>{children}</main>
       </div>
     </div>
