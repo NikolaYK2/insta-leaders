@@ -11,7 +11,6 @@ const mutex = new Mutex()
 const baseQuery = fetchBaseQuery({
   //создаем у себя в корне проекта файл .env NEXT_PUBLIC_BASE_URL=адрес нашей API
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
-  credentials: 'include',
   prepareHeaders: headers => {
     const token = LocalStorageUtil.getValue('accessToken')
 
@@ -37,7 +36,7 @@ export const baseQueryWithReauth: BaseQueryFn<
       const release = await mutex.acquire()
       try {
         const refreshResult = (await baseQuery(
-          { url: '/v1/auth/refresh-token', method: 'POST' },
+          { url: '/v1/auth/refresh-token', method: 'POST', credentials: 'include' },
           api,
           extraOptions
         )) as any
