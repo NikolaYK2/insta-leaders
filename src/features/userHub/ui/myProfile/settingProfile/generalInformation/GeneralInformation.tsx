@@ -39,7 +39,7 @@ const profileSchema = z.object({
   countryCode: z.string().optional(),
   cityId: z.string().optional(),
   aboutMe: z.string().max(200, 'max litter 200'),
-  search: z.string().max(200, 'max litter 200'),
+  search: z.string().optional(),
 })
 type FormType = z.infer<typeof profileSchema>
 // Определение текстовых полей для формы с метками, именами и подсказками
