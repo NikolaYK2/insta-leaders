@@ -29,7 +29,7 @@ import { AddProfilePhoto } from '@/features/userHub/ui/myProfile/settingProfile/
 import { cn } from '@/common/utils/cn'
 import { deepNotEqual } from '@/common/utils/deepNotEqual'
 import { calculateAge } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/lib'
-import { RenderAgeError } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/renderAgeError/RenderAgeError'
+import { renderError } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/renderAgeError/RenderAgeError'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -176,7 +176,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
                 dateFormat: 'MM.dd.yyy',
               }) ?? ''
             }
-            error={<RenderAgeError age={age} />}
+            error={renderError(age)}
           />
 
           <div className={'flex flex-wrap justify-between'}>
