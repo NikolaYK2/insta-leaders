@@ -1,4 +1,3 @@
-export * from './create/Create'
 export * from './favorites/Favorites'
 export * from './messenger/Messenger'
 export * from './myProfile/MyProfile'
