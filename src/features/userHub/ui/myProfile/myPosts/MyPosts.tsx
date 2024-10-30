@@ -5,6 +5,7 @@ import {
   Modal,
   ModalContent,
   ModalDescription,
+  ModalTitle,
   ModalTrigger,
 } from '@nikolajk2/lib-insta-leaders'
 
@@ -130,11 +131,7 @@ export const MyPosts = () => {
           />
         </div>
         <div className={'w-3/6 flex:[1_1_50%] bg-dark-300'}>
-          <div
-            className={
-              'flex items-center justify-between px-6 w-full h-[60px] border-b border-dark-100'
-            }
-          >
+          <ModalTitle className={'flex justify-between'}>
             <div className={'flex  items-center'}>
               <div className={'w-9 h-9 bg-white rounded-full'}></div>
               URLProfiele
@@ -144,7 +141,7 @@ export const MyPosts = () => {
               <Button>Edit Post</Button>
               <Button>Delete Post</Button>
             </div>
-          </div>
+          </ModalTitle>
           <ModalDescription />
           Comments
         </div>
