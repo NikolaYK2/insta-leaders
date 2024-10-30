@@ -90,7 +90,7 @@ export const SignUp: NextPageWithLayout = () => {
           <div className={'mb-6'}>
             <FormInput
               name={'email'}
-              label={'Mail'}
+              label={'Email'}
               control={control}
               placeholder={'Epam@epam.com'}
             />
