@@ -2,12 +2,15 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import {
   Button,
+  DropDownMenu,
+  ItemSetting,
   Modal,
   ModalContent,
   ModalDescription,
   ModalTitle,
   ModalTrigger,
 } from '@nikolajk2/lib-insta-leaders'
+import { DeletePost } from '@/features/userHub/ui/myProfile/myPosts/deletePost/DeletePost'
 
 type Post = {
   id: string
@@ -98,6 +101,16 @@ const testPosts: Post[] = [
 ]
 export const MyPosts = () => {
   const [post, setPost] = useState<Post>({} as Post)
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
+  const dropDownItems: ItemSetting[] = [
+    { title: 'EditPost', disabled: false, icon: 'Edit2', onClick: () => alert('click') },
+    {
+      title: 'DeletePost',
+      disabled: false,
+      icon: 'TrashOutline',
+      onClick: () => setIsOpenDeleteModal(true),
+    },
+  ]
 
   return (
     <Modal>
@@ -115,7 +128,7 @@ export const MyPosts = () => {
         ))}
       </ModalTrigger>
 
-      <ModalContent className={'flex max-w-[972px] h-[600px] border border-dark-100'}>
+      <ModalContent className={'flex max-w-[972px] h-[600px] border border-dark-100 z-0'}>
         <div className={'w-3/6 bg-amber-200 '}>
           <Image
             className={'h-[100%]  object-cover object-center'}
@@ -138,8 +151,9 @@ export const MyPosts = () => {
             </div>
             <div className={'flex  items-center'}>
               {/*Need modals*/}
-              <Button>Edit Post</Button>
-              <Button>Delete Post</Button>
+              <DropDownMenu trigger={{ icon: 'MoreHorizontal' }} items={dropDownItems} />
+              <DeletePost isOpen={isOpenDeleteModal} setIsOpen={setIsOpenDeleteModal} />
+              <Button>Edit post</Button>
             </div>
           </ModalTitle>
           <ModalDescription />
