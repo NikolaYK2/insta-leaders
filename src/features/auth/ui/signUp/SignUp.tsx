@@ -100,13 +100,13 @@ export const SignUp: NextPageWithLayout = () => {
           <div className={'mb-6'}>
             <FormInput
               type={!showPassword ? 'password' : 'text'}
-              onClick={() => setShowPassword(prevState => !prevState)}
               name={'password'}
               label={'Password'}
               control={control}
               placeholder={'******************'}
               iconEnd={
                 <DynamicIcon
+                  onClick={() => setShowPassword(prevState => !prevState)}
                   className={'cursor-pointer'}
                   iconId={showPassword ? 'Eye' : 'EyeOff'}
                 />
@@ -118,13 +118,13 @@ export const SignUp: NextPageWithLayout = () => {
           <div className={'mb-5'}>
             <FormInput
               type={!showPasswordConfirmation ? 'password' : 'text'}
-              onClick={() => setShowPasswordConfirmation(prevState => !prevState)}
               name={'passwordConfirmation'}
               label={'Password confirmation'}
               control={control}
               placeholder={'******************'}
               iconEnd={
                 <DynamicIcon
+                  onClick={() => setShowPasswordConfirmation(prevState => !prevState)}
                   className={'cursor-pointer'}
                   iconId={showPasswordConfirmation ? 'Eye' : 'EyeOff'}
                 />
@@ -133,7 +133,7 @@ export const SignUp: NextPageWithLayout = () => {
           </div>
 
           {/* Условия соглашения */}
-          <div className={'flex flex-col  space-y-5'}>
+          <div className={'flex flex-col space-y-5'}>
             <div className={'flex items-center justify-center text-center'}>
               <ControllerCheckbox name={'agreesToTOS'} control={control} />
               <Typography variant={TypographyVariant.small_text} className={''}>
