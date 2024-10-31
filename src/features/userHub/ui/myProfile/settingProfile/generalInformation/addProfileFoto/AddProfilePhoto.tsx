@@ -69,7 +69,9 @@ export const PhotoPreview = ({
           </span>
         )}
       </div>
-      {image && !image?.includes('null') && <ConfirmationModal confirmation={handleClick} />}
+      {callback && image && !image?.includes('null') && (
+        <ConfirmationModal confirmation={handleClick} />
+      )}
     </div>
   )
 }
