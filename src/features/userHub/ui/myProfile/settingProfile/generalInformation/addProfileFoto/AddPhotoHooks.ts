@@ -5,7 +5,6 @@ import {
 } from '@/features/userHub/api/user/userService'
 import { useEffect, useState } from 'react'
 import { prepareImageForUpload } from './Images'
-import { useForm } from 'react-hook-form'
 
 export const useProfilePhoto = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -16,47 +15,47 @@ export const useProfilePhoto = () => {
 
   const [image, setImage] = useState<null | string>(
     avatarData?.data.avatarUrl && avatarData.data.avatarUrl.length > 0
-      ? avatarData.data.avatarUrl
+      ? avatarData.data.avatarUrl.startsWith('/')
+        ? avatarData.data.avatarUrl
+        : `/${avatarData.data.avatarUrl}`
       : null
   )
 
-  const { handleSubmit } = useForm()
-
   useEffect(() => {
     if (avatarData?.data.avatarUrl) {
-      setImage(avatarData.data.avatarUrl)
+      setImage(
+        avatarData.data.avatarUrl.startsWith('/')
+          ? avatarData.data.avatarUrl
+          : `/${avatarData.data.avatarUrl}`
+      )
     }
   }, [avatarData])
 
-  const onSubmit = handleSubmit(async () => {
+  const handleSubmit = async (selectedImage: string | null) => {
     setIsSubmitting(true)
     try {
-      if (image && image !== avatarData?.data.avatarUrl) {
-        const formData = prepareImageForUpload(image)
+      if (selectedImage && selectedImage !== avatarData?.data.avatarUrl) {
+        const formData = prepareImageForUpload(selectedImage, 'avatarFile')
         await uploadAvatar(formData).unwrap()
+        console.log('submit')
       }
     } catch (error) {
       console.log('Error:', error)
     } finally {
       setIsSubmitting(false)
     }
-  })
+  }
 
   const handleDeletePhoto = () => {
     setImage(null)
   }
 
-  const handleOpenModal = () => {
-    setIsOpen(true)
-  }
-
   return {
     handleDeletePhoto,
-    handleOpenModal,
     image,
     isLoading,
     isSubmitting,
-    onSubmit,
+    handleSubmit,
     setImage,
     isOpen,
   }

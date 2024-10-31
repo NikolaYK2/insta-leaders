@@ -1,4 +1,5 @@
 import { ChangeEvent, useRef, useState } from 'react'
+import { useProfilePhoto } from './AddPhotoHooks'
 
 export function prepareImageForUpload(dataUrl: string, fieldName: string = 'file'): FormData {
   // Create FormData
@@ -9,13 +10,16 @@ export function prepareImageForUpload(dataUrl: string, fieldName: string = 'file
 
   // Get binary data from Data URL
   const base64 = dataUrl.split(',')[1]
-  const binaryString = atob(base64)
+  const byteCharacters = atob(base64)
+  const byteNumbers = new Array(byteCharacters.length)
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i)
+  }
 
   // Create Blob from binary data
-  const blob = new Blob(
-    [new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i))],
-    { type: mimeType }
-  )
+  const byteArray = new Uint8Array(byteNumbers)
+  const blob = new Blob([byteArray], { type: mimeType })
 
   // Append Blob to FormData
   formData.append(fieldName, blob, `avatar.${mimeType.split('/')[1]}`) // The file name will be 'avatar.jpg' or 'avatar.png'
@@ -24,16 +28,15 @@ export function prepareImageForUpload(dataUrl: string, fieldName: string = 'file
 }
 
 type UseModalAddPhotoProps = {
-  isOpen: boolean
   setImage: (image: null | string) => void
 }
 
-export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) => {
+export const useModalAddPhoto = ({ setImage }: UseModalAddPhotoProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<null | string>(null)
   const [selectedImage, setSelectedImage] = useState<null | string>(null)
   const [isSaved, setIsSaved] = useState(false)
-  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB in bytes
+  const MAX_FILE_SIZE = 1 * 1024 * 1024 // 10MB in bytes
   const ALLOWED_FORMATS = ['image/jpeg', 'image/png']
 
   const reset = () => {
@@ -81,6 +84,7 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
       setImage(selectedImage)
       setError(null)
       setIsSaved(true)
+      console.log('save')
     }
   }
 

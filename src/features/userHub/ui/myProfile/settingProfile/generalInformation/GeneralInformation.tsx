@@ -39,7 +39,7 @@ const profileSchema = z.object({
   countryCode: z.string().optional(),
   cityId: z.string().optional(),
   aboutMe: z.string().max(200, 'max litter 200'),
-  search: z.string().max(200, 'max litter 200'),
+  search: z.string().max(200, 'max litter 200').optional(),
 })
 type FormType = z.infer<typeof profileSchema>
 // Определение текстовых полей для формы с метками, именами и подсказками
@@ -100,32 +100,35 @@ export const GeneralInformation: NextPageWithLayout = () => {
   const cities = citiesData?.data.cities
 
   //проверить
-  const onSubmit = handleSubmit(async data => {
-    if (userMe) {
-      const { search, ...restData } = data // Исключение поля поиска из данных для отправки
-      const transformedData = {
-        ...restData,
-        dateOfBirth: new Date(data.dateOfBirth).toISOString(),
-        countryCode: data.countryCode ?? '',
-        cityId: Number(data.cityId),
-      }
+  const onSubmit = handleSubmit(
+    async data => {
+      if (userMe) {
+        const { search, ...restData } = data // Исключение поля поиска из данных для отправки
+        const transformedData = {
+          ...restData,
+          dateOfBirth: new Date(data.dateOfBirth).toISOString(),
+          countryCode: data.countryCode ?? '',
+          cityId: Number(data.cityId),
+        }
 
-      // Извлечение полей, которые не должны обновляться, из userMe
-      const { avatar, id, email, ...restUserMe } = userMe.data
-      const initialValues = {
-        ...restUserMe,
-        cityId: Number(userMe.data.cityId),
-        dateOfBirth: userMe.data.dateOfBirth,
-      }
+        // Извлечение полей, которые не должны обновляться, из userMe
+        const { avatar, id, email, ...restUserMe } = userMe.data
+        const initialValues = {
+          ...restUserMe,
+          cityId: Number(userMe.data.cityId),
+          dateOfBirth: userMe.data.dateOfBirth,
+        }
 
-      try {
-        // Обновление профиля только если есть изменения между начальными и текущими значениями
-        if (deepNotEqual(transformedData, initialValues)) await changeProfile(transformedData)
-      } catch (e) {
-        console.log(e)
+        try {
+          // Обновление профиля только если есть изменения между начальными и текущими значениями
+          if (deepNotEqual(transformedData, initialValues)) await changeProfile(transformedData)
+        } catch (e) {
+          console.log(e)
+        }
       }
-    }
-  })
+    },
+    errors => console.log(errors)
+  )
 
   // Сброс значений формы при изменении данных userMe
   useEffect(() => {
@@ -152,7 +155,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
           <AddProfilePhoto />
         </div>
 
-        <form className={'flex flex-col max-w-[740px] w-full mt-[36px]'} onSubmit={onSubmit}>
+        <form className={'qq flex flex-col max-w-[740px] w-full mt-[36px]'} onSubmit={onSubmit}>
           {textFields.map(field => (
             <FormInput
               className={'mb-6'}
