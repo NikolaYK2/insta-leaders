@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent, forwardRef } from 'react'
 import {
   Button,
   DynamicIcon,
@@ -14,42 +14,102 @@ import {
   VisibilityToggle,
 } from '@nikolajk2/lib-insta-leaders'
 import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
+import { cn } from '@/common/utils/cn'
+import { Cropping } from '@/features/userHub/ui/create/cropping/Cropping'
+import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/Images'
 
 type Props = ModalProps & {
   className?: string
 }
 export const Create = ({ className, ...props }: Props) => {
+  const { handleFileChange, selectedImage, handleClick, fileInputRef } = useModalAddPhoto({
+    isOpen: true,
+    setImage: () => {},
+  })
+  console.log(selectedImage)
+  // const [image, setImage] = useState<string | null>(selectedImage)
   return (
     <Modal {...props}>
-      <ModalContent className={'max-w-[492px]'}>
-        <ModalTitle asChild>
+      <ModalContent className={'flex flex-col max-w-[492px] h-[564px]'}>
+        <ModalTitle className={cn('flex', selectedImage && 'justify-center')} asChild>
           <Typography variant={TypographyVariant.h1} asChild>
-            <h2>Add Photo</h2>
+            <h2>{selectedImage ? 'Cropping' : 'Add Photo'}</h2>
           </Typography>
         </ModalTitle>
 
-        <ModalClose className={'absolute top-[18px] right-4'}>
-          <DynamicIcon iconId={'Close'} width={28} height={28} />
-        </ModalClose>
+        {selectedImage ? (
+          <div>
+            <ModalClose className="absolute top-[10px]" asChild>
+              <Button variant={'secondary'}>
+                <DynamicIcon iconId={'ArrowIosBack'} width={28} height={28} />
+              </Button>
+            </ModalClose>
+
+            <Button className={'absolute top-[11px] right-1'} variant={'text'}>
+              <Typography variant={TypographyVariant.h3}>Next</Typography>
+            </Button>
+          </div>
+        ) : (
+          <ModalClose className={'absolute top-[18px] right-4'}>
+            <DynamicIcon iconId={'Close'} width={28} height={28} />
+          </ModalClose>
+        )}
 
         <VisibilityToggle>
           <ModalDescription>image post</ModalDescription>
         </VisibilityToggle>
 
-        <ModalContentItem className={'flex flex-col justify-center pt-[70px] pb-12'}>
-          <div className={'flex justify-center'}>
-            <PhotoPreview image={''} size={20} />
-          </div>
-          <div className={'flex flex-col mx-auto'}>
-            <Button className={'mb-6 mt-10'}>
-              <Typography variant={TypographyVariant.h3}>Select from Computer</Typography>
-            </Button>
-            <Button variant={'outline'}>
-              <Typography variant={TypographyVariant.h3}>Open Draft</Typography>
-            </Button>
-          </div>
+        <ModalContentItem
+          className={cn(
+            'relative flex flex-col justify-between pt-[70px] pb-12 h-full z-50',
+            selectedImage && 'p-3'
+          )}
+        >
+          {selectedImage ? (
+            <Cropping callBack={handleClick} selectedImage={selectedImage} />
+          ) : (
+            <AddPhoto
+              handleFileChange={handleFileChange}
+              handleCLick={handleClick}
+              ref={fileInputRef}
+              image={selectedImage}
+            />
+          )}
         </ModalContentItem>
       </ModalContent>
     </Modal>
   )
 }
+
+type PropsAddPhoto = {
+  handleFileChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  handleCLick: () => void
+  image: string | null
+}
+export const AddPhoto = forwardRef<HTMLInputElement, PropsAddPhoto>(
+  ({ handleFileChange, handleCLick, image }, ref) => {
+    return (
+      <>
+        <div className={'flex justify-center'}>
+          <PhotoPreview image={image} size={20} />
+        </div>
+        <div className={'flex flex-col mx-auto'}>
+          <Button onClick={handleCLick}>
+            Select from Computer
+            <input
+              ref={ref}
+              hidden
+              onChange={handleFileChange}
+              type="file"
+              onClick={e => e.stopPropagation()}
+            />
+          </Button>
+          <Button variant={'outline'}>
+            <Typography variant={TypographyVariant.h3}>Open Draft</Typography>
+          </Button>
+        </div>
+      </>
+    )
+  }
+)
+AddPhoto.displayName = 'AddPhoto'
