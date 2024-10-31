@@ -22,7 +22,7 @@ type Props = ModalProps & {
   className?: string
 }
 export const Create = ({ className, ...props }: Props) => {
-  const { handleFileChange, selectedImage, handleClick, fileInputRef } = useModalAddPhoto({
+  const { handleFileChange, selectedImage, handleClick, fileInputRef, reset } = useModalAddPhoto({
     isOpen: true,
     setImage: () => {},
   })
@@ -39,11 +39,14 @@ export const Create = ({ className, ...props }: Props) => {
 
         {selectedImage ? (
           <div>
-            <ModalClose className="absolute top-[10px]" asChild>
-              <Button variant={'secondary'}>
-                <DynamicIcon iconId={'ArrowIosBack'} width={28} height={28} />
-              </Button>
-            </ModalClose>
+            {/*кнопка назад*/}
+            <Button
+              className="absolute top-[16px] left-3.5 p-0"
+              variant={'secondary'}
+              onClick={reset}
+            >
+              <DynamicIcon iconId={'ArrowIosBack'} width={28} height={28} />
+            </Button>
 
             <Button className={'absolute top-[11px] right-1'} variant={'text'}>
               <Typography variant={TypographyVariant.h3}>Next</Typography>
@@ -91,10 +94,10 @@ export const AddPhoto = forwardRef<HTMLInputElement, PropsAddPhoto>(
     return (
       <>
         <div className={'flex justify-center'}>
-          <PhotoPreview image={image} size={20} />
+          <PhotoPreview styleImage={'rounded-none w-[222px] h-[222px]'} image={image} size={20} />
         </div>
         <div className={'flex flex-col mx-auto'}>
-          <Button onClick={handleCLick}>
+          <Button className={'mb-6'} onClick={handleCLick}>
             Select from Computer
             <input
               ref={ref}
