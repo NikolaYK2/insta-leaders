@@ -93,5 +93,6 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
     isSaved,
     selectedImage,
     reset,
+    setError,
   }
 }
