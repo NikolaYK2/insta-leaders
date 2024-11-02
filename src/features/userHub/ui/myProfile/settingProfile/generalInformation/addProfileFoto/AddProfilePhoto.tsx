@@ -17,7 +17,7 @@ export const AddProfilePhoto = () => {
         image={image}
         size={96}
         callback={handleDeletePhoto}
-        styleImage={'h-192 w-192 object-cover rounded-full'}
+        // styleImage={'h-192 w-192 object-cover rounded-full'}
       />
       <ModalAddPhoto isOpen={isOpen} setImage={setImage} />
     </div>
@@ -30,7 +30,7 @@ type PhotoPreviewProps = {
   styleBackground?: string
   styleImage?: string
   size: number
-}
+} & Omit<ComponentPropsWithoutRef<'img'>, 'height' | 'width'>
 
 export const PhotoPreview = ({
   image,
@@ -38,6 +38,7 @@ export const PhotoPreview = ({
   styleBackground,
   styleImage,
   size,
+  ...props
 }: PhotoPreviewProps) => {
   // const { handleConfirmation } = usePhotoPreview(onDeletePhoto)
   const handleClick = () => {
@@ -61,6 +62,7 @@ export const PhotoPreview = ({
               height={size}
               src={image}
               width={size}
+              {...props}
             />
           </div>
         ) : (
