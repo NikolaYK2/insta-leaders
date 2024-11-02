@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, DynamicIcon, IconId } from '@nikolajk2/lib-insta-leaders'
 import { cn } from '@/common/utils/cn'
-import 'react-image-crop/dist/ReactCrop.css'
-import ReactCrop, { type Crop } from 'react-image-crop'
-import Image from 'next/image'
+
 import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
+import Cropper from 'react-easy-crop'
 
 type SettingButton = {
   icon: IconId
@@ -22,19 +21,14 @@ type Props = {
 }
 export const Cropping = ({ callBack, selectedImage }: Props) => {
   const [isOpenSizeImage, setIsOpenSizeImage] = useState(false)
-  const [aspect, setAspect] = useState<number>(1) // Храним aspect отдельно
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
 
-  const [crop, setCrop] = useState<Crop>({
-    unit: '%',
-    width: 50,
-    height: 50,
-    x: 25,
-    y: 25,
-  })
+  const [aspect, setAspect] = useState<number | undefined>(undefined)
+  const [aspectOriginal, setAspectOriginal] = useState<number | undefined>(undefined)
 
-  const handleAspectChange = (newAspect: number) => {
+  const handleAspectChange = (newAspect: number | undefined) => {
     setAspect(newAspect)
-    console.log('Aspect set to:', newAspect)
   }
   const handleGetImage = (icon: string) => {
     if (icon === 'Image') {
@@ -44,48 +38,45 @@ export const Cropping = ({ callBack, selectedImage }: Props) => {
       setIsOpenSizeImage(!isOpenSizeImage)
     }
   }
-  useEffect(() => {
-    // Обновляем область обрезки при изменении аспекта
-    setCrop(prevCrop => ({
-      ...prevCrop,
-      width: 50,
-      height: 50 / aspect,
-      x: 25,
-      y: 25,
-    }))
-  }, [aspect])
+
+  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    const { naturalWidth, naturalHeight } = event.currentTarget
+    const originalAspect = naturalWidth / naturalHeight
+    setAspect(originalAspect) // Устанавливаем оригинальное соотношение сторон
+    setAspectOriginal(originalAspect)
+  }
   return (
     <>
-      <div className={'absolute inset-0 flex justify-center items-center'}>
+      <div className={'flex justify-center items-center overflow-hidden'}>
         {!isOpenSizeImage ? (
           <PhotoPreview
             styleBackground={'absolute inset-0 w-full h-full'}
-            styleImage={'w-full h-full object-cover object-center rounded-none bg-amber-400'}
+            styleImage={'w-full h-full object-cover object-center rounded-none'}
             image={selectedImage}
             size={100}
+            onLoad={handleImageLoad}
           />
         ) : (
-          <ReactCrop
-            className={'flex items-center justify-center max-w-full-[504[ max-h-[504px]'}
-            crop={crop}
-            keepSelection
-            onChange={(pixelCrop, percentageCrop) => setCrop(pixelCrop)}
-            aspect={aspect}
-          >
-            <Image
-              className={'w-full h-full object-contain'}
-              src={selectedImage ?? ''}
-              width={300}
-              height={300}
-              alt={'post'}
+          <>
+            <Cropper
+              image={selectedImage ?? ''}
+              aspect={aspect}
+              crop={crop}
+              onCropChange={setCrop}
+              zoom={zoom}
+              onZoomChange={setZoom}
             />
-          </ReactCrop>
+            <Size callBack={handleAspectChange} aspect={aspect} aspectOriginal={aspectOriginal} />
+          </>
         )}
       </div>
       <div className={'flex mt-auto'}>
         {settingButton.map(btn => (
           <Button
-            className={cn('p-1.5 bg-dark-500 z-10', btn.style)}
+            className={cn(
+              'relative flex justify-center items-center max-w-full p-1.5 bg-dark-500 z-10',
+              btn.style
+            )}
             variant={'secondary'}
             key={btn.icon}
             onClick={() => handleGetImage(btn.icon)}
@@ -98,18 +89,65 @@ export const Cropping = ({ callBack, selectedImage }: Props) => {
   )
 }
 
-{
-  /*<div className="flex flex-col items-start mr-4">*/
+type Items = {
+  title: string
+  aspect?: number
+  icon?: IconId
 }
-{
-  /*  <button onClick={() => handleAspectChange(1)}>1:1</button>*/
+const items: Items[] = [
+  { title: 'Original' },
+  { title: '1:1', aspect: 1 },
+  { title: '4:5', aspect: 4 / 5 },
+  { title: '16:9', aspect: 16 / 9 },
+]
+type SizeProps = {
+  callBack: (value?: number) => void
+  aspect?: number
+  aspectOriginal?: number
 }
-{
-  /*  <button onClick={() => handleAspectChange(4 / 5)}>4:5</button>*/
-}
-{
-  /*  <button onClick={() => handleAspectChange(16 / 9)}>16:9</button>*/
-}
-{
-  /*</div>*/
+const Size = ({ callBack, aspect, aspectOriginal }: SizeProps) => {
+  return (
+    <div
+      className={
+        'absolute flex flex-col justify-between max-w-[156px] w-full h-[152px] bg-dark-500/40 bottom-[60px] left-[11px] rounded-[2px] p-3'
+      }
+    >
+      {items.map(btn => (
+        <button
+          className={cn(
+            'flex p-0 justify-start outline-2 rounded-[2px] focus:outline-none focus-visible:outline-accent-100'
+          )}
+          key={btn.title}
+          onClick={() => callBack(btn.title === 'Original' ? aspectOriginal : btn.aspect)}
+        >
+          <div
+            className={cn(
+              'flex justify-between items-center text-light-900 w-full group',
+              aspect === (btn.title === 'Original' ? aspectOriginal : btn.aspect) &&
+                'text-light-100 border-light-100',
+              'hover:text-light-100 transition ease-in-out duration-300'
+            )}
+          >
+            {btn.title}
+            {btn.title !== 'Original' ? (
+              <div
+                className={cn(
+                  !btn.icon &&
+                    'w-[18px] h-[18px] border-[2px] rounded-[3px] mr-[3px] border-light-900', //default
+                  btn.title === '4:5' && 'h-8', //для каждой кнопки делаем свою картинку
+                  btn.title === '16:9' && 'w-8', //для каждой кнопки делаем свою картинку
+                  aspect === (btn.title === 'Original' ? aspectOriginal : btn.aspect) &&
+                    'border-light-100',
+                  'group-hover:border-light-100 transition ease-in-out duration-300'
+                  //оригинальный размер картинки
+                )}
+              />
+            ) : (
+              <DynamicIcon iconId={'ImageOutline'} width={24} height={24} />
+            )}
+          </div>
+        </button>
+      ))}
+    </div>
+  )
 }
