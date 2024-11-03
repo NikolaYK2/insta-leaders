@@ -1,4 +1,4 @@
-import React, { ChangeEvent, forwardRef } from 'react'
+import React from 'react'
 import {
   Button,
   DynamicIcon,
@@ -13,20 +13,27 @@ import {
   TypographyVariant,
   VisibilityToggle,
 } from '@nikolajk2/lib-insta-leaders'
-import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
 import { cn } from '@/common/utils/cn'
 import { Cropping } from '@/features/userHub/ui/create/cropping/Cropping'
 import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/Images'
+import { AddPhoto } from '@/features/userHub/ui/create/addPhoto'
 
 type Props = ModalProps & {
   className?: string
 }
 export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
-  const { handleFileChange, selectedImage, handleClick, fileInputRef, reset, error } =
-    useModalAddPhoto({
-      isOpen: true,
-      setImage: () => {},
-    })
+  const {
+    handleFileChange,
+    selectedImage,
+    selectedImages,
+    handleClick,
+    fileInputRef,
+    reset,
+    error,
+  } = useModalAddPhoto({
+    isOpen: true,
+    setImage: () => {},
+  })
 
   return (
     <Modal {...props} open={open} onOpenChange={onOpenChange}>
@@ -74,7 +81,12 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
           )}
         >
           {selectedImage ? (
-            <Cropping callBack={handleClick} selectedImage={selectedImage} />
+            <Cropping
+              callBack={handleClick}
+              selectedImages={selectedImages}
+              ref={fileInputRef}
+              handleFileChange={handleFileChange}
+            />
           ) : (
             <AddPhoto
               handleFileChange={handleFileChange}
@@ -89,50 +101,3 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
     </Modal>
   )
 }
-
-type PropsAddPhoto = {
-  handleFileChange?: (event: ChangeEvent<HTMLInputElement>) => void
-  handleCLick: () => void
-  image: string | null
-  error: string | null
-}
-export const AddPhoto = forwardRef<HTMLInputElement, PropsAddPhoto>(
-  ({ handleFileChange, handleCLick, image, error }, ref) => {
-    return (
-      <>
-        <div className={'flex flex-col justify-between items-center h-full'}>
-          <div
-            className={cn(
-              'flex justify-center items-center my-1.5 w-full h-[60px]',
-              error && 'bg-danger-900 border-[1px] border-danger-500'
-            )}
-          >
-            {error && error}
-          </div>
-          <PhotoPreview
-            styleImage={'rounded-none w-[222px] h-[222px] mb-[60px]'}
-            image={image}
-            size={20}
-          />
-        </div>
-        <div className={'flex flex-col mx-auto'}>
-          <Button className={'mb-6'} onClick={handleCLick}>
-            Select from Computer
-            <input
-              ref={ref}
-              hidden
-              accept={'image/*'}
-              onChange={handleFileChange}
-              type="file"
-              onClick={e => e.stopPropagation()}
-            />
-          </Button>
-          <Button variant={'outline'}>
-            <Typography variant={TypographyVariant.h3}>Open Draft</Typography>
-          </Button>
-        </div>
-      </>
-    )
-  }
-)
-AddPhoto.displayName = 'AddPhoto'
