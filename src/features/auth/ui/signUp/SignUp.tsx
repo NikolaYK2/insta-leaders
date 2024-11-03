@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { AuthByGoogle } from '@/common/components'
 import { NextPageWithLayout } from '@/pages/_app'
 import {
@@ -19,6 +19,8 @@ import { EmailSent } from '@/features/auth/ui'
 import { ControllerCheckbox } from '@/common/components/ControllerCheckbox'
 import { AuthByGithub } from '@/features/auth/ui/signIn/authByGithub/AuthByGithub'
 import { Page } from '@/common/components/page'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '@/appRoot/store'
 
 export const SignUp: NextPageWithLayout = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -30,6 +32,10 @@ export const SignUp: NextPageWithLayout = () => {
     control,
     getValues,
     reset,
+    trigger,
+    setValue,
+    clearErrors,
+    setError,
     formState: { errors, isLoading, isValid },
   } = useForm<SignUpFields>({
     resolver: zodResolver(signUpSchema),
@@ -47,11 +53,16 @@ export const SignUp: NextPageWithLayout = () => {
     try {
       await signUp({ userName, password, email }).unwrap()
       setShowModal(true)
-    } catch (e) {
-      console.log(e)
+    } catch (e: any) {
+      if (e.status === 400 && e.data.message === 'Email or username is already registered') {
+        setError('email', {
+          message: e.data.message,
+        })
+      } else {
+        console.log(e)
+      }
     }
   })
-
   const handlerResetForm = () => {
     reset({
       userName: '',
@@ -59,6 +70,14 @@ export const SignUp: NextPageWithLayout = () => {
       password: '',
       passwordConfirmation: '',
     })
+  }
+  const onChangeInput = async (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    const name = e.target.name as 'userName' | 'email' | 'password' | 'passwordConfirmation'
+    setValue(name, value)
+    if (!isValid) {
+      clearErrors(name)
+    }
   }
 
   return (
@@ -83,6 +102,8 @@ export const SignUp: NextPageWithLayout = () => {
               label={'Username'}
               control={control}
               placeholder={'Epam11'}
+              onBlur={() => trigger('userName')}
+              onChange={onChangeInput}
             />
           </div>
 
@@ -93,6 +114,8 @@ export const SignUp: NextPageWithLayout = () => {
               label={'Email'}
               control={control}
               placeholder={'Epam@epam.com'}
+              onBlur={() => trigger('email')}
+              onChange={onChangeInput}
             />
           </div>
 
@@ -104,6 +127,8 @@ export const SignUp: NextPageWithLayout = () => {
               label={'Password'}
               control={control}
               placeholder={'******************'}
+              onBlur={() => trigger('password')}
+              onChange={onChangeInput}
               iconEnd={
                 <DynamicIcon
                   onClick={() => setShowPassword(prevState => !prevState)}
@@ -122,6 +147,8 @@ export const SignUp: NextPageWithLayout = () => {
               label={'Password confirmation'}
               control={control}
               placeholder={'******************'}
+              onBlur={() => trigger('passwordConfirmation')}
+              onChange={onChangeInput}
               iconEnd={
                 <DynamicIcon
                   onClick={() => setShowPasswordConfirmation(prevState => !prevState)}
