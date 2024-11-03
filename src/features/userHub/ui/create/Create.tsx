@@ -21,16 +21,15 @@ import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile
 type Props = ModalProps & {
   className?: string
 }
-export const Create = ({ className, ...props }: Props) => {
+export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
   const { handleFileChange, selectedImage, handleClick, fileInputRef, reset, error } =
     useModalAddPhoto({
       isOpen: true,
       setImage: () => {},
     })
 
-  // const [image, setImage] = useState<string | null>(selectedImage)
   return (
-    <Modal {...props}>
+    <Modal {...props} open={open} onOpenChange={onOpenChange}>
       <ModalContent className={'flex flex-col max-w-[492px] h-[564px]'}>
         <ModalTitle className={cn('flex', selectedImage && 'justify-center')} asChild>
           <Typography variant={TypographyVariant.h1} asChild>
@@ -54,7 +53,12 @@ export const Create = ({ className, ...props }: Props) => {
             </Button>
           </div>
         ) : (
-          <ModalClose className={'absolute top-[18px] right-4'}>
+          <ModalClose
+            className={'absolute top-[18px] right-4'}
+            onClick={e => {
+              e.stopPropagation()
+            }}
+          >
             <DynamicIcon iconId={'Close'} width={28} height={28} />
           </ModalClose>
         )}
