@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 import {
-  Button,
   DropDownMenu,
   ItemSetting,
   Modal,
@@ -150,10 +149,8 @@ export const MyPosts = () => {
               URLProfiele
             </div>
             <div className={'flex  items-center'}>
-              {/*Need modals*/}
               <DropDownMenu trigger={{ icon: 'MoreHorizontal' }} items={dropDownItems} />
               <DeletePost isOpen={isOpenDeleteModal} setIsOpen={setIsOpenDeleteModal} />
-              <Button>Edit post</Button>
             </div>
           </ModalTitle>
           <ModalDescription />

@@ -39,11 +39,7 @@ const userService = instaLeadersApi.injectEndpoints({
       }),
       invalidatesTags: ['User'],
     }),
-    getUsersPosts: builder.query<Res<PostsData>, void>({
-      query: () => ({
-        url: `${USERS}/posts`,
-      }),
-    }),
+
     updateProfile: builder.mutation<Res<UserData>, Omit<UserData, 'id' | 'email' | 'avatar'>>({
       query: data => ({
         url: `${USERS}/me`,
@@ -51,6 +47,11 @@ const userService = instaLeadersApi.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ['User'],
+    }),
+    getUsersPosts: builder.query<Res<PostsData>, string>({
+      query: userId => ({
+        url: `${USERS}/${userId}/posts`,
+      }),
     }),
   }),
 })

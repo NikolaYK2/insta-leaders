@@ -4,18 +4,20 @@ import { Page } from '@/common/components/page'
 import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import { ROUTES_APP } from '@/appRoot/routes/routes'
 import { useRouter } from 'next/router'
-import { useGetUsersMeQuery } from '@/features/userHub/api/user/userService'
+import { useGetUsersMeQuery, useGetUsersPostsQuery } from '@/features/userHub/api/user/userService'
 import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
 import { MyPosts } from '@/features/userHub/ui/myProfile/myPosts/MyPosts'
+import { useAddPostMutation } from '@/features/userHub/api/post/postService'
 
 export const MyProfile: NextPageWithLayout = () => {
   const router = useRouter()
+  const profileId = Number(router.query.id)
   const { data: userMe, isLoading: isLoadingUserMe, isError: isErrorUserMe } = useGetUsersMeQuery()
-  // const {
-  //   data: userPosts,
-  //   isLoading: isLoadingUserPosts,
-  //   isError: isErrorUserPosts,
-  // } = useGetUsersPostsQuery()
+  const [addPost, {}] = useAddPostMutation({})
+
+  const { data, isLoading, isError } = useGetUsersPostsQuery(String(profileId), {
+    skip: !profileId,
+  })
 
   if (isLoadingUserMe) {
     return <div>Loading...</div>
@@ -25,8 +27,10 @@ export const MyProfile: NextPageWithLayout = () => {
     router.push(`${ROUTES_APP.PROFILE}${ROUTES_APP.PROFILE_SETTING}`)
   }
 
-  const profileId = Number(router.query.id)
-
+  const addPostHandler = () => {
+    addPost({})
+  }
+  console.log(profileId)
   if (isNaN(profileId)) {
     return <div>Invalid profile ID</div>
   }
@@ -74,14 +78,13 @@ export const MyProfile: NextPageWithLayout = () => {
                   asChild
                   variant={TypographyVariant.regular_link}
                   className={'cursor-pointer'}
-                >
-                  <span>span span span</span>
-                </Typography>
+                ></Typography>
               </>
             ) : (
               '...'
             )}
           </Typography>
+          <Button onClick={addPostHandler}>add post</Button>
         </div>
       </section>
       <MyPosts />
