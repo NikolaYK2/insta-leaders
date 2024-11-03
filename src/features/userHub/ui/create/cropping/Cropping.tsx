@@ -1,198 +1,129 @@
-import React, { useCallback, useState } from 'react'
+import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react'
 import { Button, DynamicIcon, Slider } from '@nikolajk2/lib-insta-leaders'
-import { cn } from '@/common/utils/cn'
 import Cropper, { Area, MediaSize } from 'react-easy-crop'
+import { CroppingSettingSize } from '@/features/userHub/ui/create'
+import { CroppingSettingBtn } from '@/features/userHub/ui/create/cropping/CroppingSettingBtn'
+import { ImageUploader } from '@/common/components/imageUpLoader'
+import { SelectedImages } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/Images'
+import Image from 'next/image'
 
-type Icon = 'ExpandOutline' | 'MaximizeOutline' | 'Image'
-type SettingButton = {
-  icon: Icon
-  style?: string
-}
-const settingButton: SettingButton[] = [
-  { icon: 'ExpandOutline', style: 'mr-[30px]' },
-  { icon: 'MaximizeOutline' },
-  { icon: 'Image', style: 'flex ml-auto' },
-]
+export type IconBtnCropping = 'ExpandOutline' | 'MaximizeOutline' | 'Image'
 
 type Props = {
   callBack: () => void
-  selectedImage: string | null
+  selectedImages: SelectedImages[]
+  handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
-export const Cropping = ({ callBack, selectedImage }: Props) => {
-  const [isOpenSizeImage, setIsOpenSizeImage] = useState(false)
-  const [isOpenZoomImage, setIsOpenZoomImage] = useState(false)
-  const [isActiveBtn, setIsActiveBtn] = useState<Icon | null>(null)
-  const [crop, setCrop] = useState({ x: 0, y: 0 })
-  const [croppedArea, setCroppedArea] = useState<Area>()
-  const [zoom, setZoom] = useState(1)
+export const Cropping = forwardRef<HTMLInputElement, Props>(
+  ({ callBack, selectedImages, handleFileChange }, ref) => {
+    console.log('render!!!')
+    const [activeButton, setActiveButton] = useState<IconBtnCropping | null>(null)
+    const [imageCrop, setImageCrop] = useState(selectedImages[0].image)
+    const [crop, setCrop] = useState({ x: 0, y: 0 })
+    const [croppedArea, setCroppedArea] = useState<Area>()
+    const [zoom, setZoom] = useState(1)
 
-  const [aspect, setAspect] = useState<number | undefined>(undefined)
-  const [aspectOriginal, setAspectOriginal] = useState<number | undefined>(undefined)
+    const [aspect, setAspect] = useState<number | undefined>(undefined)
+    const [aspectOriginal, setAspectOriginal] = useState<number | undefined>(undefined)
 
-  const onCropComplete = (croppedAreaPercentage: Area, croppedAreaPixels: Area) => {
-    setCroppedArea(croppedAreaPixels)
-  }
-
-  const handleAspectChange = (newAspect: number | undefined) => {
-    setAspect(newAspect)
-  }
-  const handleGetImage = (icon: Icon) => {
-    if (icon === 'Image') {
-      callBack()
+    const onCropComplete = (croppedAreaPercentage: Area, croppedAreaPixels: Area) => {
+      setCroppedArea(croppedAreaPixels)
     }
-    if (icon === 'ExpandOutline') {
-      setIsOpenSizeImage(!isOpenSizeImage)
-      setIsOpenZoomImage(false)
-    }
-    if (icon === 'MaximizeOutline') {
-      setIsOpenZoomImage(!isOpenZoomImage)
-      setIsOpenSizeImage(false)
-    }
-    if (isActiveBtn === icon) {
-      //Это означает, что пользователь нажал на уже активную кнопку
-      setIsActiveBtn(null)
-    } else {
-      setIsActiveBtn(icon)
-    }
-  }
 
-  const onMediaLoaded = useCallback((mediaSize: MediaSize) => {
-    const { naturalWidth, naturalHeight } = mediaSize
-    const originalAspect = naturalWidth / naturalHeight
-    setAspect(originalAspect) // Устанавливаем оригинальное соотношение сторон
-    setAspectOriginal(originalAspect)
-  }, [])
-  // const onDownload = () => {
-  //   generateDownload(selectedImage, croppedArea)
-  // }
-
-  return (
-    <>
-      <div className={'flex justify-center items-center overflow-hidden'}>
-        <Cropper
-          image={selectedImage ?? ''}
-          aspect={aspect}
-          crop={crop}
-          onCropChange={setCrop}
-          zoom={zoom}
-          onZoomChange={setZoom}
-          onCropComplete={onCropComplete}
-          onMediaLoaded={onMediaLoaded}
-        />
-        {isOpenSizeImage && (
-          <Size callBack={handleAspectChange} aspect={aspect} aspectOriginal={aspectOriginal} />
-        )}
-        {/*<button className="absolute top-0 right-0" onClick={onDownload}>*/}
-        {/*  SAVE*/}
-        {/*</button>*/}
-        {isOpenZoomImage && (
-          <div
-            className={
-              'absolute flex flex-col justify-between h-[36px] bg-dark-500 bottom-[60px] left-[16.9%] rounded-[2px] p-3'
-            }
-          >
-            <Slider
-              className={'flex items-center max-w-[100px]'}
-              min={1}
-              max={3}
-              value={[zoom]}
-              step={0.1}
-              aria-label={'Zoom'}
-              onValueChange={value => setZoom(value[0])}
-              // onChange={e => setZoom(Number((e.target as HTMLInputElement).value))}
-            />
-          </div>
-        )}
-      </div>
-      <div className={'flex mt-auto'}>
-        {settingButton.map(btn => {
-          const isActive = isActiveBtn === btn.icon
-          return (
-            <Button
-              className={cn(
-                'relative flex justify-center items-center max-w-full p-1.5 bg-dark-500 z-10',
-                btn.style
-              )}
-              variant={'secondary'}
-              key={btn.icon}
-              onClick={() => handleGetImage(btn.icon)}
-            >
-              <DynamicIcon
-                className={cn(isActive ? 'text-accent-500' : 'text-light-100')}
-                iconId={btn.icon}
-                width={28}
-                height={28}
-              />
-            </Button>
-          )
-        })}
-      </div>
-    </>
-  )
-}
-
-type Items = {
-  title: string
-  aspect?: number
-  icon?: Icon
-}
-const items: Items[] = [
-  { title: 'Original' },
-  { title: '1:1', aspect: 1 },
-  { title: '4:5', aspect: 4 / 5 },
-  { title: '16:9', aspect: 16 / 9 },
-]
-type SizeProps = {
-  callBack: (value?: number) => void
-  aspect?: number
-  aspectOriginal?: number
-}
-const Size = ({ callBack, aspect, aspectOriginal }: SizeProps) => {
-  return (
-    <div
-      className={
-        'absolute flex flex-col justify-between max-w-[156px] w-full h-[152px] bg-dark-500/40 bottom-[60px] left-[11px] rounded-[2px] p-3'
+    const handleAspectChange = (newAspect: number | undefined) => {
+      setAspect(newAspect)
+    }
+    const handleGetImage = (icon: IconBtnCropping) => {
+      if (icon === 'Image') {
+        callBack()
+      } else {
+        setActiveButton(prev => (prev === icon ? null : icon))
       }
-    >
-      {items.map(btn => (
-        <button
-          className={cn(
-            'flex p-0 justify-start outline-2 rounded-[2px] focus:outline-none focus-visible:outline-accent-100'
+    }
+
+    const onMediaLoaded = useCallback((mediaSize: MediaSize) => {
+      const { naturalWidth, naturalHeight } = mediaSize
+      const originalAspect = naturalWidth / naturalHeight
+      setAspect(originalAspect) // Устанавливаем оригинальное соотношение сторон
+      setAspectOriginal(originalAspect)
+    }, [])
+    // const onDownload = () => {
+    //   generateDownload(selectedImage, croppedArea)
+    // }
+
+    return (
+      <>
+        <div className={'flex justify-center items-center overflow-hidden'}>
+          <Cropper
+            image={imageCrop ?? ''}
+            aspect={aspect}
+            crop={crop}
+            onCropChange={setCrop}
+            zoom={zoom}
+            onZoomChange={setZoom}
+            onCropComplete={onCropComplete}
+            onMediaLoaded={onMediaLoaded}
+          />
+          {activeButton === 'ExpandOutline' && ( //size
+            <CroppingSettingSize
+              callBack={handleAspectChange}
+              aspect={aspect}
+              aspectOriginal={aspectOriginal}
+            />
           )}
-          key={btn.title}
-          onClick={() => callBack(btn.title === 'Original' ? aspectOriginal : btn.aspect)}
-        >
-          <div
-            className={cn(
-              'flex justify-between items-center text-light-900 w-full group',
-              aspect === (btn.title === 'Original' ? aspectOriginal : btn.aspect) &&
-                'text-light-100 border-light-100',
-              'hover:text-light-100 transition ease-in-out duration-300'
-            )}
-          >
-            {btn.title}
-            {btn.title !== 'Original' ? (
-              <div
-                className={cn(
-                  !btn.icon &&
-                    'w-[18px] h-[18px] border-[2px] rounded-[3px] mr-[3px] border-light-900', //default
-                  btn.title === '4:5' && 'h-8', //для каждой кнопки делаем свою картинку
-                  btn.title === '16:9' && 'w-8', //для каждой кнопки делаем свою картинку
-                  aspect === (btn.title === 'Original' ? aspectOriginal : btn.aspect) &&
-                    'border-light-100',
-                  'group-hover:border-light-100 transition ease-in-out duration-300'
-                  //оригинальный размер картинки
-                )}
+          {/*<button className="absolute top-0 right-0" onClick={onDownload}>*/}
+          {/*  SAVE*/}
+          {/*</button>*/}
+          {activeButton === 'MaximizeOutline' && ( //zoom
+            <div
+              className={
+                'absolute flex flex-col justify-between h-[36px] bg-dark-500 bottom-[60px] left-[16.9%] rounded-[2px] p-3'
+              }
+            >
+              <Slider
+                className={'flex items-center max-w-[100px]'}
+                min={1}
+                max={3}
+                value={[zoom]}
+                step={0.1}
+                aria-label={'Zoom'}
+                onValueChange={value => setZoom(value[0])}
+                // onChange={e => setZoom(Number((e.target as HTMLInputElement).value))}
               />
-            ) : (
-              <DynamicIcon iconId={'ImageOutline'} width={24} height={24} />
-            )}
+            </div>
+          )}
+
+          <div className={'absolute bottom-[60px] right-3 bg-dark-500/40'}>
+            {/*<span>{error}</span>*/}
+            <div className={'flex flex-wrap'}>
+              {selectedImages.map(img => (
+                <Image
+                  className={'max-w-20 object-contain m-2'}
+                  key={img.id}
+                  src={img.image}
+                  alt={'img'}
+                  width={82}
+                  height={82}
+                  onClick={e => {
+                    setImageCrop(img.image)
+                  }}
+                />
+              ))}
+            </div>
+            <Button className={'p-0 text-light-100'} variant={'text'} onClick={callBack}>
+              <DynamicIcon iconId={'PlusCircleOutline'} width={30} height={30} />
+              <ImageUploader handleFileChange={handleFileChange} ref={ref} />
+            </Button>
           </div>
-        </button>
-      ))}
-    </div>
-  )
-}
+        </div>
+
+        {/*//КНОПКИ*/}
+        <CroppingSettingBtn handleGetImage={handleGetImage} />
+      </>
+    )
+  }
+)
+Cropping.displayName = 'Cropping'
 // const createImage = url =>
 //   new Promise((resolve, reject) => {
 //     const image = new Image()
