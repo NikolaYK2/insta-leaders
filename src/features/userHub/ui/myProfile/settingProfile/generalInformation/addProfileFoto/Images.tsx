@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 
 export function prepareImageForUpload(dataUrl: string, fieldName: string = 'file'): FormData {
   // Create FormData
@@ -23,6 +23,10 @@ export function prepareImageForUpload(dataUrl: string, fieldName: string = 'file
   return formData
 }
 
+export type SelectedImages = {
+  id: string
+  image: string
+}
 type UseModalAddPhotoProps = {
   isOpen: boolean
   setImage: (image: null | string) => void
@@ -32,12 +36,16 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<null | string>(null)
   const [selectedImage, setSelectedImage] = useState<null | string>(null)
+  const [selectedImages, setSelectedImages] = useState<SelectedImages[]>([])
   const [isSaved, setIsSaved] = useState(false)
+  const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
   const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB in bytes
   const ALLOWED_FORMATS = ['image/jpeg', 'image/png']
 
   const reset = () => {
     setSelectedImage(null)
+    setSelectedImages([])
     setError(null)
     setIsSaved(false)
   }
@@ -67,8 +75,29 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
       const reader = new FileReader()
 
       reader.onload = e => {
-        setSelectedImage(e.target?.result as string)
-        setError(null)
+        const newImage = e.target?.result as string
+        // Генерируем уникальный ключ для нового изображения
+        const newImages = {
+          id: Date.now().toString(), // Генерируем уникальный ID для каждого изображения
+          image: newImage,
+        }
+
+        setSelectedImage(newImage)
+
+        // Обновляем состояние, добавляя новое изображение
+        if (selectedImages.length < 10) {
+          setSelectedImages(prevImages => [...prevImages, newImages])
+        } else {
+          setError('maximum 10 photos!')
+          // Очищаем предыдущий таймер, если он есть
+          if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current)
+
+          // Устанавливаем новый таймер для сброса ошибки
+          errorTimeoutRef.current = setTimeout(() => {
+            setError(null)
+          }, 3000)
+        }
+        // setError(null)
       }
 
       reader.readAsDataURL(file)
@@ -84,15 +113,23 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
     }
   }
 
+  useEffect(() => {
+    // Очистка таймера при размонтировании компонента
+    return () => {
+      if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current)
+    }
+  }, [])
+
   return {
     error,
+    setError,
     fileInputRef,
     handleClick,
     handleFileChange,
     handleSave,
     isSaved,
     selectedImage,
+    selectedImages,
     reset,
-    setError,
   }
 }
