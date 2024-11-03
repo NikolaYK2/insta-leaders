@@ -2,7 +2,8 @@ import React, { ComponentPropsWithoutRef } from 'react'
 import { DynamicIcon } from '@nikolajk2/lib-insta-leaders'
 import Image from 'next/image'
 import { ConfirmationModal, ModalAddPhoto } from './modalAddPhoto'
-import { usePhotoPreview, useProfilePhoto } from './AddPhotoHooks'
+import { useProfilePhoto } from './AddPhotoHooks'
+import { cn } from '@/common/utils/cn'
 
 export type GeneralInfoProps = ComponentPropsWithoutRef<'div'>
 
@@ -15,8 +16,8 @@ export const AddProfilePhoto = () => {
       <PhotoPreview
         image={image}
         size={96}
-        onDeletePhoto={handleDeletePhoto}
-        preview={'h-192 w-192 object-cover rounded-full'}
+        callback={handleDeletePhoto}
+        // styleImage={'h-192 w-192 object-cover rounded-full'}
       />
       <ModalAddPhoto isOpen={isOpen} setImage={setImage} />
     </div>
@@ -25,31 +26,43 @@ export const AddProfilePhoto = () => {
 
 type PhotoPreviewProps = {
   image: null | string
-  onDeletePhoto?: () => void
-  preview?: string
+  callback?: () => void
+  styleBackground?: string
+  styleImage?: string
   size: number
-}
+} & Omit<ComponentPropsWithoutRef<'img'>, 'height' | 'width'>
 
-export const PhotoPreview = ({ image, onDeletePhoto, size }: PhotoPreviewProps) => {
-  const { handleConfirmation } = usePhotoPreview(onDeletePhoto)
-
+export const PhotoPreview = ({
+  image,
+  callback,
+  styleBackground,
+  styleImage,
+  size,
+  ...props
+}: PhotoPreviewProps) => {
+  // const { handleConfirmation } = usePhotoPreview(onDeletePhoto)
+  const handleClick = () => {
+    callback && callback()
+  }
   return (
-    <div className={'relative'}>
+    <div className={cn('relative', styleBackground)}>
       <div
-        className={
-          'relative overflow-hidden flex items-center justify-center w-[192px] h-[192px] m-0 p-0 bg-dark-500 rounded-full'
-        }
+        className={cn(
+          'relative overflow-hidden flex items-center justify-center w-[192px] h-[192px] m-0 p-0 bg-dark-500 rounded-full',
+          styleImage
+        )}
       >
         {image && !image.includes('null') ? (
           <div
             className={'absolute overflow-hidden flex items-center justify-center w-full h-full'}
           >
             <Image
-              className={'w-full h-full object-cover object-center'}
+              className={cn('w-full h-full object-cover object-center')}
               alt={'Uploaded'}
               height={size}
               src={image}
               width={size}
+              {...props}
             />
           </div>
         ) : (
@@ -58,7 +71,9 @@ export const PhotoPreview = ({ image, onDeletePhoto, size }: PhotoPreviewProps) 
           </span>
         )}
       </div>
-      {image && !image?.includes('null') && <ConfirmationModal confirmation={handleConfirmation} />}
+      {callback && image && !image?.includes('null') && (
+        <ConfirmationModal confirmation={handleClick} />
+      )}
     </div>
   )
 }

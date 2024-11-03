@@ -132,7 +132,7 @@ export const ConfirmationModal = ({ confirmation }: ModalProps) => {
     <Modal>
       <ModalTrigger
         className={
-          'cursor-pointer absolute top-[19px] right-2.5 flex items-center justify-center w-4 h-4 bg-danger-500 rounded-full hover:bg-danger-300"'
+          'cursor-pointer absolute top-[19px] right-2.5 flex items-center justify-center w-4 h-4 bg-danger-500 rounded-full hover:bg-danger-300'
         }
       >
         <DynamicIcon iconId="CloseOutline" />
