@@ -26,6 +26,7 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
     handleFileChange,
     selectedImage,
     selectedImages,
+    setSelectedImages,
     handleClick,
     fileInputRef,
     reset,
@@ -84,8 +85,10 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
             <Cropping
               callBack={handleClick}
               selectedImages={selectedImages}
+              setSelectedImages={setSelectedImages}
               ref={fileInputRef}
               handleFileChange={handleFileChange}
+              error={error}
             />
           ) : (
             <AddPhoto
