@@ -1,8 +1,8 @@
 import React, { ChangeEvent, forwardRef } from 'react'
-import { cn } from '@/common/utils/cn'
 import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
 import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import { ImageUploader } from '@/common/components/imageUpLoader'
+import { ErrorMessage } from '@/common/components/ErrorMessage/ErrorMessage'
 
 type PropsAddPhoto = {
   handleFileChange?: (event: ChangeEvent<HTMLInputElement>) => void
@@ -15,16 +15,9 @@ export const AddPhoto = forwardRef<HTMLInputElement, PropsAddPhoto>(
     return (
       <>
         <div className={'flex flex-col justify-between items-center h-full'}>
-          <div
-            className={cn(
-              'flex justify-center items-center my-1.5 w-full h-[60px]',
-              error && 'bg-danger-900 border-[1px] border-danger-500'
-            )}
-          >
-            {error && error}
-          </div>
+          {error && <ErrorMessage className={'absolute'}>{error}</ErrorMessage>}
           <PhotoPreview
-            styleImage={'rounded-none w-[222px] h-[222px] mb-[60px]'}
+            styleImage={'rounded-none w-[222px] h-[222px] mb-[60px] mt-[72px]'}
             image={image}
             size={20}
           />
