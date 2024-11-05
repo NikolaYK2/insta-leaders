@@ -25,6 +25,7 @@ export const CroppingSettingSize = ({ callBack, aspect, aspectOriginal }: SizePr
       className={
         'absolute flex flex-col justify-between max-w-[156px] w-full h-[152px] bg-dark-500/40 bottom-[60px] left-[11px] rounded-[2px] p-3'
       }
+      onClick={e => e.stopPropagation()}
     >
       {items.map(btn => (
         <button
