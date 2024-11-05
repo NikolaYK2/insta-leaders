@@ -8,12 +8,11 @@ export type GeneralInfoProps = ComponentPropsWithoutRef<'div'>
 
 export const AddProfilePhoto = () => {
   const { handleDeletePhoto, image, isLoading, isOpen, isSubmitting, setImage } = useProfilePhoto()
-  const formattedImageSrc = image && !image.startsWith('/') ? `/${image}` : image
 
   return (
     <div className={'flex flex-col items-center gap-6 w-full max-w-xs pt-6'}>
       <PhotoPreview
-        image={formattedImageSrc}
+        image={image}
         size={96}
         onDeletePhoto={handleDeletePhoto}
         preview={'h-192 w-192 object-cover rounded-full'}

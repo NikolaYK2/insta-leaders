@@ -36,7 +36,7 @@ export const useModalAddPhoto = ({ setImage }: UseModalAddPhotoProps) => {
   const [error, setError] = useState<null | string>(null)
   const [selectedImage, setSelectedImage] = useState<null | string>(null)
   const [isSaved, setIsSaved] = useState(false)
-  const MAX_FILE_SIZE = 1 * 1024 * 1024 // 10MB in bytes
+  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB in bytes
   const ALLOWED_FORMATS = ['image/jpeg', 'image/png']
 
   const reset = () => {

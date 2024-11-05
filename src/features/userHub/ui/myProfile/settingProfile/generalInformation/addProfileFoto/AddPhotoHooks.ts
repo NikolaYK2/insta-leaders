@@ -15,19 +15,13 @@ export const useProfilePhoto = () => {
 
   const [image, setImage] = useState<null | string>(
     avatarData?.data.avatarUrl && avatarData.data.avatarUrl.length > 0
-      ? avatarData.data.avatarUrl.startsWith('/')
-        ? avatarData.data.avatarUrl
-        : `/${avatarData.data.avatarUrl}`
+      ? avatarData.data.avatarUrl
       : null
   )
 
   useEffect(() => {
     if (avatarData?.data.avatarUrl) {
-      setImage(
-        avatarData.data.avatarUrl.startsWith('/')
-          ? avatarData.data.avatarUrl
-          : `/${avatarData.data.avatarUrl}`
-      )
+      setImage(avatarData.data.avatarUrl)
     }
   }, [avatarData])
 
