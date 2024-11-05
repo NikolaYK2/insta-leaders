@@ -5,6 +5,7 @@ import { CroppingSettingSize, MemoizedCroppingPhotos } from '@/features/userHub/
 import { CroppingSettingBtn } from '@/features/userHub/ui/create/cropping/CroppingSettingBtn'
 import { SelectedImages } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/Images'
 import { getCroppedImg } from '@/common/utils'
+import { ErrorMessage } from '@/common/components/ErrorMessage'
 
 export type IconBtnCropping = 'ExpandOutline' | 'MaximizeOutline' | 'Image'
 
@@ -17,17 +18,14 @@ type Props = {
 }
 export const Cropping = forwardRef<HTMLInputElement, Props>(
   ({ callBack, selectedImages, handleFileChange, setSelectedImages, error }, ref) => {
-    console.log('render!!!')
     const [activeButton, setActiveButton] = useState<IconBtnCropping | null>(null)
-    const [imageCrop, setImageCrop] = useState<SelectedImages>({
-      id: selectedImages[0].id,
-      image: selectedImages[0].image,
-    })
+    const [imageCrop, setImageCrop] = useState<SelectedImages | null>({ ...selectedImages[0] })
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [croppedArea, setCroppedArea] = useState<Area>()
     const [zoom, setZoom] = useState(1)
     const [aspect, setAspect] = useState<number | undefined>(undefined)
     const [aspectOriginal, setAspectOriginal] = useState<number | undefined>(undefined)
+    const [lastTap, setLastTap] = useState<number>(0) //обрезка для двойного нажатия на мобилках
 
     const previousImagesLength = useRef(selectedImages.length) //сохраняем значение первоначального размера массива
     // для отслеживания добавлений новый фото
@@ -45,6 +43,10 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
       setActiveButton(prev => (prev === icon ? null : icon))
     }
 
+    const handleCloseSettingBtn = () => {
+      setActiveButton(null)
+    }
+
     const onMediaLoaded = useCallback((mediaSize: MediaSize) => {
       const { naturalWidth, naturalHeight } = mediaSize
       const originalAspect = naturalWidth / naturalHeight
@@ -57,47 +59,76 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
       if (selectedImages.length === 0) return
 
       try {
-        const url = await getCroppedImg(imageCrop.image, croppedArea)
+        const url = await getCroppedImg(imageCrop?.image ?? '', croppedArea)
         if (url) {
-          setImageCrop({ id: imageCrop.id, image: url as string }) //обновляем кроппер когда обрезаои фото
+          if (imageCrop) {
+            setImageCrop({ id: imageCrop.id ?? '', image: url as string }) //обновляем кроппер когда обрезаои фото
 
-          //обрезанное фото пересохраняем в общий state
-          setSelectedImages(
-            selectedImages.map(img =>
-              img.id === imageCrop.id ? { ...img, image: url as string } : img
+            setSelectedImages(
+              selectedImages.map(img =>
+                img.id === imageCrop.id ? { ...img, image: url as string } : img
+              )
             )
-          )
+          }
+          //обрезанное фото пересохраняем в общий state
         }
       } catch (error) {
         console.error('Error generating cropped image:', error)
       }
     }
 
+    //двойное касание для мобилак
+    const handleTouch = async () => {
+      const currentTime = Date.now()
+      const tapLength = currentTime - lastTap
+      if (tapLength < 300 && tapLength > 0) {
+        // Два касания в течение 300 мс
+        await handleGenerateCroppedImage()
+      }
+      setLastTap(currentTime)
+    }
+
     //при добавлении фото, сетается сразу в cropper
     useEffect(() => {
-      if (selectedImages.length > previousImagesLength.current) {
-        // Если массив увеличился, берем последнюю картинку и сетим её в imageCrop
-        setImageCrop(selectedImages[selectedImages.length - 1])
+      if (
+        selectedImages.length > previousImagesLength.current ||
+        selectedImages.length < previousImagesLength.current
+      ) {
+        if (selectedImages.length > 0) {
+          // Если массив не пуст, устанавливаем последнее изображение
+          setImageCrop(selectedImages[selectedImages.length - 1])
+        } else {
+          // Если массив пуст, очищаем imageCrop
+          setImageCrop(null)
+        }
       }
       previousImagesLength.current = selectedImages.length // Обновляем текущую длину массива
     }, [selectedImages])
-
     return (
       <>
         <div
           className={'flex justify-center items-center overflow-hidden'}
-          onDoubleClick={handleGenerateCroppedImage}
+          onClick={handleCloseSettingBtn}
         >
-          <Cropper
-            image={imageCrop.image ?? ''}
-            aspect={aspect}
-            crop={crop}
-            onCropChange={setCrop}
-            zoom={zoom}
-            onZoomChange={setZoom}
-            onCropComplete={onCropComplete}
-            onMediaLoaded={onMediaLoaded}
-          />
+          {error && (
+            <ErrorMessage className={'absolute inset-0 z-[10000000]'}>{error}</ErrorMessage>
+          )}
+
+          {imageCrop && (
+            <div onDoubleClick={handleGenerateCroppedImage} onTouchEnd={handleTouch}>
+              <Cropper
+                image={imageCrop?.image ?? ''}
+                aspect={aspect}
+                crop={crop}
+                onCropChange={setCrop}
+                zoom={zoom}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+                onMediaLoaded={onMediaLoaded}
+              />
+            </div>
+          )}
+
           {activeButton === 'ExpandOutline' && ( //size
             <CroppingSettingSize
               callBack={handleAspectChange}
@@ -119,6 +150,7 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
                 step={0.1}
                 aria-label={'Zoom'}
                 onValueChange={value => setZoom(value[0])}
+                onClick={e => e.stopPropagation()}
               />
             </div>
           )}
@@ -129,7 +161,7 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
               ref={ref}
               callBack={callBack}
               handleFileChange={handleFileChange}
-              error={error}
+              setSelectedImages={setSelectedImages}
             />
           )}
         </div>
