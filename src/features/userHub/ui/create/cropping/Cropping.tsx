@@ -1,7 +1,7 @@
-import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react'
+import React, { ChangeEvent, forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Slider } from '@nikolajk2/lib-insta-leaders'
 import Cropper, { Area, MediaSize } from 'react-easy-crop'
-import { CroppingPhotos, CroppingSettingSize } from '@/features/userHub/ui/create'
+import { CroppingSettingSize, MemoizedCroppingPhotos } from '@/features/userHub/ui/create'
 import { CroppingSettingBtn } from '@/features/userHub/ui/create/cropping/CroppingSettingBtn'
 import { SelectedImages } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/Images'
 import { getCroppedImg } from '@/common/utils'
@@ -23,12 +23,14 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
       id: selectedImages[0].id,
       image: selectedImages[0].image,
     })
-    // const [imageCrop, setImageCrop] = useState(selectedImages[0].image)
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [croppedArea, setCroppedArea] = useState<Area>()
     const [zoom, setZoom] = useState(1)
     const [aspect, setAspect] = useState<number | undefined>(undefined)
     const [aspectOriginal, setAspectOriginal] = useState<number | undefined>(undefined)
+
+    const previousImagesLength = useRef(selectedImages.length) //сохраняем значение первоначального размера массива
+    // для отслеживания добавлений новый фото
 
     const onCropComplete = (croppedAreaPercentage: Area, croppedAreaPixels: Area) => {
       setCroppedArea(croppedAreaPixels)
@@ -50,6 +52,7 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
       setAspectOriginal(originalAspect)
     }, [])
 
+    //Обрезка photo
     const handleGenerateCroppedImage = async () => {
       if (selectedImages.length === 0) return
 
@@ -58,7 +61,7 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
         if (url) {
           setImageCrop({ id: imageCrop.id, image: url as string }) //обновляем кроппер когда обрезаои фото
 
-          //обрезанное фото пересохраняем
+          //обрезанное фото пересохраняем в общий state
           setSelectedImages(
             selectedImages.map(img =>
               img.id === imageCrop.id ? { ...img, image: url as string } : img
@@ -69,7 +72,15 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
         console.error('Error generating cropped image:', error)
       }
     }
-    console.log(activeButton)
+
+    //при добавлении фото, сетается сразу в cropper
+    useEffect(() => {
+      if (selectedImages.length > previousImagesLength.current) {
+        // Если массив увеличился, берем последнюю картинку и сетим её в imageCrop
+        setImageCrop(selectedImages[selectedImages.length - 1])
+      }
+      previousImagesLength.current = selectedImages.length // Обновляем текущую длину массива
+    }, [selectedImages])
 
     return (
       <>
@@ -112,7 +123,7 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
             </div>
           )}
           {activeButton === 'Image' && (
-            <CroppingPhotos
+            <MemoizedCroppingPhotos
               selectedImages={selectedImages}
               setImageCrop={setImageCrop}
               ref={ref}
