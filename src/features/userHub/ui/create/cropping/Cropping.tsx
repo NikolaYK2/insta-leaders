@@ -1,11 +1,10 @@
-import React, { ChangeEvent, forwardRef, useCallback, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, forwardRef, useEffect, useRef, useState } from 'react'
 import { Slider } from '@nikolajk2/lib-insta-leaders'
-import Cropper, { Area, MediaSize } from 'react-easy-crop'
 import { CroppingSettingSize, MemoizedCroppingPhotos } from '@/features/userHub/ui/create'
 import { CroppingSettingBtn } from '@/features/userHub/ui/create/cropping/CroppingSettingBtn'
 import { SelectedImages } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/Images'
-import { getCroppedImg } from '@/common/utils'
 import { ErrorMessage } from '@/common/components/ErrorMessage'
+import { CroppingPhoto } from '@/features/userHub/ui/create/cropping/CroppingPhoto'
 
 export type IconBtnCropping = 'ExpandOutline' | 'MaximizeOutline' | 'Image'
 
@@ -19,91 +18,39 @@ type Props = {
 export const Cropping = forwardRef<HTMLInputElement, Props>(
   ({ callBack, selectedImages, handleFileChange, setSelectedImages, error }, ref) => {
     const [activeButton, setActiveButton] = useState<IconBtnCropping | null>(null)
-    const [imageCrop, setImageCrop] = useState<SelectedImages | null>({ ...selectedImages[0] })
-    const [crop, setCrop] = useState({ x: 0, y: 0 })
-    const [croppedArea, setCroppedArea] = useState<Area>()
     const [zoom, setZoom] = useState(1)
     const [aspect, setAspect] = useState<number | undefined>(undefined)
     const [aspectOriginal, setAspectOriginal] = useState<number | undefined>(undefined)
-    const [lastTap, setLastTap] = useState<number>(0) //обрезка для двойного нажатия на мобилках
+    const [indexCropImage, setIndexCropImage] = useState<number>(0) //для карусели
 
     const previousImagesLength = useRef(selectedImages.length) //сохраняем значение первоначального размера массива
-    // для отслеживания добавлений новый фото
 
-    const onCropComplete = (croppedAreaPercentage: Area, croppedAreaPixels: Area) => {
-      setCroppedArea(croppedAreaPixels)
-    }
-
-    const handleAspectChange = (newAspect: number | undefined) => {
-      setAspect(newAspect)
-    }
+    const handleAspectChange = (newAspect: number | undefined) => setAspect(newAspect)
 
     //открывает dropdown menu for size, zoom, add photos
-    const handleGetImage = (icon: IconBtnCropping) => {
+    const handleGetImage = (icon: IconBtnCropping) =>
       setActiveButton(prev => (prev === icon ? null : icon))
-    }
 
-    const handleCloseSettingBtn = () => {
-      setActiveButton(null)
-    }
+    const handleCloseSettingBtn = () => setActiveButton(null)
 
-    const onMediaLoaded = useCallback((mediaSize: MediaSize) => {
-      const { naturalWidth, naturalHeight } = mediaSize
-      const originalAspect = naturalWidth / naturalHeight
-      setAspect(originalAspect) // Устанавливаем оригинальное соотношение сторон
-      setAspectOriginal(originalAspect)
-    }, [])
-
-    //Обрезка photo
-    const handleGenerateCroppedImage = async () => {
-      if (selectedImages.length === 0) return
-
-      try {
-        const url = await getCroppedImg(imageCrop?.image ?? '', croppedArea)
-        if (url) {
-          if (imageCrop) {
-            setImageCrop({ id: imageCrop.id ?? '', image: url as string }) //обновляем кроппер когда обрезаои фото
-
-            setSelectedImages(
-              selectedImages.map(img =>
-                img.id === imageCrop.id ? { ...img, image: url as string } : img
-              )
-            )
-          }
-          //обрезанное фото пересохраняем в общий state
-        }
-      } catch (error) {
-        console.error('Error generating cropped image:', error)
-      }
-    }
-
-    //двойное касание для мобилак
-    const handleTouch = async () => {
-      const currentTime = Date.now()
-      const tapLength = currentTime - lastTap
-      if (tapLength < 300 && tapLength > 0) {
-        // Два касания в течение 300 мс
-        await handleGenerateCroppedImage()
-      }
-      setLastTap(currentTime)
-    }
-
-    //при добавлении фото, сетается сразу в cropper
+    // //при добавлении фото, сетается сразу в cropper
     useEffect(() => {
-      if (
-        selectedImages.length > previousImagesLength.current ||
-        selectedImages.length < previousImagesLength.current
+      if (selectedImages.length > previousImagesLength.current) {
+        // Если добавлено новое изображение, устанавливаем currentIndex на последнее изображение
+        setIndexCropImage(selectedImages.length - 1)
+      } else if (
+        selectedImages.length < previousImagesLength.current &&
+        selectedImages.length > 0
       ) {
-        if (selectedImages.length > 0) {
-          // Если массив не пуст, устанавливаем последнее изображение
-          setImageCrop(selectedImages[selectedImages.length - 1])
-        } else {
-          // Если массив пуст, очищаем imageCrop
-          setImageCrop(null)
-        }
+        // Если изображение удалено, устанавливаем currentIndex на предыдущее изображение
+        setIndexCropImage(Math.min(indexCropImage, selectedImages.length - 1))
+      } else if (selectedImages.length === 0) {
+        // Если массив пуст, сбрасываем currentIndex и imageCrop
+        setIndexCropImage(0)
       }
       previousImagesLength.current = selectedImages.length // Обновляем текущую длину массива
-    }, [selectedImages])
+    }, [selectedImages, indexCropImage])
+
     return (
       <>
         <div
@@ -114,19 +61,18 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
             <ErrorMessage className={'absolute inset-0 z-[10000000]'}>{error}</ErrorMessage>
           )}
 
-          {imageCrop && (
-            <div onDoubleClick={handleGenerateCroppedImage} onTouchEnd={handleTouch}>
-              <Cropper
-                image={imageCrop?.image ?? ''}
-                aspect={aspect}
-                crop={crop}
-                onCropChange={setCrop}
-                zoom={zoom}
-                onZoomChange={setZoom}
-                onCropComplete={onCropComplete}
-                onMediaLoaded={onMediaLoaded}
-              />
-            </div>
+          {selectedImages.length > 0 && (
+            <CroppingPhoto
+              zoom={zoom}
+              setZoom={setZoom}
+              aspect={aspect}
+              setAspect={setAspect}
+              setAspectOriginal={setAspectOriginal}
+              indexCropImage={indexCropImage}
+              setIndexCropImage={setIndexCropImage}
+              selectedImages={selectedImages}
+              setSelectedImages={setSelectedImages}
+            />
           )}
 
           {activeButton === 'ExpandOutline' && ( //size
@@ -136,6 +82,7 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
               aspectOriginal={aspectOriginal}
             />
           )}
+
           {activeButton === 'MaximizeOutline' && ( //zoom
             <div
               className={
@@ -154,20 +101,21 @@ export const Cropping = forwardRef<HTMLInputElement, Props>(
               />
             </div>
           )}
+
           {activeButton === 'Image' && (
             <MemoizedCroppingPhotos
               selectedImages={selectedImages}
-              setImageCrop={setImageCrop}
               ref={ref}
               callBack={callBack}
               handleFileChange={handleFileChange}
               setSelectedImages={setSelectedImages}
+              setIndexCropImage={setIndexCropImage}
             />
           )}
         </div>
 
         {/*//КНОПКИ*/}
-        <CroppingSettingBtn handleGetImage={handleGetImage} />
+        <CroppingSettingBtn handleGetImage={handleGetImage} disabled={selectedImages.length < 1} />
       </>
     )
   }
