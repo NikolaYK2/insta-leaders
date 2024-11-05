@@ -60,15 +60,11 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
     if (file) {
       if (!ALLOWED_FORMATS.includes(file.type)) {
         setError('The format of the uploaded photo must be PNG and JPEG')
-        setSelectedImage(null)
-
         return
       }
 
       if (file.size > MAX_FILE_SIZE) {
         setError('Photo size must be less than 10 MB!')
-        setSelectedImage(null)
-
         return
       }
 
@@ -85,19 +81,11 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
         setSelectedImage(newImage)
 
         // Обновляем состояние, добавляя новое изображение
-        if (selectedImages.length < 10) {
+        if (selectedImages.length < 3) {
           setSelectedImages(prevImages => [...prevImages, newImages])
         } else {
           setError('maximum 10 photos!')
-          // Очищаем предыдущий таймер, если он есть
-          if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current)
-
-          // Устанавливаем новый таймер для сброса ошибки
-          errorTimeoutRef.current = setTimeout(() => {
-            setError(null)
-          }, 3000)
         }
-        // setError(null)
       }
 
       reader.readAsDataURL(file)
@@ -112,6 +100,13 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
       setIsSaved(true)
     }
   }
+  // Очищаем предыдущий таймер, если он есть
+  if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current)
+
+  // Устанавливаем новый таймер для сброса ошибки
+  errorTimeoutRef.current = setTimeout(() => {
+    setError(null)
+  }, 3000)
 
   useEffect(() => {
     // Очистка таймера при размонтировании компонента
