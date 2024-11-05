@@ -11,7 +11,7 @@ type CroppingPhotosProps = {
   callBack: () => void
   handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
-export const CroppingPhotos = forwardRef<HTMLInputElement, CroppingPhotosProps>(
+const CroppingPhotos = forwardRef<HTMLInputElement, CroppingPhotosProps>(
   ({ error, selectedImages, setImageCrop, callBack, handleFileChange }, ref) => {
     return (
       <div className={'absolute flex items-start bottom-[60px] right-3 bg-dark-500/40'}>
@@ -40,3 +40,5 @@ export const CroppingPhotos = forwardRef<HTMLInputElement, CroppingPhotosProps>(
   }
 )
 CroppingPhotos.displayName = 'PostsPhotos'
+
+export const MemoizedCroppingPhotos = React.memo(CroppingPhotos)
