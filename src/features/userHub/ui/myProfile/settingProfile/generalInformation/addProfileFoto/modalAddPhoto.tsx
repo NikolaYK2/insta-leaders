@@ -13,6 +13,7 @@ import {
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
 import { useModalAddPhoto } from './Images'
+import { cn } from '@/common/utils/cn'
 
 type ModalAddPhotoProps = {
   isOpen: boolean
@@ -125,15 +126,17 @@ const PhotoPreview = ({ image, size }: PhotoPreviewProps) => {
 
 type ModalProps = {
   confirmation: () => void
+  className?: string
 }
 
-export const ConfirmationModal = ({ confirmation }: ModalProps) => {
+export const ConfirmationModal = ({ confirmation, className }: ModalProps) => {
   return (
     <Modal>
       <ModalTrigger
-        className={
-          'cursor-pointer absolute top-[19px] right-2.5 flex items-center justify-center w-4 h-4 bg-danger-500 rounded-full hover:bg-danger-300'
-        }
+        className={cn(
+          'cursor-pointer absolute top-[19px] right-2.5 flex items-center justify-center w-4 h-4 bg-danger-500 rounded-full hover:bg-danger-300',
+          className
+        )}
       >
         <DynamicIcon iconId="CloseOutline" />
       </ModalTrigger>
