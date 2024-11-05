@@ -29,6 +29,7 @@ type PhotoPreviewProps = {
   callback?: () => void
   styleBackground?: string
   styleImage?: string
+  styleClose?: string
   size: number
 } & Omit<ComponentPropsWithoutRef<'img'>, 'height' | 'width'>
 
@@ -38,9 +39,9 @@ export const PhotoPreview = ({
   styleBackground,
   styleImage,
   size,
+  styleClose,
   ...props
 }: PhotoPreviewProps) => {
-  // const { handleConfirmation } = usePhotoPreview(onDeletePhoto)
   const handleClick = () => {
     callback && callback()
   }
@@ -72,7 +73,7 @@ export const PhotoPreview = ({
         )}
       </div>
       {callback && image && !image?.includes('null') && (
-        <ConfirmationModal confirmation={handleClick} />
+        <ConfirmationModal className={styleClose} confirmation={handleClick} />
       )}
     </div>
   )
