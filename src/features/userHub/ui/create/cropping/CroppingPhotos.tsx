@@ -7,15 +7,23 @@ import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/gen
 type CroppingPhotosProps = {
   selectedImages: SelectedImages[]
   setSelectedImages: (selectedImages: SelectedImages[]) => void
-  setImageCrop: (image: SelectedImages) => void
+  setIndexCropImage: (index: number) => void
   callBack: () => void
   handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 const CroppingPhotos = forwardRef<HTMLInputElement, CroppingPhotosProps>(
-  ({ selectedImages, setImageCrop, callBack, handleFileChange, setSelectedImages }, ref) => {
+  ({ selectedImages, callBack, handleFileChange, setSelectedImages, setIndexCropImage }, ref) => {
     const handleDeletePhoto = (id: string) => {
       setSelectedImages(selectedImages.filter(img => img.id !== id))
       // Теперь setSelectedImages обновит состояние, и картинка будет удалена
+    }
+
+    //выбираем в кроппер картинку при клике
+    const handleClickImage = (id: string) => {
+      const newIndex = selectedImages.findIndex(selectImg => selectImg.id === id) // Находим индекс выбранного изображения
+      if (newIndex !== -1) {
+        setIndexCropImage(newIndex) // Устанавливаем currentIndex на выбранное изображение
+      }
     }
     return (
       <div
@@ -25,15 +33,6 @@ const CroppingPhotos = forwardRef<HTMLInputElement, CroppingPhotosProps>(
         <div className={'flex flex-wrap'}>
           {selectedImages.map(img => (
             <div key={img.id} className={'flex max-w-[82px] max-h-[82px] overflow-hidden m-1.5'}>
-              {/*<Image*/}
-              {/*  className={'max-w-20 object-contain'}*/}
-              {/*  src={img.image}*/}
-              {/*  alt={'img'}*/}
-              {/*  width={82}*/}
-              {/*  height={82}*/}
-              {/*  onClick={() => setImageCrop({ image: img.image, id: img.id })}*/}
-              {/*/>*/}
-              {/*<div>X</div>*/}
               <PhotoPreview
                 image={img.image}
                 size={82}
@@ -41,7 +40,7 @@ const CroppingPhotos = forwardRef<HTMLInputElement, CroppingPhotosProps>(
                 styleBackground={'max-w-20 max-h-20'}
                 styleImage={'max-w-20 max-h-20 rounded-none'}
                 styleClose={'top-1 right-1 rounded-none bg-dark-100'}
-                onClick={() => setImageCrop({ image: img.image, id: img.id })}
+                onClick={() => handleClickImage(img.id)}
                 callback={() => handleDeletePhoto(img.id)}
               />
             </div>
