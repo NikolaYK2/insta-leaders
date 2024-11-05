@@ -15,28 +15,28 @@ const settingButton: SettingButton[] = [
 
 type Props = {
   handleGetImage: (icon: IconBtnCropping) => void
+  disabled: boolean
 }
-export const CroppingSettingBtn = ({ handleGetImage }: Props) => {
+export const CroppingSettingBtn = ({ handleGetImage, disabled }: Props) => {
   const [isActiveBtn, setIsActiveBtn] = useState<IconBtnCropping | null>(null)
 
-  const handleIsActive = (icon: IconBtnCropping) => {
-    if (isActiveBtn === icon) {
-      //Это означает, что пользователь нажал на уже активную кнопку
-      setIsActiveBtn(null)
-    } else {
-      setIsActiveBtn(icon)
-    }
-  }
+  const handleIsActive = (icon: IconBtnCropping) =>
+    setIsActiveBtn(isActiveBtn === icon ? null : icon) //Это означает, что пользователь нажал на уже активную кнопку
 
   return (
     <div className={'flex mt-auto'}>
       {settingButton.map(btn => {
         const isActive = isActiveBtn === btn.icon
+        const isButtonDisabled =
+          disabled && (btn.icon === 'MaximizeOutline' || btn.icon === 'ExpandOutline')
+
         return (
           <Button
+            disabled={isButtonDisabled}
             className={cn(
               'relative flex justify-center items-center max-w-full p-1.5 bg-dark-500 z-10',
-              btn.style
+              btn.style,
+              isButtonDisabled && 'opacity-50' // Общее условие для прозрачности
             )}
             variant={'secondary'}
             key={btn.icon}
