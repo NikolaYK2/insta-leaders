@@ -12,15 +12,15 @@ import {
   Typography,
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
-import { useModalAddPhoto } from './Images'
-import { useProfilePhoto } from './AddPhotoHooks'
+import { useModalAddPhoto } from './useModalAddPhoto'
+import { useAvatar } from './useAvatar'
 
-type ModalAddPhotoProps = {
+type AddPhotoModalProps = {
   setImage: (image: null | string) => void
 }
 
-export const ModalAddPhoto = ({ setImage }: ModalAddPhotoProps) => {
-  const { handleSubmit } = useProfilePhoto()
+export const AddPhotoModal = ({ setImage }: AddPhotoModalProps) => {
+  const { handleSubmit } = useAvatar()
   const {
     error,
     fileInputRef,
@@ -73,7 +73,13 @@ export const ModalAddPhoto = ({ setImage }: ModalAddPhotoProps) => {
             </Typography>
           </div>
 
-          <PhotoPreview image={selectedImage} preview={'h-296 w-296 object-cover'} size={228} />
+          <AddPhotoPreview
+            image={selectedImage}
+            size={228}
+            containerClassName={
+              'relative overflow-hidden flex items-center justify-center w-[228px] h-[228px] m-0 p-0 bg-dark-500'
+            }
+          />
           <input
             accept={'image/*'}
             hidden
@@ -105,19 +111,15 @@ export const ModalAddPhoto = ({ setImage }: ModalAddPhotoProps) => {
   )
 }
 
-type PhotoPreviewProps = {
+type AddPhotoPreviewProps = {
   image: null | string
-  preview: string
+  containerClassName: string
   size: number
 }
 
-const PhotoPreview = ({ image, size }: PhotoPreviewProps) => {
+export const AddPhotoPreview = ({ image, size, containerClassName }: AddPhotoPreviewProps) => {
   return (
-    <div
-      className={
-        'relative overflow-hidden flex items-center justify-center w-[228px] h-[228px] m-0 p-0 bg-dark-500'
-      }
-    >
+    <div className={containerClassName}>
       {image ? (
         <div className={'overflow-hidden flex items-center justify-center w-full h-full'}>
           <Image
@@ -134,49 +136,5 @@ const PhotoPreview = ({ image, size }: PhotoPreviewProps) => {
         </span>
       )}
     </div>
-  )
-}
-
-type ModalProps = {
-  confirmation: () => void
-}
-
-export const ConfirmationModal = ({ confirmation }: ModalProps) => {
-  return (
-    <Modal>
-      <ModalTrigger
-        className={
-          'cursor-pointer absolute top-[19px] right-2.5 flex items-center justify-center w-6 h-6'
-        }
-      >
-        <DynamicIcon
-          className={'border-4 border-black rounded-full bg-danger-500 hover:bg-danger-300'}
-          iconId="CloseOutline"
-          width={24}
-          color="white"
-        />
-      </ModalTrigger>
-      <ModalContent className={'w-full max-w-[492px]'}>
-        <ModalTitle className={'text-light-100'}>
-          <Typography variant={TypographyVariant.h2}>Delete Photo</Typography>
-        </ModalTitle>
-
-        <ModalContentItem className={'flex flex-col gap-6 items-center w-full p-6 pb-24'}>
-          <ModalDescription>
-            <Typography className={'text-light-100'} variant={TypographyVariant.regular_text_16}>
-              Are you sure you want to delete the photo?
-            </Typography>
-          </ModalDescription>
-          <div>
-            <ModalClose>
-              <Button variant={'outline'}>No</Button>
-            </ModalClose>
-            <Button onClick={confirmation} variant={'primary'}>
-              Yes
-            </Button>
-          </div>
-        </ModalContentItem>
-      </ModalContent>
-    </Modal>
   )
 }

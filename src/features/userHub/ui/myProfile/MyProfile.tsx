@@ -6,7 +6,7 @@ import { ROUTES_APP } from '@/appRoot/routes/routes'
 import { useRouter } from 'next/router'
 import { useGetUsersMeQuery, useGetUsersPostsQuery } from '@/features/userHub/api/user/userService'
 import Image from 'next/image'
-import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
+import { AddPhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddPhotoModal'
 
 const testPosts = [
   //временные данные для теста
@@ -60,8 +60,14 @@ export const MyProfile: NextPageWithLayout = () => {
       descriptionMeta={'View and edit your personal profile information'}
     >
       <section className={'flex justify-between flex-wrap mb-12'}>
-        <div className={'max-w-[204px] h-[204px] w-full'}>
-          <PhotoPreview image={userMe?.data.avatar ?? null} size={204} />
+        <div className={'max-w-[204px] h-[204px] rounded-full'}>
+          <AddPhotoPreview
+            image={userMe?.data.avatar ?? null}
+            size={192}
+            containerClassName={
+              'relative overflow-hidden flex items-center justify-center max-w-[204px] h-[204px] rounded-full m-0 p-0 bg-dark-500'
+            }
+          />
         </div>
         <div className={'w-full max-w-[730px]'}>
           <div className={'flex justify-between items-center mb-5'}>
