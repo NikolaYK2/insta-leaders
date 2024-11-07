@@ -1,15 +1,14 @@
 import { DynamicIcon } from '@nikolajk2/lib-insta-leaders'
-import { ConfirmationModal } from './ConfirmationModal'
 import Image from 'next/image'
 import { cn } from '@/common/utils/cn'
+import { ConfirmationModal } from '@/common/components/ConfirmationModal'
 
 type PhotoPreviewProps = {
   image: null | string
-  onDeletePhoto?: () => void
   onClick?: any
   callback?: any
   styleImage?: string
-  styleBackground?: string
+  styleContainerImage?: string
   styleClose?: string
   size: number
   className?: string
@@ -17,23 +16,20 @@ type PhotoPreviewProps = {
 
 export const PhotoPreview = ({
   image,
-  onDeletePhoto,
   size,
   styleImage,
-  styleBackground,
+  styleContainerImage,
   styleClose,
   className,
   onClick,
   callback,
 }: PhotoPreviewProps) => {
-  // const { handleConfirmation } = usePhotoPreview(onDeletePhoto)
-
   return (
     <div className={'relative'} onClick={onClick}>
       <div
         className={cn(
           'relative overflow-hidden flex items-center justify-center w-[192px] h-[192px] m-0 p-0 bg-dark-500 rounded-full',
-          styleBackground
+          styleContainerImage
         )}
       >
         {image && !image.includes('null') ? (
