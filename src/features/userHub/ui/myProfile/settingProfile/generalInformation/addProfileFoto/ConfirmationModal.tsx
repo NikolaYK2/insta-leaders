@@ -10,13 +10,20 @@ import {
   ModalDescription,
   ModalClose,
   Button,
+  IconId,
 } from '@nikolajk2/lib-insta-leaders'
 
 type ModalProps = {
   confirmation: () => void
+  className?: string
+  iconId?: IconId
 }
 
-export const ConfirmationModal = ({ confirmation }: ModalProps) => {
+export const ConfirmationModal = ({
+  confirmation,
+  className,
+  iconId = 'CloseOutline',
+}: ModalProps) => {
   return (
     <Modal>
       <ModalTrigger
@@ -26,7 +33,7 @@ export const ConfirmationModal = ({ confirmation }: ModalProps) => {
       >
         <DynamicIcon
           className={'border-4 border-black rounded-full bg-danger-500 hover:bg-danger-300'}
-          iconId="CloseOutline"
+          iconId={iconId}
           width={24}
           color="white"
         />
