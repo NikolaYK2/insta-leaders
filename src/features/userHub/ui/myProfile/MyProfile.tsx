@@ -65,7 +65,7 @@ export const MyProfile: NextPageWithLayout = () => {
             image={userMe?.data.avatar ?? null}
             size={192}
             containerClassName={
-              'relative overflow-hidden flex items-center justify-center max-w-[204px] h-[204px] rounded-full m-0 p-0 bg-dark-500'
+              'relative overflow-hidden flex items-center justify-center w-[204px] h-[204px] rounded-full m-0 p-0 bg-dark-500'
             }
           />
         </div>
