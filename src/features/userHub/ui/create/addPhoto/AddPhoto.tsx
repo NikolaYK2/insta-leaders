@@ -17,7 +17,7 @@ export const AddPhoto = () => {
       <div className={'flex flex-col justify-between items-center h-full'}>
         {error && <ErrorMessage className={'absolute'}>{error}</ErrorMessage>}
         <PhotoPreview
-          styleBackground={'rounded-none w-[222px] h-[222px] mb-[60px] mt-[72px]'}
+          styleContainerImage={'rounded-none w-[222px] h-[222px] mb-[60px] mt-[72px]'}
           image={''}
           size={20}
         />
