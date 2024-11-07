@@ -19,7 +19,8 @@ import { AddPhoto } from '@/features/userHub/ui/create/addPhoto'
 import { useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import { selectedImagesSelector } from '@/features/userHub/model/createSlice/createSelectors'
 import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
-import { ConfirmationModal } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/ConfirmationModal'
+import { deleteImages } from '@/features/userHub/model/createSlice'
+import { ConfirmationModal } from '@/common/components/ConfirmationModal'
 
 type Props = ModalProps & {
   className?: string
@@ -27,7 +28,9 @@ type Props = ModalProps & {
 export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
   const images = useAppSelector(selectedImagesSelector)
   const image = images.length
-  const { reset } = useModalAddPhoto({})
+  const { reset } = useModalAddPhoto({
+    deleteActionForImages: deleteImages,
+  })
 
   return (
     <Modal {...props} open={open} onOpenChange={onOpenChange}>
@@ -39,20 +42,20 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
         </ModalTitle>
 
         {image ? (
-          <div>
+          <>
             {/*BUTTON BACK*/}
-            <Button className="absolute top-[16px] left-3.5 p-0" variant={'secondary'}>
-              <ConfirmationModal
-                className={'relative block inset-0 w-[30px] bg-transparent h-full rounded-none'}
-                iconId={'ArrowIosBack'}
-                confirmation={reset}
-              />
-            </Button>
+            <ConfirmationModal
+              className={
+                'absolute top-[16px] left-3.5 p-0 w-[30px] h-[30px] rounded-none bg-transparent'
+              }
+              iconId={'ArrowIosBack'}
+              confirmation={reset}
+            />
 
             <Button className={'absolute top-[11px] right-1'} variant={'text'}>
               <Typography variant={TypographyVariant.h3}>Next</Typography>
             </Button>
-          </div>
+          </>
         ) : (
           <ModalClose
             className={'absolute top-[18px] right-4'}
