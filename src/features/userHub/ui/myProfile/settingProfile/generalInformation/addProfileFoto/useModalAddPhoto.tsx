@@ -1,37 +1,12 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { useAppDispatch } from '@/appRoot/lib/hooks/hooksStore'
-import { actionsCreate } from '@/features/userHub/model/createSlice'
-import { hiddenAlert, showAlert } from '@/appRoot/app.slice'
-import { PayloadAction } from '@reduxjs/toolkit'
-
-export function prepareImageForUpload(dataUrl: string, fieldName: string = 'file'): FormData {
-  // Create FormData
-  const formData = new FormData()
-
-  // Get MIME type from Data URL
-  const mimeType = dataUrl.split(';')[0].split(':')[1] // For example, 'image/jpeg' or 'image/png'
-
-  // Get binary data from Data URL
-  const base64 = dataUrl.split(',')[1]
-  const binaryString = atob(base64)
-
-  // Create Blob from binary data
-  const blob = new Blob(
-    [new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i))],
-    { type: mimeType }
-  )
-
-  // Append Blob to FormData
-  formData.append(fieldName, blob, `avatar.${mimeType.split('/')[1]}`) // The file name will be 'avatar.jpg' or 'avatar.png'
-
-  return formData
-}
+import { ChangeEvent, useRef, useState } from 'react'
+import { useAvatar } from './useAvatar'
 
 type SelectedImages = {
   id: string
   image: string
 }
 type UseModalAddPhotoProps = {
+  setImage: (image: null | string) => void
   photoLimit?: number
   photosLength?: number
   errorMessage?: string
@@ -39,8 +14,8 @@ type UseModalAddPhotoProps = {
   setActionForImages?: (payload: SelectedImages) => PayloadAction<SelectedImages>
 }
 
-export const useModalAddPhoto = <A extends SelectedImages>({
-  photoLimit,
+export const useModalAddPhoto = ({
+                                                             setImage,                                                      photoLimit,
   photosLength,
   errorMessage = '',
   localError = null,
@@ -49,7 +24,6 @@ export const useModalAddPhoto = <A extends SelectedImages>({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<null | string>(localError)
   const [selectedImage, setSelectedImage] = useState<null | string>(null)
-  const [selectedImages, setSelectedImages] = useState<SelectedImages[]>([])
   const [isSaved, setIsSaved] = useState(false)
   const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const dispatch = useAppDispatch()
@@ -59,7 +33,6 @@ export const useModalAddPhoto = <A extends SelectedImages>({
 
   const reset = () => {
     setSelectedImage(null)
-    // setSelectedImages([])
     dispatch(actionsCreate.deleteImages())
     setError(null)
     setIsSaved(false)
@@ -87,13 +60,14 @@ export const useModalAddPhoto = <A extends SelectedImages>({
 
       reader.onload = e => {
         const newImage = e.target?.result as string
+        setSelectedImage(newImage)
+
         // Генерируем уникальный ключ для нового изображения
         const newImages = {
           id: Date.now().toString(), // Генерируем уникальный ID для каждого изображения
           image: newImage,
         }
 
-        setSelectedImage(newImage)
 
         // Обновляем состояние, добавляя новое изображение
         if (photosLength && photoLimit) {
@@ -118,7 +92,7 @@ export const useModalAddPhoto = <A extends SelectedImages>({
 
   const handleSave = () => {
     if (selectedImage) {
-      // setImage(selectedImage)
+      setImage(selectedImage)
       setError(null)
       setIsSaved(true)
     }
