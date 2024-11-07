@@ -49,7 +49,7 @@ const CroppingPhotos = () => {
               image={img.image}
               size={82}
               className={'w-full h-full object-cover object-center cursor-pointer'}
-              styleBackground={'max-w-20 max-h-20'}
+              styleContainerImage={'max-w-20 max-h-20 rounded-none'}
               styleImage={'max-w-20 max-h-20 rounded-none'}
               styleClose={'top-1 right-1 rounded-none bg-dark-100'}
               onClick={() => handleClickImage(img.id)}
