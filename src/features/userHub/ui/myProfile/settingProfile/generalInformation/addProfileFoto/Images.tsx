@@ -1,4 +1,8 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { useAppDispatch } from '@/appRoot/lib/hooks/hooksStore'
+import { actionsCreate } from '@/features/userHub/model/createSlice'
+import { hiddenAlert, showAlert } from '@/appRoot/app.slice'
+import { PayloadAction } from '@reduxjs/toolkit'
 
 export function prepareImageForUpload(dataUrl: string, fieldName: string = 'file'): FormData {
   // Create FormData
@@ -23,29 +27,40 @@ export function prepareImageForUpload(dataUrl: string, fieldName: string = 'file
   return formData
 }
 
-export type SelectedImages = {
+type SelectedImages = {
   id: string
   image: string
 }
 type UseModalAddPhotoProps = {
-  isOpen: boolean
-  setImage: (image: null | string) => void
+  photoLimit?: number
+  photosLength?: number
+  errorMessage?: string
+  localError?: string | null
+  setActionForImages?: (payload: SelectedImages) => PayloadAction<SelectedImages>
 }
 
-export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) => {
+export const useModalAddPhoto = <A extends SelectedImages>({
+  photoLimit,
+  photosLength,
+  errorMessage = '',
+  localError = null,
+  setActionForImages,
+}: UseModalAddPhotoProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [error, setError] = useState<null | string>(null)
+  const [error, setError] = useState<null | string>(localError)
   const [selectedImage, setSelectedImage] = useState<null | string>(null)
   const [selectedImages, setSelectedImages] = useState<SelectedImages[]>([])
   const [isSaved, setIsSaved] = useState(false)
   const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const dispatch = useAppDispatch()
 
   const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB in bytes
   const ALLOWED_FORMATS = ['image/jpeg', 'image/png']
 
   const reset = () => {
     setSelectedImage(null)
-    setSelectedImages([])
+    // setSelectedImages([])
+    dispatch(actionsCreate.deleteImages())
     setError(null)
     setIsSaved(false)
   }
@@ -81,10 +96,18 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
         setSelectedImage(newImage)
 
         // Обновляем состояние, добавляя новое изображение
-        if (selectedImages.length < 3) {
-          setSelectedImages(prevImages => [...prevImages, newImages])
+        if (photosLength && photoLimit) {
+          if (photosLength >= photoLimit) {
+            dispatch(showAlert({ message: errorMessage ?? '', variant: 'alertError' }))
+          } else if (setActionForImages) {
+            dispatch(setActionForImages(newImages))
+          } else {
+            setSelectedImages(prevImages => [...prevImages, newImages])
+          }
+        } else if (setActionForImages) {
+          dispatch(setActionForImages(newImages))
         } else {
-          setError('maximum 10 photos!')
+          setSelectedImages(prevImages => [...prevImages, newImages])
         }
       }
 
@@ -95,7 +118,7 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
 
   const handleSave = () => {
     if (selectedImage) {
-      setImage(selectedImage)
+      // setImage(selectedImage)
       setError(null)
       setIsSaved(true)
     }
@@ -106,7 +129,8 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
   // Устанавливаем новый таймер для сброса ошибки
   errorTimeoutRef.current = setTimeout(() => {
     setError(null)
-  }, 3000)
+    dispatch(hiddenAlert())
+  }, 5000)
 
   useEffect(() => {
     // Очистка таймера при размонтировании компонента
@@ -124,8 +148,6 @@ export const useModalAddPhoto = ({ isOpen, setImage }: UseModalAddPhotoProps) =>
     handleSave,
     isSaved,
     selectedImage,
-    selectedImages,
-    setSelectedImages,
     reset,
   }
 }
