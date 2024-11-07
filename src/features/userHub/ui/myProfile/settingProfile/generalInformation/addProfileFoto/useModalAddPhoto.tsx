@@ -1,25 +1,30 @@
-import { ChangeEvent, useRef, useState } from 'react'
-import { useAvatar } from './useAvatar'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { useAppDispatch } from '@/appRoot/lib/hooks/hooksStore'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { hiddenAlert, showAlert } from '@/appRoot/app.slice'
 
 type SelectedImages = {
   id: string
   image: string
 }
 type UseModalAddPhotoProps = {
-  setImage: (image: null | string) => void
+  setImage?: (image: null | string) => void
   photoLimit?: number
   photosLength?: number
   errorMessage?: string
   localError?: string | null
   setActionForImages?: (payload: SelectedImages) => PayloadAction<SelectedImages>
+  deleteActionForImages?: () => PayloadAction<void>
 }
 
 export const useModalAddPhoto = ({
-                                                             setImage,                                                      photoLimit,
+  setImage,
+  photoLimit,
   photosLength,
   errorMessage = '',
   localError = null,
   setActionForImages,
+  deleteActionForImages,
 }: UseModalAddPhotoProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<null | string>(localError)
@@ -33,7 +38,8 @@ export const useModalAddPhoto = ({
 
   const reset = () => {
     setSelectedImage(null)
-    dispatch(actionsCreate.deleteImages())
+    if (deleteActionForImages) dispatch(deleteActionForImages())
+    // dispatch(actionsCreate.deleteImages())
     setError(null)
     setIsSaved(false)
   }
@@ -68,20 +74,15 @@ export const useModalAddPhoto = ({
           image: newImage,
         }
 
-
         // Обновляем состояние, добавляя новое изображение
         if (photosLength && photoLimit) {
           if (photosLength >= photoLimit) {
             dispatch(showAlert({ message: errorMessage ?? '', variant: 'alertError' }))
           } else if (setActionForImages) {
             dispatch(setActionForImages(newImages))
-          } else {
-            setSelectedImages(prevImages => [...prevImages, newImages])
           }
         } else if (setActionForImages) {
           dispatch(setActionForImages(newImages))
-        } else {
-          setSelectedImages(prevImages => [...prevImages, newImages])
         }
       }
 
@@ -91,7 +92,7 @@ export const useModalAddPhoto = ({
   }
 
   const handleSave = () => {
-    if (selectedImage) {
+    if (selectedImage && setImage) {
       setImage(selectedImage)
       setError(null)
       setIsSaved(true)
