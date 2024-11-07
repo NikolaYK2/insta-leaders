@@ -1,11 +1,15 @@
 import React from 'react'
 import { Button, DynamicIcon } from '@nikolajk2/lib-insta-leaders'
 import { ImageUploader } from '@/common/components/imageUpLoader'
-import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
 import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
-import { actionsCreate } from '@/features/userHub/model/createSlice'
 import { selectedImagesSelector } from '@/features/userHub/model/createSlice/createSelectors'
-import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/Images'
+import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
+import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/PhotoPreview'
+import {
+  deleteImage,
+  setIndexCropImage,
+  setSelectedImages,
+} from '@/features/userHub/model/createSlice'
 
 /**
  * Здесь будут находиться все фото которые пользователь добавит перед тем как постить
@@ -13,7 +17,7 @@ import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile
 const CroppingPhotos = () => {
   const images = useAppSelector(selectedImagesSelector)
   const { handleFileChange, handleClick, fileInputRef } = useModalAddPhoto({
-    setActionForImages: actionsCreate.setSelectedImages,
+    setActionForImages: setSelectedImages,
     photosLength: images.length,
     photoLimit: 3,
     errorMessage: 'maximum 10 photos!',
@@ -22,14 +26,14 @@ const CroppingPhotos = () => {
 
   const handleDeletePhoto = (id: string) => {
     // Теперь setSelectedImages обновит состояние, и картинка будет удалена
-    dispatch(actionsCreate.deleteImage({ id }))
+    dispatch(deleteImage({ id }))
   }
 
   //выбираем в кроппер картинку при клике
   const handleClickImage = (id: string) => {
     const newIndex = images.findIndex(selectImg => selectImg.id === id) // Находим индекс выбранного изображения
     if (newIndex !== -1) {
-      dispatch(actionsCreate.setIndexCropImage(newIndex)) // Устанавливаем currentIndex на выбранное изображение
+      dispatch(setIndexCropImage(newIndex)) // Устанавливаем currentIndex на выбранное изображение
     }
   }
 

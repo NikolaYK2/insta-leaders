@@ -46,4 +46,5 @@ const slice = createSlice({
 })
 
 export const createPostReducer = slice.reducer
-export const actionsCreate = slice.actions
+export const { setSelectedImages, deleteImage, deleteImages, setCroppedImage, setIndexCropImage } =
+  slice.actions

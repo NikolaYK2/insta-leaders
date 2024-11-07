@@ -8,7 +8,7 @@ import {
   indexCropImageSelector,
   selectedImagesSelector,
 } from '@/features/userHub/model/createSlice/createSelectors'
-import { actionsCreate } from '@/features/userHub/model/createSlice'
+import { setCroppedImage, setIndexCropImage } from '@/features/userHub/model/createSlice'
 
 type CarouselBtn = {
   id: string
@@ -53,7 +53,7 @@ export const CroppingPhoto = ({ aspect, setAspect, setAspectOriginal, setZoom, z
       const url = await getCroppedImg(images[indexCropImage]?.image ?? '', croppedArea)
       if (url) {
         // Обновляем текущее изображение в `selectedImages` на обрезанное
-        dispatch(actionsCreate.setCroppedImage({ url }))
+        dispatch(setCroppedImage({ url }))
       }
     } catch (error) {
       console.error('Error generating cropped image:', error)
@@ -86,7 +86,7 @@ export const CroppingPhoto = ({ aspect, setAspect, setAspectOriginal, setZoom, z
         ? Math.min(indexCropImage + 1, images.length - 1) // Переход к следующему изображению
         : Math.max(indexCropImage - 1, 0) // Переход к предыдущему изображению
 
-    dispatch(actionsCreate.setIndexCropImage(newIndex))
+    dispatch(setIndexCropImage(newIndex))
   }
 
   const isPreviousHidden = indexCropImage === 0

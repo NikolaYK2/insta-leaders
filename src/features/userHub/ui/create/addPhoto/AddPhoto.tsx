@@ -1,14 +1,15 @@
 import React from 'react'
-import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddProfilePhoto'
 import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import { ImageUploader } from '@/common/components/imageUpLoader'
 import { ErrorMessage } from '@/common/components/ErrorMessage/ErrorMessage'
-import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/Images'
-import { actionsCreate } from '@/features/userHub/model/createSlice'
+import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
+import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/PhotoPreview'
+import { deleteImages, setSelectedImages } from '@/features/userHub/model/createSlice'
 
 export const AddPhoto = () => {
   const { handleFileChange, handleClick, fileInputRef, error } = useModalAddPhoto({
-    setActionForImages: actionsCreate.setSelectedImages,
+    setActionForImages: setSelectedImages,
+    deleteActionForImages: deleteImages,
   })
 
   return (

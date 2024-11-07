@@ -15,11 +15,11 @@ import {
 } from '@nikolajk2/lib-insta-leaders'
 import { cn } from '@/common/utils/cn'
 import { Cropping } from '@/features/userHub/ui/create/cropping/Cropping'
-import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/Images'
 import { AddPhoto } from '@/features/userHub/ui/create/addPhoto'
 import { useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import { selectedImagesSelector } from '@/features/userHub/model/createSlice/createSelectors'
-import { ConfirmationModal } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/modalAddPhoto'
+import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
+import { ConfirmationModal } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/ConfirmationModal'
 
 type Props = ModalProps & {
   className?: string
