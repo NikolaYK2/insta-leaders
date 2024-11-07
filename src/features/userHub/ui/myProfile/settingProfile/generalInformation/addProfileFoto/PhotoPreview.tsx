@@ -1,31 +1,50 @@
 import { DynamicIcon } from '@nikolajk2/lib-insta-leaders'
-import { usePhotoPreview } from './usePhotoPreview'
 import { ConfirmationModal } from './ConfirmationModal'
 import Image from 'next/image'
+import { cn } from '@/common/utils/cn'
 
 type PhotoPreviewProps = {
   image: null | string
   onDeletePhoto?: () => void
-  preview?: string
+  onClick?: any
+  callback?: any
+  styleImage?: string
+  styleBackground?: string
+  styleClose?: string
   size: number
+  className?: string
 }
 
-export const PhotoPreview = ({ image, onDeletePhoto, size }: PhotoPreviewProps) => {
-  const { handleConfirmation } = usePhotoPreview(onDeletePhoto)
+export const PhotoPreview = ({
+  image,
+  onDeletePhoto,
+  size,
+  styleImage,
+  styleBackground,
+  styleClose,
+  className,
+  onClick,
+  callback,
+}: PhotoPreviewProps) => {
+  // const { handleConfirmation } = usePhotoPreview(onDeletePhoto)
 
   return (
-    <div className={'relative'}>
+    <div className={'relative'} onClick={onClick}>
       <div
-        className={
-          'relative overflow-hidden flex items-center justify-center w-[192px] h-[192px] m-0 p-0 bg-dark-500 rounded-full'
-        }
+        className={cn(
+          'relative overflow-hidden flex items-center justify-center w-[192px] h-[192px] m-0 p-0 bg-dark-500 rounded-full',
+          styleBackground
+        )}
       >
         {image && !image.includes('null') ? (
           <div
-            className={'absolute overflow-hidden flex items-center justify-center w-full h-full'}
+            className={cn(
+              'absolute overflow-hidden flex items-center justify-center w-full h-full',
+              styleImage
+            )}
           >
             <Image
-              className={'w-full h-full object-cover object-center'}
+              className={cn('w-full h-full object-cover object-center', className)}
               alt={'Uploaded'}
               height={size}
               src={image}
@@ -38,7 +57,9 @@ export const PhotoPreview = ({ image, onDeletePhoto, size }: PhotoPreviewProps) 
           </span>
         )}
       </div>
-      {image && !image?.includes('null') && <ConfirmationModal confirmation={handleConfirmation} />}
+      {image && !image?.includes('null') && (
+        <ConfirmationModal className={styleClose} confirmation={callback} />
+      )}
     </div>
   )
 }
