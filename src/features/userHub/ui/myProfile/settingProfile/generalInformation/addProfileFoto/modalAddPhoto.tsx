@@ -2,6 +2,7 @@ import Image from 'next/image'
 import {
   Button,
   DynamicIcon,
+  IconId,
   Modal,
   ModalClose,
   ModalContent,
@@ -30,7 +31,7 @@ export const ModalAddPhoto = ({ isOpen, setImage }: ModalAddPhotoProps) => {
     handleSave,
     isSaved,
     selectedImage,
-  } = useModalAddPhoto({ isOpen, setImage })
+  } = useModalAddPhoto({})
 
   return (
     <Modal>
@@ -127,9 +128,14 @@ const PhotoPreview = ({ image, size }: PhotoPreviewProps) => {
 type ModalProps = {
   confirmation: () => void
   className?: string
+  iconId?: IconId
 }
 
-export const ConfirmationModal = ({ confirmation, className }: ModalProps) => {
+export const ConfirmationModal = ({
+  confirmation,
+  className,
+  iconId = 'CloseOutline',
+}: ModalProps) => {
   return (
     <Modal>
       <ModalTrigger
@@ -138,7 +144,8 @@ export const ConfirmationModal = ({ confirmation, className }: ModalProps) => {
           className
         )}
       >
-        <DynamicIcon iconId="CloseOutline" />
+        <DynamicIcon iconId={iconId} />
+        {/*<DynamicIcon iconId="CloseOutline" />*/}
       </ModalTrigger>
       <ModalContent className={'w-full max-w-[492px]'}>
         <ModalTitle className={'text-light-100'}>
