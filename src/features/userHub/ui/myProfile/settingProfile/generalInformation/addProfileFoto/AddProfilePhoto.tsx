@@ -14,7 +14,7 @@ export const AddProfilePhoto = () => {
         image={image}
         size={96}
         onDeletePhoto={handleDeletePhoto}
-        preview={'h-192 w-192 object-cover rounded-full'}
+        styleImage={'h-192 w-192 object-cover rounded-full'}
       />
       <AddPhotoModal setImage={setImage} />
     </div>
