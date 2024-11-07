@@ -12,6 +12,7 @@ import {
   Button,
   IconId,
 } from '@nikolajk2/lib-insta-leaders'
+import { cn } from '@/common/utils/cn'
 
 type ModalProps = {
   confirmation: () => void
@@ -27,9 +28,10 @@ export const ConfirmationModal = ({
   return (
     <Modal>
       <ModalTrigger
-        className={
-          'cursor-pointer absolute top-[19px] right-2.5 flex items-center justify-center w-6 h-6'
-        }
+        className={cn(
+          'cursor-pointer absolute top-[19px] right-2.5 flex items-center justify-center w-6 h-6',
+          className
+        )}
       >
         <DynamicIcon
           className={'border-4 border-black rounded-full bg-danger-500 hover:bg-danger-300'}
