@@ -19,7 +19,8 @@
     "@reduxjs/toolkit": "2.2.7",
     "async-mutex": "^0.5.0",
     "clsx": "^2.1.1",
-    "next": "14.2.12",
+    "idb": "^8.0.0",
+    "next": "15.0.3",
     "next-redux-wrapper": "8.1.0",
     "react": "18",
     "react-dom": "18",
@@ -44,5 +45,5 @@
     "tailwindcss": "3.4.1",
     "typescript": "5"
   },
-  "packageManager": "pnpm@9.12.1+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
+  "packageManager": "pnpm@9.12.3+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
 }
