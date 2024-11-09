@@ -18,7 +18,7 @@ const createImage = (url: string): Promise<HTMLImageElement> =>
 export const getCroppedImg = async (
   imageSrc: string,
   pixelCrop: Area | undefined
-): Promise<string | undefined> => {
+): Promise<Blob | undefined> => {
   // Загружает изображение из указанного URL с помощью функции `createImage`.
   const image = await createImage(imageSrc)
   // Создает элемент `canvas`, который используется для отображения обрезанного изображения.
@@ -49,8 +49,8 @@ export const getCroppedImg = async (
 
   return new Promise(resolve => {
     canvas.toBlob(blob => {
-      // Преобразует изображение на канвасе в `blob` (бинарный объект), затем создает URL для этого `blob`, который можно использовать для отображения или сохранения.
-      resolve(blob ? URL.createObjectURL(blob) : undefined)
+      // Преобразует изображение на канвасе в `blob` (бинарный объект)
+      resolve(blob ? blob : undefined)
       // Второй аргумент `'image/jpeg'` указывает, что формат изображения должен быть JPEG.
     }, 'image/jpeg')
   })
