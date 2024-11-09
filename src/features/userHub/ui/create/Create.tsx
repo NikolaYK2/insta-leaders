@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Button,
   DynamicIcon,
@@ -16,11 +16,12 @@ import {
 import { cn } from '@/common/utils/cn'
 import { Cropping } from '@/features/userHub/ui/create/cropping/Cropping'
 import { AddPhoto } from '@/features/userHub/ui/create/addPhoto'
-import { useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
+import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import { selectedImagesSelector } from '@/features/userHub/model/createSlice/createSelectors'
 import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
 import { deleteImages } from '@/features/userHub/model/createSlice'
 import { ConfirmationModal } from '@/common/components/ConfirmationModal'
+import { loadSavedImages } from '@/features/userHub/ui/create/lib/loadSavedImages'
 
 type Props = ModalProps & {
   className?: string
@@ -28,9 +29,13 @@ type Props = ModalProps & {
 export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
   const images = useAppSelector(selectedImagesSelector)
   const image = images.length
+  const dispatch = useAppDispatch()
   const { reset } = useModalAddPhoto({
     deleteActionForImages: deleteImages,
   })
+  useEffect(() => {
+    loadSavedImages(dispatch)
+  }, [])
 
   return (
     <Modal {...props} open={open} onOpenChange={onOpenChange}>
@@ -40,7 +45,6 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
             <h2>{image ? 'Cropping' : 'Add Photo'}</h2>
           </Typography>
         </ModalTitle>
-
         {image ? (
           <>
             {/*BUTTON BACK*/}
@@ -49,6 +53,9 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
                 'absolute top-[16px] left-3.5 p-0 w-[30px] h-[30px] rounded-none bg-transparent'
               }
               iconId={'ArrowIosBack'}
+              description={
+                'Do you really want to close the creation of a publication? If you close everything will be deleted'
+              }
               confirmation={reset}
             />
 
