@@ -4,11 +4,11 @@ import { ImageUploader } from '@/common/components/imageUpLoader'
 import { ErrorMessage } from '@/common/components/ErrorMessage/ErrorMessage'
 import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
 import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/PhotoPreview'
-import { deleteImages, setSelectedImages } from '@/features/userHub/model/createSlice'
+import { deleteImages, setImage } from '@/features/userHub/model/createSlice'
 
 export const AddPhoto = () => {
   const { handleFileChange, handleClick, fileInputRef, error } = useModalAddPhoto({
-    setActionForImages: setSelectedImages,
+    setActionForImages: setImage,
     deleteActionForImages: deleteImages,
   })
 
