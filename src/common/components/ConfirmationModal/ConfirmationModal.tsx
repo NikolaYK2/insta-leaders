@@ -18,12 +18,14 @@ type ModalProps = {
   confirmation: () => void
   className?: string
   iconId?: IconId
+  description?: string
 }
 
 export const ConfirmationModal = ({
   confirmation,
   className,
   iconId = 'CloseOutline',
+  description = '',
 }: ModalProps) => {
   return (
     <Modal>
@@ -45,7 +47,7 @@ export const ConfirmationModal = ({
         >
           <ModalDescription asChild>
             <Typography className={'text-light-100'} variant={TypographyVariant.regular_text_16}>
-              Are you sure you want to delete the photo?
+              {description || 'Are you sure you want to delete the photo?'}
             </Typography>
           </ModalDescription>
           <div className={'flex justify-between max-w-[216px] w-full ml-auto'}>
