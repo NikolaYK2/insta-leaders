@@ -4,24 +4,27 @@ export type SelectedImages = {
   id: string
   image: string
 }
-type InitialState = {
+export type InitialStateCreat = {
   selectedImages: SelectedImages[]
   indexCropImage: number
   error: null | string
 }
-const initialState: InitialState = {
+const initialStateCreate: InitialStateCreat = {
   selectedImages: [],
   indexCropImage: 0,
   error: null,
 }
 const slice = createSlice({
   name: 'create',
-  initialState: initialState,
+  initialState: initialStateCreate,
   reducers: {
-    setSelectedImages: (state, action: PayloadAction<SelectedImages>) => {
+    setImage: (state, action: PayloadAction<SelectedImages>) => {
       state.selectedImages.push(action.payload)
       state.indexCropImage = state.selectedImages.length - 1 // Устанавливаем индекс на последнее изображение,
       // а значит переключаемся на добавленное фото
+    },
+    setImages: (state, action: PayloadAction<SelectedImages[]>) => {
+      state.selectedImages = action.payload
     },
     setCroppedImage: (state, action: PayloadAction<{ url: string }>) => {
       const index = state.selectedImages.findIndex((img, i) => i === state.indexCropImage)
@@ -33,9 +36,10 @@ const slice = createSlice({
     deleteImage: (state, action: PayloadAction<{ id: string }>) => {
       const index = state.selectedImages.findIndex(image => image.id === action.payload.id)
       if (index !== -1) {
-        state.selectedImages.splice(index, 1)
-        state.indexCropImage = state.selectedImages.length - 1 // Устанавливаем индекс на последнее изображение,
         // а значит показываем последнее еще имеющееся фото
+        state.selectedImages.splice(index, 1)
+
+        state.indexCropImage = Math.max(0, state.selectedImages.length - 1) // Устанавливаем индекс на последнее изображение,
       }
     },
     deleteImages: state => {
@@ -46,5 +50,11 @@ const slice = createSlice({
 })
 
 export const createPostReducer = slice.reducer
-export const { setSelectedImages, deleteImage, deleteImages, setCroppedImage, setIndexCropImage } =
-  slice.actions
+export const {
+  setImages,
+  setImage,
+  deleteImage,
+  deleteImages,
+  setCroppedImage,
+  setIndexCropImage,
+} = slice.actions
