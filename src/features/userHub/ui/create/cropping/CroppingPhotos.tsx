@@ -5,11 +5,8 @@ import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import { selectedImagesSelector } from '@/features/userHub/model/createSlice/createSelectors'
 import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
 import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/PhotoPreview'
-import {
-  deleteImage,
-  setIndexCropImage,
-  setSelectedImages,
-} from '@/features/userHub/model/createSlice'
+import { deleteImage, setImage, setIndexCropImage } from '@/features/userHub/model/createSlice'
+import { indexDBUtils } from '@/common/utils'
 
 /**
  * Здесь будут находиться все фото которые пользователь добавит перед тем как постить
@@ -17,15 +14,19 @@ import {
 const CroppingPhotos = () => {
   const images = useAppSelector(selectedImagesSelector)
   const { handleFileChange, handleClick, fileInputRef } = useModalAddPhoto({
-    setActionForImages: setSelectedImages,
+    setActionForImages: setImage,
     photosLength: images.length,
-    photoLimit: 3,
+    photoLimit: 10,
     errorMessage: 'maximum 10 photos!',
   })
   const dispatch = useAppDispatch()
 
-  const handleDeletePhoto = (id: string) => {
-    // Теперь setSelectedImages обновит состояние, и картинка будет удалена
+  const handleDeletePhoto = async (id: string) => {
+    const imageToDelete = images.find(img => img.id === id)
+    if (imageToDelete) {
+      URL.revokeObjectURL(imageToDelete.image) // Освобождаем память для удалённого URL
+    }
+    await indexDBUtils.deleteImageById(id)
     dispatch(deleteImage({ id }))
   }
 
@@ -36,15 +37,14 @@ const CroppingPhotos = () => {
       dispatch(setIndexCropImage(newIndex)) // Устанавливаем currentIndex на выбранное изображение
     }
   }
-
   return (
     <div
       className={'absolute flex items-start bottom-[60px] right-3 bg-dark-500/40'}
       onClick={e => e.stopPropagation()}
     >
-      <div className={'flex flex-wrap'}>
+      <div className={'flex flex-wrap overflow-hidden'}>
         {images.map(img => (
-          <div key={img.id} className={'flex max-w-[82px] max-h-[82px] overflow-hidden m-1.5'}>
+          <div key={img.id} className="flex max-w-[82px] max-h-[82px] overflow-hidden m-1.5">
             <PhotoPreview
               image={img.image}
               size={82}
