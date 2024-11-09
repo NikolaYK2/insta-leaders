@@ -2,7 +2,7 @@ import Cropper, { Area, MediaSize } from 'react-easy-crop'
 import { Button, DynamicIcon } from '@nikolajk2/lib-insta-leaders'
 import { cn } from '@/common/utils/cn'
 import React, { useCallback, useState } from 'react'
-import { getCroppedImg } from '@/common/utils'
+import { getCroppedImg, indexDBUtils } from '@/common/utils'
 import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import {
   indexCropImageSelector,
@@ -50,10 +50,11 @@ export const CroppingPhoto = ({ aspect, setAspect, setAspectOriginal, setZoom, z
     if (images.length === 0) return
 
     try {
-      const url = await getCroppedImg(images[indexCropImage]?.image ?? '', croppedArea)
-      if (url) {
+      const blob = await getCroppedImg(images[indexCropImage]?.image ?? '', croppedArea)
+      if (blob) {
         // Обновляем текущее изображение в `selectedImages` на обрезанное
-        dispatch(setCroppedImage({ url }))
+        dispatch(setCroppedImage({ url: URL.createObjectURL(blob) })) // URL для отображения в интерфейсе
+        await indexDBUtils.updateImageById({ id: images[indexCropImage].id, updatedImage: blob })
       }
     } catch (error) {
       console.error('Error generating cropped image:', error)
@@ -107,24 +108,22 @@ export const CroppingPhoto = ({ aspect, setAspect, setAspectOriginal, setZoom, z
         />
       </div>
       {/*КНОПКИ СЛАЙДА*/}
-      {carouselBtn.map(btn => {
-        return (
-          <Button
-            key={btn.id}
-            className={cn(
-              'absolute top-[50%] p-2 bg-dark-500/80 text-light-100',
-              images.length === 1 && 'hidden',
-              btn.id === 'next' && isPreviousHidden && 'hidden',
-              btn.id === 'back' && isNextHidden && 'hidden',
-              btn.classname
-            )}
-            variant={'text'}
-            onClick={() => handleGetCarousel(btn.id)}
-          >
-            <DynamicIcon iconId={btn.iconId} width={24} height={24} />
-          </Button>
-        )
-      })}
+      {carouselBtn.map(btn => (
+        <Button
+          key={btn.id}
+          className={cn(
+            'absolute top-[50%] p-2 bg-dark-500/80 text-light-100',
+            images.length === 1 && 'hidden',
+            btn.id === 'next' && isPreviousHidden && 'hidden',
+            btn.id === 'back' && isNextHidden && 'hidden',
+            btn.classname
+          )}
+          variant={'text'}
+          onClick={() => handleGetCarousel(btn.id)}
+        >
+          <DynamicIcon iconId={btn.iconId} width={24} height={24} />
+        </Button>
+      ))}
     </>
   )
 }
