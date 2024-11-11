@@ -132,7 +132,7 @@ export const SignUp: NextPageWithLayout = () => {
               iconEnd={
                 <DynamicIcon
                   onClick={() => setShowPassword(prevState => !prevState)}
-                  className={'cursor-pointer'}
+                  className={'cursor-pointer fill-light-100'}
                   iconId={showPassword ? 'Eye' : 'EyeOff'}
                 />
               }
@@ -152,7 +152,7 @@ export const SignUp: NextPageWithLayout = () => {
               iconEnd={
                 <DynamicIcon
                   onClick={() => setShowPasswordConfirmation(prevState => !prevState)}
-                  className={'cursor-pointer'}
+                  className={'cursor-pointer fill-light-100'}
                   iconId={showPasswordConfirmation ? 'Eye' : 'EyeOff'}
                 />
               }
@@ -163,7 +163,7 @@ export const SignUp: NextPageWithLayout = () => {
           <div className={'flex flex-col space-y-5'}>
             <div className={'flex items-center justify-center text-center'}>
               <ControllerCheckbox name={'agreesToTOS'} control={control} />
-              <Typography variant={TypographyVariant.small_text} className={''}>
+              <Typography variant={TypographyVariant.small_text} className={'text-light-100'}>
                 I agree to the{' '}
                 <Link
                   href={ROUTES_AUTH.TERMS_OF_SERVICE}
@@ -191,7 +191,7 @@ export const SignUp: NextPageWithLayout = () => {
 
         {/*  Вход в аккаунт */}
         <div className={'flex flex-col items-center gap-y-3 mt-[18px] '}>
-          <Typography variant={TypographyVariant.regular_text_16}>
+          <Typography variant={TypographyVariant.regular_text_16} className={'text-light-100'}>
             Do you have an account?
           </Typography>
           <Link href={ROUTES_AUTH.LOGIN} className={'text-accent-500'}>
