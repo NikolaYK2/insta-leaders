@@ -17,7 +17,12 @@ export const AuthByGithub = () => {
       className={'flex items-center hover:text-light-100 p-1 border-2 border-transparent'}
       href={link}
     >
-      <DynamicIcon iconId={'GithubSvgrepoCom31'} width={36} height={36} />
+      <DynamicIcon
+        className={'fill-light-100'}
+        iconId={'GithubSvgrepoCom31'}
+        width={36}
+        height={36}
+      />
     </Link>
   )
 }
