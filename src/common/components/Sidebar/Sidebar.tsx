@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ROUTES_APP } from '@/appRoot/routes/routes'
 import LogOut from '@/features/auth/ui/logOut/logOut'
 import { NextPageWithLayout } from '@/pages/_app'
-
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 import { cn } from '@/common/utils/cn'
 import { DynamicIcon, IconId } from '@nikolajk2/lib-insta-leaders'
+import { Create } from '@/features/userHub/ui/create/Create'
 
 type Routs = {
-  href: string
+  href?: string
   label: string
   style?: string
   icon: IconId
+  component?: ReactNode
 }
 const routs: Routs[] = [
   { href: ROUTES_APP.HOME, label: 'Home', icon: 'HomeOutline' },
-  { href: ROUTES_APP.CREATE, label: 'Create', icon: 'PlusSquareOutline' },
+  { label: 'Create', icon: 'PlusSquareOutline', component: <Create /> },
   { href: ROUTES_APP.PROFILE, label: 'My Profile', icon: 'PersonOutline' },
   { href: ROUTES_APP.MESSENGER, label: 'Messenger', icon: 'MessageCircle' },
   { href: ROUTES_APP.SEARCH, label: 'Search', style: 'mb-[38.66%]', icon: 'Search' },
@@ -25,12 +26,20 @@ const routs: Routs[] = [
 ]
 export const Sidebar: NextPageWithLayout = () => {
   const [userId, setUserId] = useState<string | null>(null)
+  const [open, setOpen] = useState<boolean>(false)
 
-  //проверяет, если href равен ROUTES_APP.PROFILE так как в profile нужно передать id
-  const getHref = (href: string) => {
+  // Получает путь для ссылки, добавляя userId, если нужно
+  const getHref = (href: string | undefined) => {
+    if (!href) return '#'
     return href === ROUTES_APP.PROFILE ? `${href}/${userId}` : href
   }
 
+  // Обработчик клика, открывающий модал для 'Create'
+  const handlerClickLink = (label: string) => {
+    if (label === 'Create') {
+      setOpen(true)
+    }
+  }
   useEffect(() => {
     const storedUserId = LocalStorageUtil.getValue('userId') as string | null
 
@@ -44,12 +53,14 @@ export const Sidebar: NextPageWithLayout = () => {
       >
         {routs.map(rout => (
           <Link
-            className={cn('flex mb-[17.4%]', rout.style)}
+            className={cn('relative flex mb-[17.4%]', rout.style)}
             href={getHref(rout.href)}
             key={rout.label}
+            onClick={() => handlerClickLink(rout.label)}
           >
             <DynamicIcon className={' mr-[19px]'} iconId={rout.icon} width={24} height={24} />
             {rout.label}
+            {rout.label === 'Create' && <Create open={open} onOpenChange={setOpen} />}
           </Link>
         ))}
         <LogOut />

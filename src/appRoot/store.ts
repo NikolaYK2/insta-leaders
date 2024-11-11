@@ -2,12 +2,14 @@ import { Action, combineSlices, configureStore, ThunkAction } from '@reduxjs/too
 import { createWrapper } from 'next-redux-wrapper'
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import { appSlice } from '@/appRoot/app.slice'
+import { createPostReducer } from '@/features/userHub/model/createSlice/createSlice'
 
 const makeStore = () =>
   configureStore({
     reducer: combineSlices({
       [instaLeadersApi.reducerPath]: instaLeadersApi.reducer,
       alert: appSlice,
+      create: createPostReducer,
     }),
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(instaLeadersApi.middleware),
 

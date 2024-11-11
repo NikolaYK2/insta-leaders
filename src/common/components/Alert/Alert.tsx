@@ -3,6 +3,7 @@ import { Toast } from '@nikolajk2/lib-insta-leaders'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppState } from '@/appRoot/store'
 import { AlertState, hiddenAlert } from '@/appRoot/app.slice'
+import { cn } from '@/common/utils/cn'
 
 type Props = {
   ms?: number
@@ -32,7 +33,7 @@ export const Alert = ({ className, ms = 3000 }: Props) => {
   if (!message) return null
 
   return (
-    <div className={`${isShow ? 'block' : 'hidden'} absolute bottom-6 left-[173px] z-50`}>
+    <div className={cn(isShow ? 'block' : 'hidden', 'fixed bottom-[5%] left-[2%] z-50', className)}>
       <Toast variant={variant} callback={handleClose} maxWidth={'auto'}>
         {message}
       </Toast>
