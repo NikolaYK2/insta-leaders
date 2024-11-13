@@ -1,32 +1,13 @@
 import Cropper, { Area, MediaSize } from 'react-easy-crop'
-import { Button, DynamicIcon } from '@nikolajk2/lib-insta-leaders'
-import { cn } from '@/common/utils/cn'
 import React, { useCallback, useState } from 'react'
 import { getCroppedImg, indexDBUtils } from '@/common/utils'
 import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import {
-  indexCropImageSelector,
-  selectedImagesSelector,
+  selectorIndexCropImage,
+  selectorSelectedImages,
 } from '@/features/userHub/model/createSlice/createSelectors'
-import { setCroppedImage, setIndexCropImage } from '@/features/userHub/model/createSlice'
-
-type CarouselBtn = {
-  id: string
-  iconId: 'ArrowIosForward'
-  classname: string
-}
-const carouselBtn: CarouselBtn[] = [
-  {
-    id: 'next',
-    iconId: 'ArrowIosForward',
-    classname: 'left-3 rotate-180',
-  },
-  {
-    id: 'back',
-    iconId: 'ArrowIosForward',
-    classname: 'right-3',
-  },
-]
+import { setCroppedImage } from '@/features/userHub/model/createSlice'
+import { CarouselBtn } from '@/features/userHub/ui/create/carouselBtn'
 
 type Props = {
   aspect: number | undefined
@@ -39,8 +20,8 @@ export const CroppingPhoto = ({ aspect, setAspect, setAspectOriginal, setZoom, z
   const [crop, setCrop] = useState({ x: 0, y: 0 }) //координаты для cropper
   const [lastTap, setLastTap] = useState<number>(0) //обрезка для двойного нажатия на мобилках
   const [croppedArea, setCroppedArea] = useState<Area>() //координаты после обрезки фото
-  const images = useAppSelector(selectedImagesSelector)
-  const indexCropImage = useAppSelector(indexCropImageSelector)
+  const images = useAppSelector(selectorSelectedImages)
+  const indexCropImage = useAppSelector(selectorIndexCropImage)
   const dispatch = useAppDispatch()
   const onCropComplete = (croppedAreaPercentage: Area, croppedAreaPixels: Area) => {
     setCroppedArea(croppedAreaPixels)
@@ -80,19 +61,6 @@ export const CroppingPhoto = ({ aspect, setAspect, setAspectOriginal, setZoom, z
     setLastTap(currentTime)
   }
 
-  // для слайдов
-  const handleGetCarousel = (idBtn: string) => {
-    const newIndex =
-      idBtn === 'back'
-        ? Math.min(indexCropImage + 1, images.length - 1) // Переход к следующему изображению
-        : Math.max(indexCropImage - 1, 0) // Переход к предыдущему изображению
-
-    dispatch(setIndexCropImage(newIndex))
-  }
-
-  const isPreviousHidden = indexCropImage === 0
-  const isNextHidden = indexCropImage === images.length - 1
-
   return (
     <>
       <div onDoubleClick={handleGenerateCroppedImage} onTouchEnd={handleTouch}>
@@ -107,23 +75,8 @@ export const CroppingPhoto = ({ aspect, setAspect, setAspectOriginal, setZoom, z
           onMediaLoaded={onMediaLoaded}
         />
       </div>
-      {/*КНОПКИ СЛАЙДА*/}
-      {carouselBtn.map(btn => (
-        <Button
-          key={btn.id}
-          className={cn(
-            'absolute top-[50%] p-2 bg-dark-500/80 text-light-100',
-            images.length === 1 && 'hidden',
-            btn.id === 'next' && isPreviousHidden && 'hidden',
-            btn.id === 'back' && isNextHidden && 'hidden',
-            btn.classname
-          )}
-          variant={'text'}
-          onClick={() => handleGetCarousel(btn.id)}
-        >
-          <DynamicIcon iconId={btn.iconId} width={24} height={24} />
-        </Button>
-      ))}
+      {/*/!*КНОПКИ СЛАЙДА*!/*/}
+      <CarouselBtn arrayItems={images} indexItems={indexCropImage} />
     </>
   )
 }
