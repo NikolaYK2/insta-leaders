@@ -17,29 +17,34 @@ import { cn } from '@/common/utils/cn'
 import { Cropping } from '@/features/userHub/ui/create/cropping/Cropping'
 import { AddPhoto } from '@/features/userHub/ui/create/addPhoto'
 import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
-import { selectedImagesSelector } from '@/features/userHub/model/createSlice/createSelectors'
+import { selectorSelectedImages } from '@/features/userHub/model/createSlice/createSelectors'
 import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
 import { deleteImages } from '@/features/userHub/model/createSlice'
 import { ConfirmationModal } from '@/common/components/ConfirmationModal'
 import { loadSavedImages } from '@/features/userHub/ui/create/lib/loadSavedImages'
+import { Filters } from '@/features/userHub/ui/create/filters/Filters'
 
 type Props = ModalProps & {
   className?: string
 }
 export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
-  const images = useAppSelector(selectedImagesSelector)
+  const images = useAppSelector(selectorSelectedImages)
   const image = images.length
   const dispatch = useAppDispatch()
+  const filter = true
   const { reset } = useModalAddPhoto({
     deleteActionForImages: deleteImages,
   })
   useEffect(() => {
-    loadSavedImages(dispatch)
+    loadSavedImages(dispatch) //получаем фото из хранилища indexDB
   }, [])
 
   return (
     <Modal {...props} open={open} onOpenChange={onOpenChange}>
-      <ModalContent className={'flex flex-col max-w-[492px] h-[564px]'}>
+      <ModalContent
+        className={cn('flex flex-col max-w-[492px] h-[564px]', filter && 'max-w-[972px] h-auto')}
+      >
+        {/*<ModalContent className={'flex flex-col max-w-[492px] h-[564px]'}>*/}
         <ModalTitle className={cn('flex', image && 'justify-center')} asChild>
           <Typography variant={TypographyVariant.h1} asChild>
             <h2>{image ? 'Cropping' : 'Add Photo'}</h2>
@@ -81,7 +86,8 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
         <ModalContentItem
           className={cn('relative flex flex-col pt-[0px] pb-12 h-full z-50', image && 'p-3')}
         >
-          {image ? <Cropping /> : <AddPhoto />}
+          {image ? <Filters /> : <AddPhoto />}
+          {/*{image ? <Cropping /> : <AddPhoto />}*/}
         </ModalContentItem>
       </ModalContent>
     </Modal>
