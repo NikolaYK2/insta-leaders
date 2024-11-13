@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, DynamicIcon } from '@nikolajk2/lib-insta-leaders'
 import { ImageUploader } from '@/common/components/imageUpLoader'
 import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
-import { selectedImagesSelector } from '@/features/userHub/model/createSlice/createSelectors'
+import { selectorSelectedImages } from '@/features/userHub/model/createSlice/createSelectors'
 import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
 import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/PhotoPreview'
 import { deleteImage, setImage, setIndexCropImage } from '@/features/userHub/model/createSlice'
@@ -12,7 +12,7 @@ import { indexDBUtils } from '@/common/utils'
  * Здесь будут находиться все фото которые пользователь добавит перед тем как постить
  */
 const CroppingPhotos = () => {
-  const images = useAppSelector(selectedImagesSelector)
+  const images = useAppSelector(selectorSelectedImages)
   const { handleFileChange, handleClick, fileInputRef } = useModalAddPhoto({
     setActionForImages: setImage,
     photosLength: images.length,
