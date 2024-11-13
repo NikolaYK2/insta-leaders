@@ -4,16 +4,16 @@ import { CroppingSettingSize, MemoizedCroppingPhotos } from '@/features/userHub/
 import { CroppingSettingBtn } from '@/features/userHub/ui/create/cropping/CroppingSettingBtn'
 import { CroppingPhoto } from '@/features/userHub/ui/create/cropping/CroppingPhoto'
 import { useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
-import { selectedImagesSelector } from '@/features/userHub/model/createSlice/createSelectors'
+import { selectorSelectedImages } from '@/features/userHub/model/createSlice/createSelectors'
 
-export type IconBtnCropping = 'ExpandOutline' | 'MaximizeOutline' | 'Image'
+export type IconBtnCropping = 'ExpandOutline' | 'MaximizeOutline' | 'Image' | 'ColorPaletteOutline'
 
 export const Cropping = () => {
   const [activeButton, setActiveButton] = useState<IconBtnCropping | null>(null)
   const [zoom, setZoom] = useState(1)
   const [aspect, setAspect] = useState<number | undefined>(undefined)
   const [aspectOriginal, setAspectOriginal] = useState<number | undefined>(undefined)
-  const images = useAppSelector(selectedImagesSelector)
+  const images = useAppSelector(selectorSelectedImages)
 
   const handleAspectChange = (newAspect: number | undefined) => setAspect(newAspect)
 
