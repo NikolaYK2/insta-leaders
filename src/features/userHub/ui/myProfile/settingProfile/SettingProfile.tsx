@@ -3,14 +3,14 @@ import { NextPageWithLayout } from '@/pages/_app'
 import { TabContent, Tabs, TabType } from '@nikolajk2/lib-insta-leaders'
 import { Page } from '@/common/components/page'
 import { GeneralInformation } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/GeneralInformation'
-import { Devices } from './devices/Devices'
+import { DeviceComponent } from './devices/Devices'
 
 type TabsTrigger = TabType & {
   component: ReactNode
 }
 const tabsTrigger: TabsTrigger[] = [
   { value: 'General information', title: 'General information', component: <GeneralInformation /> },
-  { value: 'Devices', title: 'Devices', component: <Devices /> },
+  { value: 'Devices', title: 'Devices', component: <DeviceComponent /> },
   { value: 'Account Management', title: 'Account Management', component: 'Account Management' },
   { value: 'My payments', title: 'My payments', component: 'My payments' },
 ]

@@ -7,16 +7,12 @@ import { Card, DynamicIcon, Typography, TypographyVariant } from '@nikolajk2/lib
 import { useGetDevicesQuery } from '@/features/userHub/api/devices/devices'
 import { Device } from '@/features/userHub/api/devices/devices.types'
 
-type DevicesProps = {
-  device: Device
-}
-
-export const DeviceComponent = ({ device }: DevicesProps) => {
-  const { data: devices, isLoading: loadingDevices } = useGetDevicesQuery()
+export const DeviceComponent = () => {
+  const { data, error, isLoading } = useGetDevicesQuery()
 
   return (
     <Page titleMeta={'Devices'} descriptionMeta={'devices'} className={'pt-0'}>
-      <section className={'flex justify-between flex-wrap mt-[3.04%]'}>
+      {/* <section className={'flex justify-between flex-wrap mt-[3.04%]'}>
         <Typography variant={TypographyVariant.h3} className="text-light-100">
           Current device
         </Typography>
@@ -24,29 +20,35 @@ export const DeviceComponent = ({ device }: DevicesProps) => {
           <DynamicIcon iconId="GoogleSvgrepoCom1" width={36} height={36} />
           <Typography variant={TypographyVariant.bold_text_16} className="text-light-100">
             Google
-          </Typography>
-          <Typography variant={TypographyVariant.regular_text_14} className="text-light-100">
-            {device.ip}
-          </Typography>
+          </Typography> */}
+      {/* <Typography variant={TypographyVariant.regular_text_14} className="text-light-100"> */}
+      {data?.data.map(device => (
+        <div key={device.deviceId}>
+          <p>IP: {device.ip}</p>
+          <p>Title: {device.title}</p>
+          <p>Last Active Date: {device.lastActiveDate}</p>
+        </div>
+      ))}
+      {/* </Typography>
         </Card>
-      </section>
+      </section> */}
     </Page>
   )
 }
 
-export const Devices: NextPageWithLayout = () => {
-  return (
-    <Page titleMeta={'Devices'} descriptionMeta={'devices'} className={'pt-0'}>
-      <section className={'flex justify-between flex-wrap mt-[3.04%]'}>
-        <DeviceComponent
-          device={{
-            ip: '',
-            title: '',
-            lastActiveDate: '',
-            deviceId: '',
-          }}
-        />
-      </section>
-    </Page>
-  )
-}
+// export const Devices: NextPageWithLayout = () => {
+//   return (
+//     <Page titleMeta={'Devices'} descriptionMeta={'devices'} className={'pt-0'}>
+//       <section className={'flex justify-between flex-wrap mt-[3.04%]'}>
+//         <DeviceComponent
+//           device={{
+//             ip: '',
+//             title: '',
+//             lastActiveDate: '',
+//             deviceId: '',
+//           }}
+//         />
+//       </section>
+//     </Page>
+//   )
+// }
