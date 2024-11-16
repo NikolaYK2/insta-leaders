@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { IconBtnCropping } from '@/features/userHub/ui/create'
 import { Button, DynamicIcon } from '@nikolajk2/lib-insta-leaders'
 import { cn } from '@/common/utils/cn'
+import { IconBtnCropping } from '@/features/userHub/ui/create/ui/cropping/Cropping'
 
 type SettingButton = {
   icon: IconBtnCropping
@@ -20,8 +20,10 @@ type Props = {
 export const CroppingSettingBtn = ({ handleGetImage, disabled }: Props) => {
   const [isActiveBtn, setIsActiveBtn] = useState<IconBtnCropping | null>(null)
 
-  const handleIsActive = (icon: IconBtnCropping) =>
+  const handleIsActive = (icon: IconBtnCropping) => {
     setIsActiveBtn(isActiveBtn === icon ? null : icon) //Это означает, что пользователь нажал на уже активную кнопку
+    handleGetImage(icon)
+  }
 
   return (
     <div className={'flex mt-auto'}>
@@ -40,10 +42,7 @@ export const CroppingSettingBtn = ({ handleGetImage, disabled }: Props) => {
             )}
             variant={'secondary'}
             key={btn.icon}
-            onClick={() => {
-              handleGetImage(btn.icon)
-              handleIsActive(btn.icon)
-            }}
+            onClick={() => handleIsActive(btn.icon)}
           >
             <DynamicIcon
               className={cn(isActive ? 'text-accent-500' : 'text-light-100')}
