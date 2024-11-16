@@ -33,6 +33,16 @@ export const indexDBUtils = {
     return db.getAll(STORE_NAME)
   },
 
+  async getImageById(id: string): Promise<{ id: string; image: Blob }> {
+    const db = await initDB()
+    const tx = db.transaction(STORE_NAME, 'readonly')
+    const result = await tx.store.get(id)
+
+    if (!result) {
+      throw new Error(`Image with ID ${id} not found in IndexedDB`)
+    }
+    return { id, image: result.image }
+  },
   async clearAllImages() {
     const db = await initDB()
     const tx = db.transaction(STORE_NAME, 'readwrite')
