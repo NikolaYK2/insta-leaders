@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
-import { Slider } from '@nikolajk2/lib-insta-leaders'
-import { CroppingSettingSize, MemoizedCroppingPhotos } from '@/features/userHub/ui/create'
-import { CroppingSettingBtn } from '@/features/userHub/ui/create/cropping/CroppingSettingBtn'
-import { CroppingPhoto } from '@/features/userHub/ui/create/cropping/CroppingPhoto'
+import { useState } from 'react'
 import { useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import { selectorSelectedImages } from '@/features/userHub/model/createSlice/createSelectors'
+import { CroppingPhoto } from '@/features/userHub/ui/create/ui/cropping/CroppingPhoto'
+import { Slider } from '@nikolajk2/lib-insta-leaders'
+import { CroppingSettingSize } from '@/features/userHub/ui/create/ui/cropping/CroppingSettingSize'
+import { MemoizedCroppingPhotos } from '@/features/userHub/ui/create/ui/cropping/CroppingPhotos'
+import { CroppingSettingBtn } from '@/features/userHub/ui/create/ui/cropping/CroppingSettingBtn'
 
-export type IconBtnCropping = 'ExpandOutline' | 'MaximizeOutline' | 'Image' | 'ColorPaletteOutline'
+export type IconBtnCropping = 'ExpandOutline' | 'MaximizeOutline' | 'Image'
 
 export const Cropping = () => {
   const [activeButton, setActiveButton] = useState<IconBtnCropping | null>(null)
@@ -74,4 +75,3 @@ export const Cropping = () => {
     </>
   )
 }
-Cropping.displayName = 'Cropping'

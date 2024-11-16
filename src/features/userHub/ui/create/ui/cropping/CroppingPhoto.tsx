@@ -7,7 +7,7 @@ import {
   selectorSelectedImages,
 } from '@/features/userHub/model/createSlice/createSelectors'
 import { setCroppedImage } from '@/features/userHub/model/createSlice'
-import { CarouselBtn } from '@/features/userHub/ui/create/carouselBtn'
+import { CarouselBtn } from '@/features/userHub/ui/create/ui/carouselBtn'
 
 type Props = {
   aspect: number | undefined

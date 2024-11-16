@@ -14,15 +14,15 @@ import {
   VisibilityToggle,
 } from '@nikolajk2/lib-insta-leaders'
 import { cn } from '@/common/utils/cn'
-import { Cropping } from '@/features/userHub/ui/create/cropping/Cropping'
-import { AddPhoto } from '@/features/userHub/ui/create/addPhoto'
 import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import { selectorSelectedImages } from '@/features/userHub/model/createSlice/createSelectors'
 import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
 import { deleteImages } from '@/features/userHub/model/createSlice'
 import { ConfirmationModal } from '@/common/components/ConfirmationModal'
-import { loadSavedImages } from '@/features/userHub/ui/create/lib/loadSavedImages'
-import { Filters } from '@/features/userHub/ui/create/filters/Filters'
+import { loadImages } from '@/features/userHub/ui/create/lib/loadImages'
+import { AddPhoto } from '@/features/userHub/ui/create/ui/addPhoto'
+import { Cropping } from '@/features/userHub/ui/create/ui/cropping'
+import { Filters } from '@/features/userHub/ui/create/ui/filters/Filters'
 
 type Props = ModalProps & {
   className?: string
@@ -36,7 +36,8 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
     deleteActionForImages: deleteImages,
   })
   useEffect(() => {
-    loadSavedImages(dispatch) //получаем фото из хранилища indexDB
+    //получаем фото из хранилища indexDB
+    loadImages(dispatch).catch(e => console.error(e, ': Error load images indexDB!'))
   }, [])
 
   return (
