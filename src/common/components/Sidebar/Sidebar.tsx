@@ -6,7 +6,7 @@ import { NextPageWithLayout } from '@/pages/_app'
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 import { cn } from '@/common/utils/cn'
 import { DynamicIcon, IconId } from '@nikolajk2/lib-insta-leaders'
-import { Create } from '@/features/userHub/ui/create/Create'
+import { Create } from '@/features/userHub/ui/create/ui/Create'
 
 type Routs = {
   href?: string
