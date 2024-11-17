@@ -72,7 +72,10 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
   // Загрузка изображений при монтировании
   useEffect(() => {
     //получаем фото из хранилища indexDB
-    loadImages(dispatch).catch(e => console.error(e, ': Error load images indexDB!'))
+    loadImages(dispatch).catch(e => {
+      console.error(e, ': Error load images indexDB!')
+      dispatch(showAlert({ message: 'Error load images indexDB!', variant: 'alertError' }))
+    })
   }, [])
 
   return (
