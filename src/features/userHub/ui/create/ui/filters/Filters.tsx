@@ -12,6 +12,7 @@ import { CarouselBtn } from '@/features/userHub/ui/create/ui/carouselBtn'
 import { getFilteredThumbnail } from '@/features/userHub/ui/create/lib/getFilteredThumbnail'
 import { Button } from '@nikolajk2/lib-insta-leaders'
 import { useDebounce } from '@/common/hooks'
+import { ImageForCreate } from '@/features/userHub/ui/create/ui/image/ImageForCreate'
 
 const filterNames = [
   'normal',
@@ -149,15 +150,8 @@ export const Filters = () => {
   return (
     <div className="flex">
       <div className="relative flex flex-[0_1_50%] max-w-[490px] max-h-[503px]">
-        <Image
-          className="flex object-contain"
-          src={images[indexImage].image}
-          alt="image"
-          width={490}
-          height={503}
-        />
+        <ImageForCreate images={images} indexImage={indexImage} />
         <canvas ref={canvasRef} width={490} height={503} className="hidden" />
-
         <CarouselBtn arrayItems={images} indexItems={indexImage} />
       </div>
       <div className="flex relative flex-[1_1_50%] max-w-[490px] max-h-[503px]">
