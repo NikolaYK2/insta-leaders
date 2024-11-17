@@ -118,13 +118,15 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
             )}
             {/*BUTTON BACK*/}
 
-            <Button
-              className={'absolute top-[11px] right-1'}
-              onClick={handleNextClick}
-              variant={'text'}
-            >
-              <Typography variant={TypographyVariant.h3}>Next</Typography>
-            </Button>
+            {switchCreate !== 'publication' && (
+              <Button
+                className={'absolute top-[11px] right-1'}
+                onClick={handleNextClick}
+                variant={'text'}
+              >
+                <Typography variant={TypographyVariant.h3}>Next</Typography>
+              </Button>
+            )}
           </>
         ) : (
           <ModalClose
