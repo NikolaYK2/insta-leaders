@@ -11,7 +11,7 @@ export const CreatePrimitiveRoot = ({ children, ...props }: CreatePrimitiveProps
 
 export const CreatePrimitiveContent = ({ children, ...props }: CreatePrimitiveProps) => {
   return (
-    <div className="relative flex flex-[0_1_50%] max-w-[490px] max-h-[503px]" {...props}>
+    <div className="relative flex flex-[0_0_50%] max-w-[490px] max-h-[503px]" {...props}>
       {children}
     </div>
   )
