@@ -13,6 +13,11 @@ import { getFilteredThumbnail } from '@/features/userHub/ui/create/lib/getFilter
 import { Button } from '@nikolajk2/lib-insta-leaders'
 import { useDebounce } from '@/common/hooks'
 import { ImageForCreate } from '@/features/userHub/ui/create/ui/image/ImageForCreate'
+import {
+  CreatePrimitiveContent,
+  CreatePrimitiveRoot,
+} from '@/features/userHub/ui/create/ui/primitives'
+import { showAlert } from '@/appRoot/app.slice'
 
 const filterNames = [
   'normal',
@@ -121,7 +126,10 @@ export const Filters = () => {
   }
   // Load the original image when indexImage changes
   useEffect(() => {
-    fetchOriginalImage()
+    fetchOriginalImage().catch(error => {
+      console.error(error)
+      dispatch(showAlert({ message: 'изображения не загружены', variant: 'alertError' }))
+    })
   }, [indexImage])
 
   const debouncedOriginalImageBlob = useDebounce(originalImageBlob, 1000)
@@ -129,9 +137,12 @@ export const Filters = () => {
   // Генерация миниатюр при изменении оригинального изображения
   useEffect(() => {
     if (debouncedOriginalImageBlob && fabricCanvasRef.current) {
-      generateThumbnails().catch(error =>
-        console.error(error, ': генерация миниатюр прошла с ошибкой!')
-      )
+      generateThumbnails().catch(error => {
+        dispatch(
+          showAlert({ message: 'генерация миниатюр прошла с ошибкой!', variant: 'alertError' })
+        )
+        console.error(error)
+      })
     }
   }, [debouncedOriginalImageBlob, fabricCanvasRef.current])
 
@@ -148,15 +159,15 @@ export const Filters = () => {
   }, [])
 
   return (
-    <div className="flex">
-      <div className="relative flex flex-[0_1_50%] max-w-[490px] max-h-[503px]">
+    <CreatePrimitiveRoot>
+      <CreatePrimitiveContent>
         <ImageForCreate images={images} indexImage={indexImage} />
         <canvas ref={canvasRef} width={490} height={503} className="hidden" />
         <CarouselBtn arrayItems={images} indexItems={indexImage} />
-      </div>
-      <div className="flex relative flex-[1_1_50%] max-w-[490px] max-h-[503px]">
+      </CreatePrimitiveContent>
+      <CreatePrimitiveContent>
         {/* Элементы управления для выбора фильтров */}
-        <div className="flex flex-wrap  w-full justify-between">
+        <div className="flex flex-wrap w-full justify-between">
           {isLoading ? (
             <div className="flex w-full h-full items-center justify-center">
               <p>Loading thumbnails...</p> {/* Здесь можно использовать спиннер */}
@@ -181,7 +192,7 @@ export const Filters = () => {
             ))
           )}
         </div>
-      </div>
-    </div>
+      </CreatePrimitiveContent>
+    </CreatePrimitiveRoot>
   )
 }

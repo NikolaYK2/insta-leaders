@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import { selectorSelectedImages } from '@/features/userHub/model/createSlice/createSelectors'
-import { CroppingPhoto } from '@/features/userHub/ui/create/ui/cropping/CroppingPhoto'
+import { CroppingSettingBtn } from '@/features/userHub/ui/create/ui/2-cropping/CroppingSettingBtn'
+import { CroppingPhoto } from '@/features/userHub/ui/create/ui/2-cropping/CroppingPhoto'
+import { CroppingSettingSize } from '@/features/userHub/ui/create/ui/2-cropping/CroppingSettingSize'
 import { Slider } from '@nikolajk2/lib-insta-leaders'
-import { CroppingSettingSize } from '@/features/userHub/ui/create/ui/cropping/CroppingSettingSize'
-import { MemoizedCroppingPhotos } from '@/features/userHub/ui/create/ui/cropping/CroppingPhotos'
-import { CroppingSettingBtn } from '@/features/userHub/ui/create/ui/cropping/CroppingSettingBtn'
+import { MemoizedCroppingPhotos } from '@/features/userHub/ui/create/ui/2-cropping/CroppingPhotos'
 
 export type IconBtnCropping = 'ExpandOutline' | 'MaximizeOutline' | 'Image'
 

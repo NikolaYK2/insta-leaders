@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, DynamicIcon } from '@nikolajk2/lib-insta-leaders'
 import { cn } from '@/common/utils/cn'
-import { IconBtnCropping } from '@/features/userHub/ui/create/ui/cropping/Cropping'
+import { IconBtnCropping } from '@/features/userHub/ui/create/ui/2-cropping/Cropping'
 
 type SettingButton = {
   icon: IconBtnCropping

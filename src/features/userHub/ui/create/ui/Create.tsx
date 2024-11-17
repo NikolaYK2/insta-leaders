@@ -20,19 +20,20 @@ import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile
 import { deleteImages } from '@/features/userHub/model/createSlice'
 import { ConfirmationModal } from '@/common/components/ConfirmationModal'
 import { loadImages } from '@/features/userHub/ui/create/lib/loadImages'
-import { AddPhoto } from '@/features/userHub/ui/create/ui/addPhoto'
-import { Cropping } from '@/features/userHub/ui/create/ui/cropping'
 import { Filters } from '@/features/userHub/ui/create/ui/filters/Filters'
 import { showAlert } from '@/appRoot/app.slice'
+import { AddPhoto } from '@/features/userHub/ui/create/ui/1-addPhoto'
+import { Cropping } from '@/features/userHub/ui/create/ui/2-cropping'
+import { Publication } from '@/features/userHub/ui/create/ui/3-publication/Publication'
 
 // Тип для переключения между состояниями
-type SwitchCreate = 'addPhoto' | 'cropping' | 'filters'
+type SwitchCreate = 'addPhoto' | 'cropping' | 'filters' | 'publication'
 
 type Props = ModalProps & {
   className?: string
 }
 export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
-  const [switchCreate, setSwitchCreate] = useState<SwitchCreate>('addPhoto')
+  const [switchCreate, setSwitchCreate] = useState<SwitchCreate>('publication')
   const images = useAppSelector(selectorSelectedImages)
   const image = Boolean(images.length)
   const dispatch = useAppDispatch()
@@ -44,11 +45,13 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
   const handleBackClick = () => {
     if (switchCreate === 'filters') {
       setSwitchCreate('cropping')
+    } else if (switchCreate === 'publication') {
+      setSwitchCreate('filters')
     } else if (switchCreate === 'cropping') {
+      // Возврат к начальному состоянию, удаление фото
       reset().catch(error =>
         dispatch(showAlert({ message: error + ': фото не удалены!', variant: 'alertError' }))
       )
-      // Возврат к начальному состоянию, удаление фото
     }
   }
   // Логика кнопки "Вперед"
@@ -56,9 +59,12 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
     if (switchCreate === 'cropping') {
       setSwitchCreate('filters')
     }
+    if (switchCreate === 'filters') {
+      setSwitchCreate('publication')
+    }
   }
 
-  // Установка начального состояния при наличии изображений
+  // // Установка начального состояния при наличии изображений
   useEffect(() => {
     setSwitchCreate(image ? 'cropping' : 'addPhoto')
   }, [image])
@@ -74,7 +80,8 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
       <ModalContent
         className={cn(
           'flex flex-col max-w-[492px] h-[564px]',
-          switchCreate === 'filters' && 'max-w-[972px] h-auto'
+          switchCreate === 'filters' && 'max-w-[972px] h-auto',
+          switchCreate === 'publication' && 'max-w-[972px] h-auto'
         )}
       >
         <ModalTitle className={cn('flex', image && 'justify-center')} asChild>
@@ -140,7 +147,8 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
           className={cn(
             'relative flex flex-col pt-[0px] h-full z-50 p-12',
             switchCreate === 'cropping' && 'p-3',
-            switchCreate === 'filters' && 'p-0'
+            switchCreate === 'filters' && 'p-0',
+            switchCreate === 'publication' && 'p-0'
           )}
         >
           {switchCreatePhotos(switchCreate, Boolean(image))}
@@ -156,6 +164,7 @@ const switchCreatePhotos = (switchCreate: SwitchCreate, image: boolean) => {
     addPhoto: <AddPhoto />,
     cropping: image ? <Cropping /> : null,
     filters: image ? <Filters /> : null,
+    publication: image ? <Publication /> : null,
   }
 
   return components[switchCreate] || null
@@ -164,7 +173,8 @@ const switchCreatePhotos = (switchCreate: SwitchCreate, image: boolean) => {
 //Для тайтла Create
 const switchTitleCreate = (switchCreate: SwitchCreate): string =>
   ({
+    addPhoto: 'Add Photo',
     cropping: 'Cropping',
     filters: 'Filters',
-    addPhoto: 'Add Photo',
+    publication: 'Publication',
   })[switchCreate] || 'Add Photo'
