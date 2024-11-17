@@ -11,6 +11,7 @@ import { indexDBUtils } from '@/common/utils'
 import { CarouselBtn } from '@/features/userHub/ui/create/ui/carouselBtn'
 import { getFilteredThumbnail } from '@/features/userHub/ui/create/lib/getFilteredThumbnail'
 import { Button } from '@nikolajk2/lib-insta-leaders'
+import { useDebounce } from '@/common/hooks'
 
 const filterNames = [
   'normal',
@@ -122,12 +123,16 @@ export const Filters = () => {
     fetchOriginalImage()
   }, [indexImage])
 
+  const debouncedOriginalImageBlob = useDebounce(originalImageBlob, 1000)
+
   // Генерация миниатюр при изменении оригинального изображения
   useEffect(() => {
-    if (originalImageBlob && fabricCanvasRef.current) {
-      generateThumbnails()
+    if (debouncedOriginalImageBlob && fabricCanvasRef.current) {
+      generateThumbnails().catch(error =>
+        console.error(error, ': генерация миниатюр прошла с ошибкой!')
+      )
     }
-  }, [originalImageBlob, fabricCanvasRef.current])
+  }, [debouncedOriginalImageBlob, fabricCanvasRef.current])
 
   // Инициализация холста
   useEffect(() => {
@@ -165,7 +170,7 @@ export const Filters = () => {
           ) : (
             filterNames.map(filterName => (
               <Button
-                className={'flex flex-col flex-[1_1_33%] p-0'}
+                className={'flex flex-col flex-[0_1_33%] p-0'}
                 variant={'text'}
                 key={filterName}
                 onClick={() => applyFilter(filterName)}
