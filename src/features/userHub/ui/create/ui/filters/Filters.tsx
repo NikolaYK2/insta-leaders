@@ -170,7 +170,7 @@ export const Filters = () => {
           ) : (
             filterNames.map(filterName => (
               <Button
-                className={'flex flex-col flex-[0_1_33%] p-0'}
+                className={'flex flex-col flex-[0_1_33%] p-0 text-light-100'}
                 variant={'text'}
                 key={filterName}
                 onClick={() => applyFilter(filterName)}
