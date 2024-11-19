@@ -51,38 +51,47 @@ export const Filters = () => {
     if (!fabricCanvas || !originalImageBlob) return
     setIsLoading(true)
 
-    // Загружаем оригинальное изображение
-    const originalImgSrc = URL.createObjectURL(originalImageBlob) // Создаем URL из Blob
+    try {
+      // Загружаем оригинальное изображение
+      const originalImgSrc = URL.createObjectURL(originalImageBlob)
 
-    const generatedThumbnails = await Promise.all(
-      filterNames.map(async filterName => {
-        const quality = filterName === 'normal' ? 1 : 0.5
-        const multiplier = filterName === 'normal' ? 1 : 0.2
+      const generatedThumbnails = await Promise.all(
+        filterNames.map(async filterName => {
+          const quality = filterName === 'normal' ? 1 : 0.5
+          const multiplier = filterName === 'normal' ? 1 : 0.2
 
-        const thumbnail = await getFilteredThumbnail({
-          fabricCanvas,
-          imgSrc: originalImgSrc,
-          filterName,
-          quality,
-          multiplier,
+          const thumbnail = await getFilteredThumbnail({
+            fabricCanvas: fabricCanvasRef.current,
+            imgSrc: originalImgSrc,
+            filterName,
+            quality,
+            multiplier,
+            isMounted: () => fabricCanvasRef.current !== null, // Проверка монтирования
+          })
+
+          return { filterName, thumbnail }
         })
+      )
 
-        return { filterName, thumbnail }
-      })
-    )
+      // Формируем карту миниатюр только если компонент все еще смонтирован
+      if (fabricCanvasRef.current) {
+        const thumbnailsMap = generatedThumbnails.reduce(
+          (acc, { filterName, thumbnail }) => {
+            if (thumbnail) acc[filterName] = thumbnail
+            return acc
+          },
+          {} as Record<string, string>
+        )
 
-    const thumbnailsMap = generatedThumbnails.reduce(
-      (acc, { filterName, thumbnail }) => {
-        if (thumbnail) acc[filterName] = thumbnail
-        return acc
-      },
-      {} as Record<string, string>
-    )
-
-    setThumbnails(thumbnailsMap)
-    setIsLoading(false)
+        setThumbnails(thumbnailsMap)
+      }
+    } catch (error) {
+      console.error('Ошибка при генерации миниатюры:', error)
+      dispatch(showAlert({ message: 'Ошибка при генерации миниатюр!', variant: 'alertError' }))
+    } finally {
+      setIsLoading(false)
+    }
   }
-
   /**
    * Applies a selected filter to the current image.
    */
@@ -105,6 +114,7 @@ export const Filters = () => {
         filterName,
         quality: 1,
         multiplier: 1,
+        isMounted: () => fabricCanvasRef.current !== null, // Проверка монтирования
       })
 
       if (url) {
@@ -132,11 +142,11 @@ export const Filters = () => {
     })
   }, [indexImage])
 
-  const debouncedOriginalImageBlob = useDebounce(originalImageBlob, 1000)
+  const debouncedOriginalImageBlob = useDebounce(originalImageBlob, 500)
 
   // Генерация миниатюр при изменении оригинального изображения
   useEffect(() => {
-    if (debouncedOriginalImageBlob && fabricCanvasRef.current) {
+    if (debouncedOriginalImageBlob) {
       generateThumbnails().catch(error => {
         dispatch(
           showAlert({ message: 'генерация миниатюр прошла с ошибкой!', variant: 'alertError' })
@@ -144,7 +154,7 @@ export const Filters = () => {
         console.error(error)
       })
     }
-  }, [debouncedOriginalImageBlob, fabricCanvasRef.current])
+  }, [debouncedOriginalImageBlob])
 
   // Инициализация холста
   useEffect(() => {

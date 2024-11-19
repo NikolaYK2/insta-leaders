@@ -7,6 +7,7 @@ type Params = {
   filterName: string
   quality: number
   multiplier: number
+  isMounted: () => boolean // Новый параметр, функция для проверки монтирования компонента
 }
 
 export const getFilteredThumbnail = async ({
@@ -15,11 +16,18 @@ export const getFilteredThumbnail = async ({
   filterName,
   quality,
   multiplier,
+  isMounted,
 }: Params): Promise<string | null> => {
-  if (!fabricCanvas || !imgSrc) return null
+  if (!fabricCanvas || !imgSrc || !isMounted()) return null
 
   try {
     const img = await loadImage(imgSrc)
+
+    // Проверяем, что компонент все еще смонтирован и fabricCanvas не обнулен
+    if (!isMounted() || !fabricCanvas) {
+      return null
+    }
+
     // Полностью очищаем холст
     fabricCanvas.clear()
     // Устанавливаем размер холста
