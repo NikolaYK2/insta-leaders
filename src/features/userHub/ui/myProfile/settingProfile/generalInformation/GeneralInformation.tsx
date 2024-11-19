@@ -30,6 +30,7 @@ import { cn } from '@/common/utils/cn'
 import { deepNotEqual } from '@/common/utils/deepNotEqual'
 import { calculateAge } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/lib'
 import { renderError } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/renderAgeError/RenderAgeError'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -118,18 +119,33 @@ export const GeneralInformation: NextPageWithLayout = () => {
         dateOfBirth: userMe.data.dateOfBirth,
       }
 
-      try {
-        // Обновление профиля только если есть изменения между начальными и текущими значениями
-        if (deepNotEqual(transformedData, initialValues)) await changeProfile(transformedData)
-      } catch (e) {
-        console.log(e)
+      // Обновление профиля только если есть изменения между начальными и текущими значениями
+      if (deepNotEqual(transformedData, initialValues)) {
+        try {
+          await changeProfile(transformedData)
+          LocalStorageUtil.removeItem('profileForm') // Очистка локального хранилища после сохранения
+        } catch (e) {
+          console.log(e)
+        }
       }
     }
   })
-
-  // Сброс значений формы при изменении данных userMe
+  //сохраняем профиль в сторадж в случаи ошибки заполнения профиля, что бы не потерять уже готовые данные пользователя
+  const savedData = LocalStorageUtil.getValue('profileForm')
+  /**
+   * Это нужно для того, что б когда пользователь вдруг зашел на страничку политики конфидициальности,
+   * данные при возврате не потерялись
+   */
+  //сбрасываем сохраненый профиль из стораджа если ошибок в заполнении профиля нет
   useEffect(() => {
-    if (userMe) {
+    if (age !== null && age > 13) localStorage.removeItem('profileForm')
+  }, [age])
+
+  useEffect(() => {
+    // Сброс значений формы при изменении данных userMe или наличия сохраненных данных
+    if (savedData) {
+      reset(savedData)
+    } else if (userMe) {
       reset({
         ...userMe.data,
         search: city?.data.name,
@@ -137,6 +153,19 @@ export const GeneralInformation: NextPageWithLayout = () => {
       })
     }
   }, [userMe, reset, city])
+
+  // Сохранение значений формы в localStorage при изменении полей формы
+  useEffect(() => {
+    const subscription = watch(value => {
+      // Преобразование даты в строку ISO перед сохранением
+      if (value.dateOfBirth) {
+        value.dateOfBirth = new Date(value.dateOfBirth).toISOString()
+      }
+
+      LocalStorageUtil.setValue('profileForm', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch])
 
   if (loadingUserMe || loadingCity) {
     return <div>Loading...</div>
@@ -172,7 +201,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
             selected={selectedDate}
             defaultValue={
               formatDate({
-                date: userMe?.data.dateOfBirth ?? '',
+                date: getValues('dateOfBirth') ?? '',
                 dateFormat: 'MM.dd.yyy',
               }) ?? ''
             }
