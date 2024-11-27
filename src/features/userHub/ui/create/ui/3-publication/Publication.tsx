@@ -23,17 +23,23 @@ import {
 } from '@/features/userHub/api/post/postService'
 import { showAlert } from '@/appRoot/app.slice'
 import { indexDBUtils } from '@/common/utils'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-// const publishSchema = z.object({
-//   location: z.string(),
-//   text: z.string(),
-//   photos: z.array(z.string()),
-// })
-type Form = {
-  text: string
-  location: string
-  photosIds: string[]
-}
+const maxLitters = 500
+
+const publishSchema = z.object({
+  location: z.string(),
+  text: z.string().max(maxLitters, 'max 500 litters'),
+  photosIds: z.array(z.string()),
+})
+
+type FormType = z.infer<typeof publishSchema>
+// type Form = {
+//   text: string
+//   location: string
+//   photosIds: string[]
+// }
 export const Publication = () => {
   const { data: me } = useGetUsersMeQuery()
   const [createPostsPhotos] = useCreatePostsPhotosMutation()
@@ -42,15 +48,18 @@ export const Publication = () => {
   const indexImage = useAppSelector(selectorIndexCropImage)
   const dispatch = useAppDispatch()
 
-  const { handleSubmit, control, setValue } = useForm<Form>({
+  const { handleSubmit, control, setValue, watch } = useForm<FormType>({
     defaultValues: {
       text: '',
       location: '',
       photosIds: [],
     },
+    resolver: zodResolver(publishSchema),
   })
 
-  const onSubmit: SubmitHandler<Form> = async data => {
+  const litters = watch('text').length
+
+  const onSubmit: SubmitHandler<FormType> = async data => {
     console.log(data)
     try {
       // 1. Загрузка фото
@@ -86,7 +95,15 @@ export const Publication = () => {
       await indexDBUtils.clearAllImages()
     } catch (error) {
       console.error('Ошибка при создании публикации:', error)
-      dispatch(showAlert({ message: error!.data!.message, variant: 'alertError' }))
+      // Проверяем, что error — объект и имеет свойство 'data'
+      if (typeof error === 'object' && error !== null && 'data' in error) {
+        const errorData = error.data as { message?: string }
+
+        if (typeof errorData === 'object' && errorData !== null && 'message' in errorData) {
+          const message = errorData.message ?? 'error'
+          dispatch(showAlert({ message, variant: 'alertError' }))
+        }
+      }
     }
   }
 
@@ -108,10 +125,13 @@ export const Publication = () => {
           </div>
           <FormTextarea name={'text'} label={'Add publication descriptions'} control={control} />
           <Typography
-            className={'text-right text-light-900 mb-5'}
+            className={cn(
+              'text-right text-light-900 mb-5',
+              litters > maxLitters && 'text-danger-500'
+            )}
             variant={TypographyVariant.small_text}
           >
-            0/500
+            {`${litters} / ${maxLitters}`}
           </Typography>
           <div
             className={cn(
