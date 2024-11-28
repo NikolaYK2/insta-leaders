@@ -30,10 +30,10 @@ export interface LoginResponse {
 
 export interface Data {
   accessToken: string
-  user: User
+  user: Profile
 }
 
-interface User {
+interface Profile {
   id: number
   email: string
   name: string
