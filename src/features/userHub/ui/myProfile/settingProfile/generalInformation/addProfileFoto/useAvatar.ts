@@ -1,10 +1,9 @@
-import {
-  useDeleteAvatarMutation,
-  useGetAvatarQuery,
-  useUploadAvatarMutation,
-} from '@/features/userHub/api/user/userService'
 import { useEffect, useState } from 'react'
 import { prepareImageForUpload } from './prepareImageForUpload'
+import {
+  useGetAvatarQuery,
+  useUploadAvatarMutation,
+} from '@/features/userHub/api/profile/profileService'
 
 export const useAvatar = () => {
   const [isOpen, setIsOpen] = useState(false)

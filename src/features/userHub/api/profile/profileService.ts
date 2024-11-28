@@ -4,62 +4,63 @@ import {
   DeleteAvatartResponse,
   PostsData,
   Res,
+  ResProfile,
   UserData,
-} from '@/features/userHub/api/user/userServiceType'
+} from '@/features/userHub/api/profile/profileServiceType'
 
-const USERS = 'v1/users'
-const userService = instaLeadersApi.injectEndpoints({
+const PROFILE = 'v1/users'
+const profileService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
-    // getUsersMe: builder.query<Res<UserData>, void>({
-    //   providesTags: ['User'],
-    //   query: () => ({
-    //     url: `${USERS}/me`,
-    //   }),
-    // }),
+    getProfile: builder.query<ResProfile, void>({
+      providesTags: ['Profile'],
+      query: () => ({
+        url: `${PROFILE}/profile`,
+      }),
+    }),
 
     getAvatar: builder.query<Res<Avatar>, void>({
-      providesTags: ['User'],
+      providesTags: ['Profile'],
       query: () => ({
         method: 'GET',
-        url: `${USERS}/me/avatar`,
+        url: `${PROFILE}/me/avatar`,
       }),
     }),
     uploadAvatar: builder.mutation<Res<Avatar>, FormData>({
-      invalidatesTags: ['User'],
+      invalidatesTags: ['Profile'],
       query: (formData: FormData) => ({
         body: formData,
         method: 'POST',
-        url: `${USERS}/me/avatar`,
+        url: `${PROFILE}/me/avatar`,
       }),
     }),
     deleteAvatar: builder.mutation<DeleteAvatartResponse, void>({
       query: () => ({
         method: 'DELETE',
-        url: `${USERS}/me/avatar`,
+        url: `${PROFILE}/me/avatar`,
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ['Profile'],
     }),
     getUsersPosts: builder.query<Res<PostsData>, void>({
       query: () => ({
-        url: `${USERS}/posts`,
+        url: `${PROFILE}/posts`,
       }),
     }),
     updateProfile: builder.mutation<Res<UserData>, Omit<UserData, 'id' | 'email' | 'avatar'>>({
       query: data => ({
-        url: `${USERS}/me`,
+        url: `${PROFILE}/me`,
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ['Profile'],
     }),
   }),
 })
 
 export const {
-  // useGetUsersMeQuery,
+  useGetProfileQuery,
   useDeleteAvatarMutation,
   useGetAvatarQuery,
   useUploadAvatarMutation,
   useGetUsersPostsQuery,
   useUpdateProfileMutation,
-} = userService
+} = profileService

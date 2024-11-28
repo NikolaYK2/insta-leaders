@@ -1,6 +1,6 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
-import { Res } from '@/features/userHub/api/user/userServiceType'
 import { PostData } from '@/features/userHub/api/post/postServiceType'
+import { Res } from '@/features/userHub/api/profile/profileServiceType'
 
 const POSTS = 'v1/posts'
 const postService = instaLeadersApi.injectEndpoints({

@@ -11,7 +11,6 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ControllerSelect, FormInput } from '@/common/components'
-import { useUpdateProfileMutation } from '@/features/userHub/api/user/userService'
 import { NextPageWithLayout } from '@/pages/_app'
 import { useGeCitiesQuery, useGetCountriesQuery } from '@/features/userHub/api/geo/geoService'
 import { useDebounce } from '@/common/hooks'
@@ -20,6 +19,7 @@ import { AddProfilePhoto } from '@/features/userHub/ui/myProfile/settingProfile/
 import { cn } from '@/common/utils/cn'
 import { calculateAge } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/lib'
 import { useMeQuery } from '@/features/auth/api/authService'
+import { useUpdateProfileMutation } from '@/features/userHub/api/profile/profileService'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),

@@ -1,5 +1,5 @@
-import { useDeleteAvatarMutation } from '@/features/userHub/api/user/userService'
 import { useState } from 'react'
+import { useDeleteAvatarMutation } from '@/features/userHub/api/profile/profileService'
 
 export const usePhotoPreview = (onDeletePhoto?: () => void) => {
   const [isOpen, setIsOpen] = useState(false)
