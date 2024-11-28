@@ -39,7 +39,7 @@ export type DeleteAvatartResponse = {
   data: null
 }
 
-// - NEW БЭКЭНД
+// - NEW БЭКЭНД ----------------------------------------------------------------------------
 export type Avatars = {
   url: string
   width: number
@@ -61,3 +61,5 @@ export type ResProfile = {
   avatars: Avatars[]
   createdAt: string
 }
+
+export type ParamsProfile = Omit<ResProfile, 'avatars' | 'id' | 'createdAt'>
