@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import { cn } from '@/common/utils/cn'
 import {
   DynamicIcon,
@@ -10,9 +10,6 @@ import {
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
 import { Alert } from '@/common/components/Alert'
-import { useRouter } from 'next/router'
-import { useMeQuery } from '@/features/auth/api/authService'
-import { ROUTES_APP } from '@/appRoot/routes/routes'
 import { Logo } from '@/common/components/Logo/Logo'
 
 const LANGUAGES = [
@@ -21,16 +18,6 @@ const LANGUAGES = [
 ] as const
 export const BaseLayout: NextPage<PropsWithChildren> = ({ children }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>(LANGUAGES[1].title)
-  const router = useRouter()
-  const { data: me, isLoading: isLoadMe } = useMeQuery()
-
-  useEffect(() => {
-    if (!isLoadMe) {
-      if (me) {
-        router.push(`${ROUTES_APP.PROFILE}/${me.userId}`).catch(console.error)
-      }
-    }
-  }, [])
 
   return (
     <div className="flex min-h-screen w-full mx-auto flex-col pt-[60px]">
