@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { cn } from '@/common/utils/cn'
 import {
   DynamicIcon,
@@ -10,13 +10,29 @@ import {
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
 import { Alert } from '@/common/components/Alert'
+import { useRouter } from 'next/router'
+import { useMeQuery } from '@/features/auth/api/authService'
+import { ROUTES_APP, ROUTES_AUTH } from '@/appRoot/routes/routes'
+import { Logo } from '@/common/components/Logo/Logo'
 
-const selectLanguage = [
+const LANGUAGES = [
   { icon: 'FlagRussia', title: 'Russian' },
   { icon: 'FlagUnitedKingdom', title: 'English' },
 ] as const
 export const BaseLayout: NextPage<PropsWithChildren> = ({ children }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(selectLanguage[1].title)
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(LANGUAGES[1].title)
+  const router = useRouter()
+  const { data: me, isLoading: isLoadMe, isError: isErrMe } = useMeQuery()
+
+  useEffect(() => {
+    if (!isLoadMe) {
+      if (me) {
+        router.push(`${ROUTES_APP.PROFILE}/${me.userId}`).catch(console.error)
+      } else if (isErrMe) {
+        router.push(ROUTES_AUTH.LOGIN).catch(console.error)
+      }
+    }
+  }, [me, isErrMe, isLoadMe, router])
 
   return (
     <div className="flex min-h-screen w-full mx-auto flex-col pt-[60px]">
@@ -28,29 +44,14 @@ export const BaseLayout: NextPage<PropsWithChildren> = ({ children }) => {
             'flex justify-between max-w-screen-desktop w-full m-auto px-[min(3.2673%,64px)]'
           }
         >
-          <div className={'relative flex'}>
-            <Typography variant={TypographyVariant.large}>S</Typography>
-            <Typography
-              className={'transform translate-y-[6px] translate-x-[-6.4px] text-accent-500'}
-              variant={TypographyVariant.large}
-            >
-              P
-            </Typography>
-          </div>
-          {/*<div>*/}
-          {/*  <Link href={ROUTES_APP.HOME}>Main</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.REGISTRATION}>Sign Up</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.LOGIN}>Sign In</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>Forgot Password</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.RECOVERY_PASSWORD}>Password recovery</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.CREATE_NEW_PASSWORD}>Create New Password</Link>*/}
-          {/*</div>*/}
+          <Logo />
+
           <Selector
             className={'!relative max-w-[163px] w-full'}
             value={selectedLanguage}
             onValueChange={setSelectedLanguage}
           >
-            {selectLanguage.map(language => (
+            {LANGUAGES.map(language => (
               <SelectItem
                 className={'!relative w-[161px]'}
                 key={language.icon}
