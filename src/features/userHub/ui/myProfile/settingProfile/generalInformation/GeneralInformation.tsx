@@ -165,7 +165,7 @@ export const GeneralInformation: NextPageWithLayout = () => {
             selected={selectedDate}
             defaultValue={
               formatDate({
-                date: profile?.dateOfBirth ?? '',
+                date: getValues('dateOfBirth') ?? '',
                 dateFormat: 'MM.dd.yyy',
               }) ?? ''
             }
