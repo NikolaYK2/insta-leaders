@@ -12,7 +12,7 @@ import {
 import { Alert } from '@/common/components/Alert'
 import { useRouter } from 'next/router'
 import { useMeQuery } from '@/features/auth/api/authService'
-import { ROUTES_APP, ROUTES_AUTH } from '@/appRoot/routes/routes'
+import { ROUTES_APP } from '@/appRoot/routes/routes'
 import { Logo } from '@/common/components/Logo/Logo'
 
 const LANGUAGES = [
@@ -22,17 +22,15 @@ const LANGUAGES = [
 export const BaseLayout: NextPage<PropsWithChildren> = ({ children }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>(LANGUAGES[1].title)
   const router = useRouter()
-  const { data: me, isLoading: isLoadMe, isError: isErrMe } = useMeQuery()
+  const { data: me, isLoading: isLoadMe } = useMeQuery()
 
   useEffect(() => {
     if (!isLoadMe) {
       if (me) {
         router.push(`${ROUTES_APP.PROFILE}/${me.userId}`).catch(console.error)
-      } else if (isErrMe) {
-        router.push(ROUTES_AUTH.LOGIN).catch(console.error)
       }
     }
-  }, [me, isErrMe, isLoadMe, router])
+  }, [])
 
   return (
     <div className="flex min-h-screen w-full mx-auto flex-col pt-[60px]">
