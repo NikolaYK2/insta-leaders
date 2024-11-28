@@ -1,11 +1,11 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
-  AuthRes,
+  AuthGoogleRes,
   ConfirmEmailResponse,
-  Data,
   LoginArgs,
   LoginResponse,
   LogOutResponse,
+  MeRes,
   RegistrationProps,
   RegistrationResponse,
   SendLinkArgs,
@@ -14,6 +14,7 @@ import {
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 import { ROUTES_APP } from '@/appRoot/routes/routes'
 import Router from 'next/router'
+import { showAlert } from '@/appRoot/app.slice'
 
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
@@ -77,31 +78,40 @@ const authService = instaLeadersApi.injectEndpoints({
         }
       },
     }),
-    authByGoogle: builder.query<AuthRes<Data>, { provider: 'google'; code: string }>({
-      async onQueryStarted(_, { queryFulfilled }) {
+    me: builder.query<MeRes, void>({
+      query: () => {
+        return {
+          url: `${AUTH}/me`,
+        }
+      },
+    }),
+    authGoogle: builder.mutation<AuthGoogleRes, { code: string }>({
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled
 
-          if (!data || !data.data.accessToken) return
-
-          LocalStorageUtil.setValue('accessToken', data.data.accessToken)
-          LocalStorageUtil.setValue('userId', data.data.user.id)
+          LocalStorageUtil.setValue('accessToken', data.accessToken)
         } catch (error) {
           console.error('Error during query fulfillment:', error)
+          dispatch(
+            showAlert({
+              message: `Error during query fulfillment: ${error}`,
+              variant: 'alertError',
+            })
+          )
         }
       },
-      query: params => {
-        return {
-          url: `${AUTH}/registration/by-provider`,
-          params,
-        }
-      },
+
+      query: code => ({
+        method: 'POST',
+        url: `${AUTH}/google/login`,
+        body: code,
+      }),
     }),
     logOut: builder.mutation<LogOutResponse, void>({
       query: () => ({
         method: 'POST',
         url: `${AUTH}/logout`,
-        // credentials: 'include',
       }),
     }),
     createNewPassword: builder.mutation<any, { newPassword: string; recoveryCode: string }>({
@@ -123,6 +133,7 @@ const authService = instaLeadersApi.injectEndpoints({
 })
 //пример
 export const {
+  useMeQuery,
   useRegistrationMutation,
   useConfirmEmailMutation,
   useResendEmailMutation,
@@ -131,5 +142,5 @@ export const {
   useSignInMutation,
   useAuthByGithubQuery,
   useForgotPasswordMutation,
-  useAuthByGoogleQuery,
+  useAuthGoogleMutation,
 } = authService

@@ -80,3 +80,14 @@ export type AuthRes<T> = {
   code: number
   data: T
 }
+
+export type AuthGoogleRes = {
+  accessToken: string
+  email: string
+}
+export type MeRes = {
+  userId: number
+  userName: string
+  email: string
+  isBlocked: boolean
+}
