@@ -24,6 +24,7 @@ import {
 import { ControllerInputDataPicker } from '@/common/components/ControllerInputDataPicker/ControllerInputDataPicker'
 import { renderError } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/renderAgeError/RenderAgeError'
 import { deepNotEqual } from '@/common/utils/deepNotEqual'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -88,20 +89,46 @@ export const GeneralInformation: NextPageWithLayout = () => {
         // Обновление профиля только если есть изменения между начальными и текущими значениями
         if (deepNotEqual(transformedData, initialValues))
           await changeProfile({ ...transformedData, region })
+        LocalStorageUtil.removeItem('profileForm') // Очистка локального хранилища после сохранения
       } catch (e) {
         console.log(e)
       }
     }
   })
 
-  // Сброс значений формы при изменении данных userMe
+  //сохраняем профиль в сторадж в случаи ошибки заполнения профиля, что бы не потерять уже готовые данные пользователя
+  const savedData = LocalStorageUtil.getValue('profileForm')
+  /**
+   * Это нужно для того, что б когда пользователь вдруг зашел на страничку политики конфидициальности,
+   * данные при возврате не потерялись
+   */
+  //сбрасываем сохраненый профиль из стораджа если ошибок в заполнении профиля нет
   useEffect(() => {
-    if (profile) {
+    if (age !== null && age > 13) localStorage.removeItem('profileForm')
+  }, [age])
+
+  // Сброс значений формы при изменении данных profile или наличия сохраненных данных
+  useEffect(() => {
+    if (savedData) {
+      reset(savedData)
+    } else if (profile) {
       reset({
         ...profile,
       })
     }
   }, [profile, reset])
+
+  useEffect(() => {
+    const subscription = watch(value => {
+      // Преобразование даты в строку ISO перед сохранением
+      if (value.dateOfBirth) {
+        value.dateOfBirth = new Date(value.dateOfBirth).toISOString()
+      }
+
+      LocalStorageUtil.setValue('profileForm', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch])
 
   if (isLoadProf) {
     return <div>Loading...</div>
@@ -201,3 +228,50 @@ export const GeneralInformation: NextPageWithLayout = () => {
     </Page>
   )
 }
+
+// if (deepNotEqual(transformedData, initialValues)) {
+//   try {
+//     await changeProfile(transformedData)
+//     LocalStorageUtil.removeItem('profileForm') // Очистка локального хранилища после сохранения
+//   } catch (e) {
+//     console.log(e)
+//   }
+// }
+// }
+// })
+// //сохраняем профиль в сторадж в случаи ошибки заполнения профиля, что бы не потерять уже готовые данные пользователя
+// const savedData = LocalStorageUtil.getValue('profileForm')
+// /**
+//  * Это нужно для того, что б когда пользователь вдруг зашел на страничку политики конфидициальности,
+//  * данные при возврате не потерялись
+//  */
+// //сбрасываем сохраненый профиль из стораджа если ошибок в заполнении профиля нет
+// useEffect(() => {
+//   if (age !== null && age > 13) localStorage.removeItem('profileForm')
+// }, [age])
+//
+// useEffect(() => {
+//   // Сброс значений формы при изменении данных userMe или наличия сохраненных данных
+//   if (savedData) {
+//     reset(savedData)
+//   } else if (userMe) {
+//     reset({
+//       ...userMe.data,
+//       search: city?.data.name,
+//       cityId: String(userMe.data.cityId),
+//     })
+//   }
+// }, [userMe, reset, city])
+//
+// // Сохранение значений формы в localStorage при изменении полей формы
+// useEffect(() => {
+//   const subscription = watch(value => {
+//     // Преобразование даты в строку ISO перед сохранением
+//     if (value.dateOfBirth) {
+//       value.dateOfBirth = new Date(value.dateOfBirth).toISOString()
+//     }
+//
+//     LocalStorageUtil.setValue('profileForm', value)
+//   })
+//   return () => subscription.unsubscribe()
+// }, [watch])
