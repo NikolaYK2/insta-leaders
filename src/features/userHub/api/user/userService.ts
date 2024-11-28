@@ -10,12 +10,12 @@ import {
 const USERS = 'v1/users'
 const userService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
-    getUsersMe: builder.query<Res<UserData>, void>({
-      providesTags: ['User'],
-      query: () => ({
-        url: `${USERS}/me`,
-      }),
-    }),
+    // getUsersMe: builder.query<Res<UserData>, void>({
+    //   providesTags: ['User'],
+    //   query: () => ({
+    //     url: `${USERS}/me`,
+    //   }),
+    // }),
 
     getAvatar: builder.query<Res<Avatar>, void>({
       providesTags: ['User'],
@@ -56,7 +56,7 @@ const userService = instaLeadersApi.injectEndpoints({
 })
 
 export const {
-  useGetUsersMeQuery,
+  // useGetUsersMeQuery,
   useDeleteAvatarMutation,
   useGetAvatarQuery,
   useUploadAvatarMutation,
