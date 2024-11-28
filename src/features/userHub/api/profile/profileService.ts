@@ -2,10 +2,10 @@ import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
   Avatar,
   DeleteAvatartResponse,
+  ParamsProfile,
   PostsData,
   Res,
   ResProfile,
-  UserData,
 } from '@/features/userHub/api/profile/profileServiceType'
 
 const PROFILE = 'v1/users'
@@ -17,7 +17,14 @@ const profileService = instaLeadersApi.injectEndpoints({
         url: `${PROFILE}/profile`,
       }),
     }),
-
+    updateProfile: builder.mutation<void, ParamsProfile>({
+      query: body => ({
+        url: `${PROFILE}/profile`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['Profile'],
+    }),
     getAvatar: builder.query<Res<Avatar>, void>({
       providesTags: ['Profile'],
       query: () => ({
@@ -44,14 +51,6 @@ const profileService = instaLeadersApi.injectEndpoints({
       query: () => ({
         url: `${PROFILE}/posts`,
       }),
-    }),
-    updateProfile: builder.mutation<Res<UserData>, Omit<UserData, 'id' | 'email' | 'avatar'>>({
-      query: data => ({
-        url: `${PROFILE}/me`,
-        method: 'PATCH',
-        body: data,
-      }),
-      invalidatesTags: ['Profile'],
     }),
   }),
 })
