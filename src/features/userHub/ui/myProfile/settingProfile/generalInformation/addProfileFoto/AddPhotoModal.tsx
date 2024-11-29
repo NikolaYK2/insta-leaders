@@ -6,7 +6,6 @@ import {
   ModalClose,
   ModalContent,
   ModalContentItem,
-  ModalDescription,
   ModalTitle,
   ModalTrigger,
   Typography,
@@ -131,7 +130,7 @@ export const AddPhotoPreview = ({ image, size, containerClassName }: AddPhotoPre
           />
         </div>
       ) : (
-        <span className={'flex items-center justify-items-center'}>
+        <span className={'flex items-center justify-center w-full h-full'}>
           <DynamicIcon iconId="ImageOutline" height={48} width={48} />
         </span>
       )}
