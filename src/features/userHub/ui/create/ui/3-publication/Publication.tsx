@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { ImageForCreate } from '@/features/userHub/ui/create/ui/image/ImageForCreate'
 import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
 import {
@@ -10,89 +10,92 @@ import {
   CreatePrimitiveRoot,
 } from '@/features/userHub/ui/create/ui/primitives/CreatePrimitive'
 import { CarouselBtn } from '@/features/userHub/ui/create/ui/carouselBtn'
-import { useGetUsersMeQuery } from '@/features/userHub/api/user/userService'
 import { AddPhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddPhotoModal'
 import { FormTextarea } from '@/common/components/ControllerTextarea'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Button, DynamicIcon, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import { FormInput } from '@/common/components'
 import { cn } from '@/common/utils/cn'
-import {
-  useCreatePostsMutation,
-  useCreatePostsPhotosMutation,
-} from '@/features/userHub/api/post/postService'
 import { showAlert } from '@/appRoot/app.slice'
-import { indexDBUtils } from '@/common/utils'
+import { convertBlobUrlToFile, indexDBUtils } from '@/common/utils'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useGetProfileQuery } from '@/features/userHub/api/profile/profileService'
+import { SelectedImages } from '@/features/userHub/model/createSlice'
+import {
+  useCreatePostsDescriptionMutation,
+  useCreatePostsImagesMutation,
+} from '@/features/userHub/api/post/postService'
+import { useRouter } from 'next/router'
+import { ROUTES_APP } from '@/appRoot/routes/routes'
 
 const maxLitters = 500
 
 const publishSchema = z.object({
-  location: z.string(),
-  text: z.string().max(maxLitters, 'max 500 litters'),
-  photosIds: z.array(z.string()),
+  location: z.string().optional(),
+  description: z.string().max(maxLitters, 'max 500 litters'),
+  images: z.array(z.any()),
 })
 
 type FormType = z.infer<typeof publishSchema>
-// type Form = {
-//   text: string
-//   location: string
-//   photosIds: string[]
-// }
+
 export const Publication = () => {
-  const { data: me } = useGetUsersMeQuery()
-  const [createPostsPhotos] = useCreatePostsPhotosMutation()
-  const [createPosts] = useCreatePostsMutation()
+  const [isLoading, setIsLoading] = useState(false)
+  const { data: profile } = useGetProfileQuery()
+  const [createPostsImages] = useCreatePostsImagesMutation()
+  const [createPostsDescription] = useCreatePostsDescriptionMutation()
   const images = useAppSelector(selectorSelectedImages)
   const indexImage = useAppSelector(selectorIndexCropImage)
   const dispatch = useAppDispatch()
+  const route = useRouter()
 
-  const { handleSubmit, control, setValue, watch } = useForm<FormType>({
+  const { handleSubmit, control, watch } = useForm<FormType>({
     defaultValues: {
-      text: '',
-      location: '',
-      photosIds: [],
+      description: '',
+      images,
     },
     resolver: zodResolver(publishSchema),
   })
 
-  const litters = watch('text').length
+  const littersPublicationDescription = watch('description')?.length || 0
+
+  // 1. загрузка фото
+  const uploadImages = useCallback(
+    async (images: SelectedImages[]) => {
+      // преобразуем images in Blob
+      const filePromises = images.map((image: SelectedImages) =>
+        convertBlobUrlToFile(image.image, 'photo.jpg')
+      )
+      const filesImages = await Promise.all(filePromises)
+
+      return await createPostsImages(filesImages).unwrap() //Сначала загружаем картинки
+    },
+    [createPostsImages]
+  )
+
+  //2. финальная отправка формы
+  const submitPost = useCallback(
+    async (description: string, uploadIds: { uploadId: string }[]) => {
+      const finalData = { description, childrenMetadata: uploadIds }
+      await createPostsDescription(finalData)
+    },
+    [createPostsDescription]
+  )
 
   const onSubmit: SubmitHandler<FormType> = async data => {
-    console.log(data)
+    setIsLoading(true) // Включаем индикатор загрузки
+
     try {
-      // 1. Загрузка фото
-      // const res = await createPostsPhotos(images).unwrap()
-      // const uploadPhotoResponse = await api.post('/api/v1/posts/photos', {
-      //   photoFile: images[indexImage],
-      // })
-      // 1. Преобразуем blob URL в File
+      const resImages = await uploadImages(data.images)
 
-      const filePromises = images.map(image => convertBlobUrlToFile(image.image, 'photo.jpg'))
-      const files = await Promise.all(filePromises)
+      //получаем id наших картинок
+      const uploadIds = resImages.images?.map(image => ({ uploadId: image.uploadId })) || []
 
-      // 2. Отправляем фото по очереди
-      const photoIds: string[] = []
-
-      for (const file of files) {
-        const res = await createPostsPhotos([file]).unwrap()
-        if (res.data.photoId) {
-          photoIds.push(res.data.photoId) // Сохраняем ID каждой загруженной фотографии
-        }
-      }
-      console.log(photoIds, 'ids')
-      // const res = await createPostsPhotos(files).unwrap()
-
-      // // 2. Добавление ID загруженного фото в форму
-      // const photoId = res.data.photoId
-      setValue('photosIds', photoIds)
-
-      // // 3. Отправка публикации
-      await createPosts(data).unwrap()
-      // // const postResponse = await api.post('/api/v1/posts', data)
-      // // console.log('Публикация создана:', postResponse.data)
+      await submitPost(data.description, uploadIds)
+      //очищаем черновик
       await indexDBUtils.clearAllImages()
+      //перенаправляем на профиль что-бы видеть добавленные новые посты
+      await route.push(`${ROUTES_APP.PROFILE}/${profile?.id}`)
     } catch (error) {
       console.error('Ошибка при создании публикации:', error)
       // Проверяем, что error — объект и имеет свойство 'data'
@@ -104,11 +107,32 @@ export const Publication = () => {
           dispatch(showAlert({ message, variant: 'alertError' }))
         }
       }
+    } finally {
+      setIsLoading(false) // Снимаем индикатор загрузки
     }
   }
 
   return (
     <CreatePrimitiveRoot>
+      {isLoading && (
+        <div
+          className={cn(
+            'absolute indent-0 flex justify-center items-center',
+            'bg-dark-500/50 w-full h-full z-50',
+            'text-[40px] font-bold'
+          )}
+        >
+          {Array.from('Creating...').map((char, index) => (
+            <span
+              key={index}
+              className={`animate-bounce inline-block`}
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              {char}
+            </span>
+          ))}
+        </div>
+      )}
       <CreatePrimitiveContent>
         <ImageForCreate images={images} indexImage={indexImage} />
         <CarouselBtn arrayItems={images} indexItems={indexImage} />
@@ -117,21 +141,25 @@ export const Publication = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={'flex items-center mb-7'}>
             <AddPhotoPreview
-              image={me?.data?.avatar ?? ''}
+              image={profile?.avatars[0]?.url ?? ''}
               containerClassName={'rounded-full w-9 h-9 overflow-hidden'}
               size={36}
             />
-            <p className={'mx-3'}>{me?.data.userName}</p>
+            <p className={'mx-3'}>{profile?.userName}</p>
           </div>
-          <FormTextarea name={'text'} label={'Add publication descriptions'} control={control} />
+          <FormTextarea
+            name={'description'}
+            label={'Add publication descriptions'}
+            control={control}
+          />
           <Typography
             className={cn(
               'text-right text-light-900 mb-5',
-              litters > maxLitters && 'text-danger-500'
+              littersPublicationDescription > maxLitters && 'text-danger-500'
             )}
             variant={TypographyVariant.small_text}
           >
-            {`${litters} / ${maxLitters}`}
+            {`${littersPublicationDescription} / ${maxLitters}`}
           </Typography>
           <div
             className={cn(
@@ -154,6 +182,7 @@ export const Publication = () => {
           <Button
             className={'fixed top-3 right-0'}
             variant={'text'}
+            disabled={isLoading}
             onClick={e => e.stopPropagation()}
           >
             <Typography variant={TypographyVariant.h3}>Publish</Typography>
@@ -162,10 +191,4 @@ export const Publication = () => {
       </CreatePrimitiveContent>
     </CreatePrimitiveRoot>
   )
-}
-
-const convertBlobUrlToFile = async (blobUrl: string, fileName: string): Promise<File> => {
-  const response = await fetch(blobUrl) // Загружаем blob по URL
-  const blob = await response.blob() // Преобразуем в Blob
-  return new File([blob], fileName, { type: blob.type }) // Преобразуем в File
 }
