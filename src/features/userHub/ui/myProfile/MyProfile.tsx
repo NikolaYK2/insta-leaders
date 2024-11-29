@@ -4,8 +4,8 @@ import { Page } from '@/common/components/page'
 import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import { ROUTES_APP } from '@/appRoot/routes/routes'
 import { useRouter } from 'next/router'
-import { useGetUsersMeQuery, useGetUsersPostsQuery } from '@/features/userHub/api/user/userService'
 import Image from 'next/image'
+import { useGetProfileQuery } from '@/features/userHub/api/profile/profileService'
 import { AddPhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/AddPhotoModal'
 
 const testPosts = [
@@ -34,14 +34,9 @@ const testPosts = [
 
 export const MyProfile: NextPageWithLayout = () => {
   const router = useRouter()
-  const { data: userMe, isLoading: isLoadingUserMe, isError: isErrorUserMe } = useGetUsersMeQuery()
-  const {
-    data: userPosts,
-    isLoading: isLoadingUserPosts,
-    isError: isErrorUserPosts,
-  } = useGetUsersPostsQuery()
+  const { data: profile, isLoading: isLoadProf, isError: isErrProf } = useGetProfileQuery()
 
-  if (isLoadingUserMe) {
+  if (isLoadProf) {
     return <div>Loading...</div>
   }
 
@@ -59,7 +54,7 @@ export const MyProfile: NextPageWithLayout = () => {
       <section className={'flex justify-between flex-wrap mb-12'}>
         <div className={'max-w-[204px] h-[204px] rounded-full'}>
           <AddPhotoPreview
-            image={userMe?.data.avatar ?? null}
+            image={profile?.avatars[0]?.url ?? null}
             size={192}
             containerClassName={
               'relative overflow-hidden flex items-center justify-center w-[204px] h-[204px] rounded-full m-0 p-0 bg-dark-500'
@@ -68,10 +63,12 @@ export const MyProfile: NextPageWithLayout = () => {
         </div>
         <div className={'w-full max-w-[730px]'}>
           <div className={'flex justify-between items-center mb-5'}>
-            <Typography>{userMe?.data.userName ?? 'User name'}</Typography>
-            {userMe?.data.id &&
+            <Typography variant={TypographyVariant.h1}>
+              {profile?.userName ?? 'User name'}
+            </Typography>
+            {profile?.id &&
               router.query.id &&
-              userMe?.data.id === profileId && ( //являешься ли владельцем профиля
+              profile?.id === profileId && ( //являешься ли владельцем профиля
                 <Button variant={'secondary'} onClick={handlerClickRedirectSetting}>
                   <Typography variant={TypographyVariant.h3}>Profile Settings</Typography>
                 </Button>
@@ -94,9 +91,9 @@ export const MyProfile: NextPageWithLayout = () => {
           </div>
 
           <Typography variant={TypographyVariant.regular_text_16} className={''}>
-            {userMe?.data.aboutMe ? (
+            {profile?.aboutMe ? (
               <>
-                {userMe?.data.aboutMe}
+                {profile?.aboutMe}
                 <Typography
                   asChild
                   variant={TypographyVariant.regular_link}
