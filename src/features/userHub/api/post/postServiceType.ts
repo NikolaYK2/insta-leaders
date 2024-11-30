@@ -8,6 +8,12 @@ export type ParamPosts = {
 }
 
 //RES POSTS ------------------------------------------
+export type ResPost = {
+  pageSize: number
+  totalCount: number
+  notReadCount: number
+  items: PostItem[]
+}
 export type Images = {
   url: string
   width: number
@@ -22,7 +28,7 @@ export type Owner = {
   lastName: string
 }
 
-export type ResPosts = {
+export type PostItem = {
   id: number
   userName: string
   description: string

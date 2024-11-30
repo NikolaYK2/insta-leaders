@@ -1,10 +1,15 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
-import { ParamPosts, ResPosts, ResPostsImage } from '@/features/userHub/api/post/postServiceType'
+import {
+  ParamPosts,
+  PostItem,
+  ResPost,
+  ResPostsImage,
+} from '@/features/userHub/api/post/postServiceType'
 
 const POSTS = 'v1/posts'
 const postService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
-    createPostsDescription: builder.mutation<ResPosts, ParamPosts>({
+    createPostsDescription: builder.mutation<PostItem, ParamPosts>({
       invalidatesTags: ['Post'],
       query: body => ({
         url: POSTS,
@@ -24,7 +29,16 @@ const postService = instaLeadersApi.injectEndpoints({
         }
       },
     }),
+    getsPostsByUsername: builder.query<ResPost, string>({
+      query: (userName: string) => ({
+        url: `${POSTS}/${userName}`,
+      }),
+    }),
   }),
 })
 
-export const { useCreatePostsDescriptionMutation, useCreatePostsImagesMutation } = postService
+export const {
+  useCreatePostsDescriptionMutation,
+  useCreatePostsImagesMutation,
+  useGetsPostsByUsernameQuery,
+} = postService

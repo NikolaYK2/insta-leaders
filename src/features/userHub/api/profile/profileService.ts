@@ -60,6 +60,5 @@ export const {
   useDeleteAvatarMutation,
   useGetAvatarQuery,
   useUploadAvatarMutation,
-  useGetUsersPostsQuery,
   useUpdateProfileMutation,
 } = profileService
