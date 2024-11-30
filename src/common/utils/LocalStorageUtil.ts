@@ -6,8 +6,9 @@ type StorageKeys = {
   accessToken: 'accessToken'
   userId: 'userId'
   profileForm: 'profileForm'
+  publicationForm: 'publicationForm'
 }
-type ParamsKey = keyof StorageKeys
+export type ParamsKey = keyof StorageKeys
 
 export class LocalStorageUtil {
   static setValue<T>(key: ParamsKey, value: T): void {
