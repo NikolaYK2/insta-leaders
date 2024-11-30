@@ -21,7 +21,7 @@ import { convertBlobUrlToFile, indexDBUtils } from '@/common/utils'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useGetProfileQuery } from '@/features/userHub/api/profile/profileService'
-import { SelectedImages } from '@/features/userHub/model/createSlice'
+import { deleteImages, SelectedImages } from '@/features/userHub/model/createSlice'
 import {
   useCreatePostsDescriptionMutation,
   useCreatePostsImagesMutation,
@@ -39,7 +39,10 @@ const publishSchema = z.object({
 
 type FormType = z.infer<typeof publishSchema>
 
-export const Publication = () => {
+type Props = {
+  onOpenChange: ((open: boolean) => void) | undefined
+}
+export const Publication = ({ onOpenChange }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
   const { data: profile } = useGetProfileQuery()
   const [createPostsImages] = useCreatePostsImagesMutation()
@@ -82,6 +85,10 @@ export const Publication = () => {
     [createPostsDescription]
   )
 
+  const resetForm = () => {
+    onOpenChange?.(false)
+    dispatch(deleteImages())
+  }
   const onSubmit: SubmitHandler<FormType> = async data => {
     setIsLoading(true) // Включаем индикатор загрузки
 
@@ -96,6 +103,8 @@ export const Publication = () => {
       await indexDBUtils.clearAllImages()
       //перенаправляем на профиль что-бы видеть добавленные новые посты
       await route.push(`${ROUTES_APP.PROFILE}/${profile?.id}`)
+
+      resetForm()
     } catch (error) {
       console.error('Ошибка при создании публикации:', error)
       // Проверяем, что error — объект и имеет свойство 'data'

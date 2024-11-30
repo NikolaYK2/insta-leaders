@@ -156,7 +156,7 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
             switchCreate === 'publication' && 'p-0'
           )}
         >
-          {switchCreatePhotos(switchCreate, Boolean(image))}
+          {switchCreatePhotos(switchCreate, Boolean(image), onOpenChange)}
         </ModalContentItem>
       </ModalContent>
     </Modal>
@@ -164,12 +164,16 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
 }
 
 //Для переключения состояний настройки поста
-const switchCreatePhotos = (switchCreate: SwitchCreate, image: boolean) => {
+const switchCreatePhotos = (
+  switchCreate: SwitchCreate,
+  image: boolean,
+  onOpenChange: ((open: boolean) => void) | undefined
+) => {
   const components = {
     addPhoto: <AddPhoto />,
     cropping: image ? <Cropping /> : null,
     filters: image ? <Filters /> : null,
-    publication: image ? <Publication /> : null,
+    publication: image ? <Publication onOpenChange={onOpenChange} /> : null,
   }
 
   return components[switchCreate] || null
