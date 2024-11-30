@@ -28,6 +28,8 @@ import {
 } from '@/features/userHub/api/post/postService'
 import { useRouter } from 'next/router'
 import { ROUTES_APP } from '@/appRoot/routes/routes'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
+import { useSaveForm } from '@/common/hooks/useSaveForm'
 
 const maxLitters = 500
 
@@ -52,7 +54,7 @@ export const Publication = ({ onOpenChange }: Props) => {
   const dispatch = useAppDispatch()
   const route = useRouter()
 
-  const { handleSubmit, control, watch } = useForm<FormType>({
+  const { handleSubmit, control, watch, reset } = useForm<FormType>({
     defaultValues: {
       description: '',
       images,
@@ -88,7 +90,9 @@ export const Publication = ({ onOpenChange }: Props) => {
   const resetForm = () => {
     onOpenChange?.(false)
     dispatch(deleteImages())
+    LocalStorageUtil.removeItem('publicationForm')
   }
+
   const onSubmit: SubmitHandler<FormType> = async data => {
     setIsLoading(true) // Включаем индикатор загрузки
 
@@ -120,6 +124,18 @@ export const Publication = ({ onOpenChange }: Props) => {
       setIsLoading(false) // Снимаем индикатор загрузки
     }
   }
+
+  useSaveForm({
+    watch,
+    reset,
+    valueKey: 'publicationForm',
+    saveValue: value => {
+      LocalStorageUtil.setValue('publicationForm', value)
+    },
+    getValue: () => ({
+      description: LocalStorageUtil.getValue('publicationForm') || '',
+    }),
+  })
 
   return (
     <CreatePrimitiveRoot>

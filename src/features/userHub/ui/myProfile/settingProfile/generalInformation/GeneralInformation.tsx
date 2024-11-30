@@ -25,6 +25,7 @@ import { ControllerInputDataPicker } from '@/common/components/ControllerInputDa
 import { renderError } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/renderAgeError/RenderAgeError'
 import { deepNotEqual } from '@/common/utils/deepNotEqual'
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
+import { useSaveForm } from '@/common/hooks/useSaveForm'
 
 const profileSchema = z.object({
   userName: z.string().min(6, 'min liters').max(30, 'max litters 30'),
@@ -96,8 +97,6 @@ export const GeneralInformation: NextPageWithLayout = () => {
     }
   })
 
-  //сохраняем профиль в сторадж в случаи ошибки заполнения профиля, что бы не потерять уже готовые данные пользователя
-  const savedData = LocalStorageUtil.getValue('profileForm')
   /**
    * Это нужно для того, что б когда пользователь вдруг зашел на страничку политики конфидициальности,
    * данные при возврате не потерялись
@@ -107,28 +106,22 @@ export const GeneralInformation: NextPageWithLayout = () => {
     if (age !== null && age > 13) localStorage.removeItem('profileForm')
   }, [age])
 
-  // Сброс значений формы при изменении данных profile или наличия сохраненных данных
-  useEffect(() => {
-    if (savedData) {
-      reset(savedData)
-    } else if (profile) {
-      reset({
-        ...profile,
-      })
-    }
-  }, [profile, reset])
-
-  useEffect(() => {
-    const subscription = watch(value => {
-      // Преобразование даты в строку ISO перед сохранением
-      if (value.dateOfBirth) {
-        value.dateOfBirth = new Date(value.dateOfBirth).toISOString()
+  //сохраняем профиль в сторадж в случаи ошибки заполнения профиля, что бы не потерять уже готовые данные пользователя
+  useSaveForm({
+    watch,
+    reset,
+    valueKey: 'profileForm',
+    saveValue: value => {
+      const updateValue = { ...value }
+      if (updateValue.dateOfBirth) {
+        updateValue.dateOfBirth = new Date(updateValue.dateOfBirth).toISOString()
       }
+      LocalStorageUtil.setValue('profileForm', updateValue)
+    },
+    getValue: () => profile ?? null, // Сброс значений формы при изменении данных profile или наличия сохраненных данных
 
-      LocalStorageUtil.setValue('profileForm', value)
-    })
-    return () => subscription.unsubscribe()
-  }, [watch])
+    dependencies: [profile],
+  })
 
   if (isLoadProf) {
     return <div>Loading...</div>
