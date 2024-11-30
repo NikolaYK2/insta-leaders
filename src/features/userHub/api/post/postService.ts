@@ -30,6 +30,7 @@ const postService = instaLeadersApi.injectEndpoints({
       },
     }),
     getsPostsByUsername: builder.query<ResPost, string>({
+      providesTags: ['Post'],
       query: (userName: string) => ({
         url: `${POSTS}/${userName}`,
       }),

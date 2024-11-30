@@ -6,7 +6,7 @@ import { ResProfile } from '@/features/userHub/api/profile/profileServiceType'
 type Props = {
   profile: ResProfile
   isOwner: boolean
-  onEdit?: () => void
+  onEdit: () => void
 }
 export const InfoProfile = ({ isOwner, profile, onEdit }: Props) => {
   return (
@@ -18,7 +18,7 @@ export const InfoProfile = ({ isOwner, profile, onEdit }: Props) => {
         <div className={'flex justify-between items-center mb-5'}>
           <Typography>{profile.userName ?? 'User name'}</Typography>
           {isOwner && ( //являешься ли владельцем профиля
-            <Button variant={'secondary'} onClick={() => onEdit}>
+            <Button variant={'secondary'} onClick={() => onEdit()}>
               <Typography variant={TypographyVariant.h3}>Profile Settings</Typography>
             </Button>
           )}
