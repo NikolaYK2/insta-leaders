@@ -38,3 +38,10 @@ export type DeleteAvatartResponse = {
   code: number
   data: null
 }
+export type UserPostsData = {
+  pagesCount: number
+  page: number
+  pageSize: number
+  totalCount: number
+  items: PostsDataPhotos[]
+}

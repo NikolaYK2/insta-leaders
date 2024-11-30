@@ -2,9 +2,9 @@ import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
   Avatar,
   DeleteAvatartResponse,
-  PostsData,
   Res,
   UserData,
+  UserPostsData,
 } from '@/features/userHub/api/user/userServiceType'
 
 const USERS = 'v1/users'
@@ -39,9 +39,9 @@ const userService = instaLeadersApi.injectEndpoints({
       }),
       invalidatesTags: ['User'],
     }),
-    getUsersPosts: builder.query<Res<PostsData>, void>({
-      query: () => ({
-        url: `${USERS}/posts`,
+    getUsersPosts: builder.query<Res<UserPostsData>, number>({
+      query: id => ({
+        url: `${USERS}/${id}/posts`,
       }),
     }),
     updateProfile: builder.mutation<Res<UserData>, Omit<UserData, 'id' | 'email' | 'avatar'>>({
