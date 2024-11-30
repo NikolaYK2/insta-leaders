@@ -45,3 +45,28 @@ export type UserPostsData = {
   totalCount: number
   items: PostsDataPhotos[]
 }
+
+// - NEW БЭКЭНД ----------------------------------------------------------------------------
+export type Avatars = {
+  url: string
+  width: number
+  height: number
+  fileSize: number
+  createdAt: string
+}
+
+export type ResProfile = {
+  id: number
+  userName: string
+  firstName: string
+  lastName: string
+  city: string
+  country: string
+  region: string
+  dateOfBirth: string
+  aboutMe: string
+  avatars: Avatars[]
+  createdAt: string
+}
+
+export type ParamsProfile = Omit<ResProfile, 'avatars' | 'id' | 'createdAt'>

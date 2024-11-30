@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   Button,
+  DynamicIcon,
   Modal,
   ModalClose,
   ModalContent,
@@ -9,12 +10,10 @@ import {
   ModalTitle,
   Typography,
   TypographyVariant,
-  DynamicIcon,
 } from '@nikolajk2/lib-insta-leaders'
 
 import { cn } from '@/common/utils/cn'
 import { DialogProps } from '@radix-ui/react-dialog'
-import { clsx } from 'clsx'
 
 type EmailSentProps = DialogProps & {
   className?: string
@@ -26,7 +25,7 @@ export const EmailSent = ({ children, className = '', callback, ...props }: Emai
   }
   return (
     <Modal {...props}>
-      <ModalContent className={clsx('max-w-[378px]', className)}>
+      <ModalContent className={cn('max-w-[378px]', className)}>
         <ModalTitle className={'flex justify-between'}>
           <Typography variant={TypographyVariant.h1}>Email sent</Typography>
           <ModalClose asChild>

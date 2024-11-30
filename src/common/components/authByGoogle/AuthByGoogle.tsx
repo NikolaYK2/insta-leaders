@@ -1,35 +1,50 @@
 import React from 'react'
+import { CodeResponse, useGoogleLogin } from '@react-oauth/google'
 import { DynamicIcon } from '@nikolajk2/lib-insta-leaders'
-import Link from 'next/link'
+import { useAuthGoogleMutation } from '@/features/auth/api/authService'
+import { useAppDispatch } from '@/appRoot/lib/hooks/hooksStore'
+import { showAlert } from '@/appRoot/app.slice'
+import { useRouter } from 'next/router'
+import { ROUTES_APP } from '@/appRoot/routes/routes'
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
+import { extractUserIdFromToken } from '@/common/components'
 
 export const AuthByGoogle = () => {
-  // Идентификатор клиента, выданный Google, который используется для OAuth аутентификации
-  // создаем у себя в корне проекта файл .env NEXT_PUBLIC_GOOGLE_CLIENT_ID=клиентский id
-  const client_id = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+  const [authGoogle] = useAuthGoogleMutation()
 
-  // URL, куда пользователь будет перенаправлен после успешной аутентификации
-  const redirect_uri = 'http://localhost:3000/google' // Локальный URI, используемый для разработки, его нужно заменить на production URI при развертывании
+  const router = useRouter()
+  const dispatch = useAppDispatch()
+  const login = useGoogleLogin({
+    flow: 'auth-code',
+    onSuccess: async (credentialResponse: CodeResponse) => {
+      try {
+        // Отправляем код авторизации на сервер
+        const { accessToken } = await authGoogle({ code: credentialResponse.code }).unwrap()
 
-  // Генерируем уникальное значение для защиты от CSRF-атак
-  const state = process.env.NEXT_PUBLIC_GOOGLE_STATE // Используем встроенный метод crypto.randomUUID(), чтобы создать уникальный токен
+        // Извлекаем userId из токена
+        const userId = extractUserIdFromToken(accessToken)
 
-  // Сохраняем сгенерированный токен в локальное хранилище, чтобы использовать его позже для проверки на сервере
-  LocalStorageUtil.setValue('latestCSRFToken', state) // Используем утилиту для записи токена в LocalStorage
+        // Сохраняем userId в LocalStorage
+        LocalStorageUtil.setValue('userId', userId)
 
-  // Формируем ссылку для аутентификации через Google
-  // Содержит все необходимые параметры для OAuth 2.0: client_id, response_type, scope, redirect_uri и state
-  const link = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${client_id}&response_type=code&scope=email profile&redirect_uri=${redirect_uri}&state=${state}`
+        // Перенаправляем на страницу профиля
+        await router.push(`${ROUTES_APP.PROFILE}/${userId}`)
+      } catch (error) {
+        console.error('Authorization failed:', error)
+        dispatch(showAlert({ message: 'Ошибка авторизации', variant: 'alertError' }))
+      }
+    },
+    onError: () => dispatch(showAlert({ message: 'Вход не выполнен', variant: 'alertError' })),
+  })
 
   return (
-    // Компонент Link из Next.js используется для навигации на внешнюю ссылку аутентификации Google
-    <Link
+    <button
       className={
         'p-1 inline-flex border-2 border-transparent focus:border-2 focus:border-accent-100'
       }
-      href={link}
+      onClick={() => login()}
     >
       <DynamicIcon iconId={'GoogleSvgrepoCom1'} width={36} height={36} />
-    </Link>
+    </button>
   )
 }

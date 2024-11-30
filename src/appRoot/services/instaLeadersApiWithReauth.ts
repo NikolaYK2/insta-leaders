@@ -9,8 +9,8 @@ import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 const mutex = new Mutex()
 
 const baseQuery = fetchBaseQuery({
-  //создаем у себя в корне проекта файл .env NEXT_PUBLIC_BASE_URL=адрес нашей API
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+  credentials: 'include',
   prepareHeaders: headers => {
     const token = LocalStorageUtil.getValue('accessToken')
 
@@ -36,12 +36,12 @@ export const baseQueryWithReauth: BaseQueryFn<
       const release = await mutex.acquire()
       try {
         const refreshResult = (await baseQuery(
-          { url: '/v1/auth/refresh-token', method: 'POST', credentials: 'include' },
+          { url: '/v1/auth/update-tokens', method: 'POST' },
           api,
           extraOptions
         )) as any
         if (refreshResult.data) {
-          LocalStorageUtil.setValue('accessToken', refreshResult.data.data.accessToken)
+          LocalStorageUtil.setValue('accessToken', refreshResult.data.accessToken)
           // retry the initial query
           result = await baseQuery(args, api, extraOptions)
         } else {

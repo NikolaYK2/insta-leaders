@@ -1,6 +1,6 @@
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
-import { Res } from '@/features/userHub/api/user/userServiceType'
 import { Citi, Cities, CitiesParams, Countries } from '@/features/userHub/api/geo/GeoServiceType'
+import { Res } from '@/features/userHub/api/profile/profileServiceType'
 
 const GEO = 'v1/geo/countries'
 const geoService = instaLeadersApi.injectEndpoints({

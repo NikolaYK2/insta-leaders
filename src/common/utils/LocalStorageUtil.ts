@@ -5,6 +5,7 @@ type StorageKeys = {
   userData: 'userData'
   accessToken: 'accessToken'
   userId: 'userId'
+  profileForm: 'profileForm'
 }
 type ParamsKey = keyof StorageKeys
 

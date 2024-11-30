@@ -10,49 +10,37 @@ import {
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
 import { Alert } from '@/common/components/Alert'
+import { Logo } from '@/common/components/Logo/Logo'
 
-const selectLanguage = [
+const LANGUAGES = [
   { icon: 'FlagRussia', title: 'Russian' },
   { icon: 'FlagUnitedKingdom', title: 'English' },
 ] as const
 export const BaseLayout: NextPage<PropsWithChildren> = ({ children }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(selectLanguage[1].title)
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(LANGUAGES[1].title)
 
   return (
-    <div className="flex min-h-screen w-full mx-auto flex-col pt-[60px]">
+    <div className="flex min-h-screen w-full mx-auto flex-col">
+      {/*<div className="flex min-h-screen w-full mx-auto flex-col pt-[60px]">*/}
       <Alert />
 
-      <Header className={'fixed bg-dark-700 w-full z-10 p-0'}>
+      <Header className={'sticky top-0 bg-dark-700 w-full z-10 p-0'}>
+        {/*<Header className={'fixed bg-dark-700 w-full z-10 p-0'}>*/}
         <div
           className={
             'flex justify-between max-w-screen-desktop w-full m-auto px-[min(3.2673%,64px)]'
           }
         >
-          <div className={'relative flex'}>
-            <Typography variant={TypographyVariant.large}>S</Typography>
-            <Typography
-              className={'transform translate-y-[6px] translate-x-[-6.4px] text-accent-500'}
-              variant={TypographyVariant.large}
-            >
-              P
-            </Typography>
-          </div>
-          {/*<div>*/}
-          {/*  <Link href={ROUTES_APP.HOME}>Main</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.REGISTRATION}>Sign Up</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.LOGIN}>Sign In</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>Forgot Password</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.RECOVERY_PASSWORD}>Password recovery</Link>*/}
-          {/*  <Link href={ROUTES_AUTH.CREATE_NEW_PASSWORD}>Create New Password</Link>*/}
-          {/*</div>*/}
+          <Logo />
+
           <Selector
-            className={'!relative max-w-[163px] w-full'}
+            className={'relative max-w-[163px] w-full'}
             value={selectedLanguage}
             onValueChange={setSelectedLanguage}
           >
-            {selectLanguage.map(language => (
+            {LANGUAGES.map(language => (
               <SelectItem
-                className={'!relative w-[161px]'}
+                className={'relative w-[161px]'}
                 key={language.icon}
                 value={language.title}
               >

@@ -30,10 +30,10 @@ export interface LoginResponse {
 
 export interface Data {
   accessToken: string
-  user: User
+  user: Profile
 }
 
-interface User {
+interface Profile {
   id: number
   email: string
   name: string
@@ -79,4 +79,15 @@ export type AuthRes<T> = {
   status: string
   code: number
   data: T
+}
+
+export type AuthGoogleRes = {
+  accessToken: string
+  email: string
+}
+export type MeRes = {
+  userId: number
+  userName: string
+  email: string
+  isBlocked: boolean
 }
