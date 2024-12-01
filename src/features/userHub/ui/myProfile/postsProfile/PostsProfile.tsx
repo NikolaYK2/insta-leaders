@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useGetsPostsByUsernameQuery } from '@/features/userHub/api/post/postService'
-import { PostsByUsernameParams } from '@/features/userHub/api/post/postServiceType'
+import { PostItem, PostsByUsernameParams } from '@/features/userHub/api/post/postServiceType'
 
 type Props = {
   username: string
@@ -9,7 +9,7 @@ type Props = {
 
 export const PostsProfile = ({ username }: Props) => {
   const [pageNumber, setPageNumber] = useState(1) // Номер текущей страницы
-  const [posts, setPosts] = useState<any[]>([]) // Список всех постов
+  const [posts, setPosts] = useState<PostItem[]>([]) // Список всех постов
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null) // Ссылка на div для отслеживания
   const observer = useRef<IntersectionObserver | null>(null) // Ссылка на IntersectionObserver
