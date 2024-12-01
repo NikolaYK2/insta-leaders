@@ -2,6 +2,7 @@ import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
   ParamPosts,
   PostItem,
+  PostsByUsernameParams,
   ResPost,
   ResPostsImage,
 } from '@/features/userHub/api/post/postServiceType'
@@ -29,10 +30,16 @@ const postService = instaLeadersApi.injectEndpoints({
         }
       },
     }),
-    getsPostsByUsername: builder.query<ResPost, string>({
+    getsPostsByUsername: builder.query<ResPost, PostsByUsernameParams>({
       providesTags: ['Post'],
-      query: (userName: string) => ({
-        url: `${POSTS}/${userName}`,
+      query: ({ username, pageSize, pageNumber, sortBy, sortDirection }) => ({
+        url: `${POSTS}/${username}`,
+        params: {
+          pageSize,
+          pageNumber,
+          sortBy,
+          sortDirection,
+        },
       }),
     }),
   }),

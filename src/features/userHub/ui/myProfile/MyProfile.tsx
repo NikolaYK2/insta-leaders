@@ -33,7 +33,7 @@ export const MyProfile: NextPageWithLayout = () => {
       >
         <InfoProfile profile={data} isOwner={isOwner} onEdit={handlerClickRedirectSetting} />
 
-        <PostsProfile userName={data.userName} />
+        <PostsProfile username={data.userName} />
       </Page>
     )
 }

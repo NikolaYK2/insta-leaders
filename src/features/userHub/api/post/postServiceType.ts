@@ -1,3 +1,5 @@
+import { number } from 'zod'
+
 export type ChildrenMetadata = {
   uploadId: string
 }
@@ -46,4 +48,12 @@ export type PostItem = {
 
 export type ResPostsImage = {
   images: Images[]
+}
+//PARAM POSTS ------------------------------------------
+export type PostsByUsernameParams = {
+  username: string
+  pageSize?: number
+  pageNumber?: number
+  sortBy?: string
+  sortDirection?: 'asc' | 'desc'
 }
