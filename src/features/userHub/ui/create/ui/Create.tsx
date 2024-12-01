@@ -25,6 +25,7 @@ import { AddPhoto } from '@/features/userHub/ui/create/ui/1-addPhoto'
 import { Cropping } from '@/features/userHub/ui/create/ui/2-cropping'
 import { Filters } from '@/features/userHub/ui/create/ui/3-filters/Filters'
 import { Publication } from '@/features/userHub/ui/create/ui/4-publication/Publication'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 
 // Тип для переключения между состояниями
 type SwitchCreate = 'addPhoto' | 'cropping' | 'filters' | 'publication'
@@ -62,6 +63,11 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
     if (switchCreate === 'filters') {
       setSwitchCreate('publication')
     }
+  }
+
+  const handleResetClick = async () => {
+    await reset()
+    LocalStorageUtil.removeItem('publicationForm')
   }
 
   // // Установка начального состояния при наличии изображений
@@ -105,7 +111,7 @@ export const Create = ({ className, open, onOpenChange, ...props }: Props) => {
                 description={
                   'Do you really want to close the creation of a publication? If you close everything will be deleted'
                 }
-                confirmation={reset}
+                confirmation={handleResetClick}
               />
             )}
             {/*кнопка возврата*/}
