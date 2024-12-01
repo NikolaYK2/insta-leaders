@@ -18,14 +18,12 @@ export type ConfirmEmailResponse = {
   code: number
   data: string
 }
-export interface LoginArgs {
+export type LoginArgs = {
   email: string
   password: string
 }
-export interface LoginResponse {
-  status: string
-  code: number
-  data: Data
+export type LoginResponse = {
+  accessToken: string
 }
 
 export interface Data {
