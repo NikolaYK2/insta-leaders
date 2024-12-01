@@ -1,14 +1,18 @@
-import React from 'react'
 import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import { PhotoPreview } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/PhotoPreview'
 import { ResProfile } from '@/features/userHub/api/profile/profileServiceType'
+import { ROUTES_APP } from '@/appRoot/routes/routes'
+import { router } from 'next/client'
 
 type Props = {
   profile: ResProfile
   isOwner: boolean
-  onEdit?: () => void
 }
-export const InfoProfile = ({ isOwner, profile, onEdit }: Props) => {
+export const InfoProfile = ({ isOwner, profile }: Props) => {
+  const handlerClickRedirectSetting = () => {
+    router.push(`${ROUTES_APP.PROFILE}${ROUTES_APP.PROFILE_SETTING}`)
+  }
+
   return (
     <section className={'flex justify-between flex-wrap mb-12'}>
       <div className={'max-w-[204px] h-[204px] w-full'}>
@@ -18,7 +22,7 @@ export const InfoProfile = ({ isOwner, profile, onEdit }: Props) => {
         <div className={'flex justify-between items-center mb-5'}>
           <Typography>{profile.userName ?? 'User name'}</Typography>
           {isOwner && ( //являешься ли владельцем профиля
-            <Button variant={'secondary'} onClick={() => onEdit}>
+            <Button variant={'secondary'} onClick={handlerClickRedirectSetting}>
               <Typography variant={TypographyVariant.h3}>Profile Settings</Typography>
             </Button>
           )}

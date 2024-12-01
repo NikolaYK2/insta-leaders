@@ -30,8 +30,16 @@ const postService = instaLeadersApi.injectEndpoints({
       },
     }),
     getsPostsByUsername: builder.query<ResPost, string>({
+      providesTags: ['Post'],
       query: (userName: string) => ({
         url: `${POSTS}/${userName}`,
+      }),
+    }),
+    deletePost: builder.mutation<void, number>({
+      invalidatesTags: ['Post'],
+      query: postId => ({
+        url: `${POSTS}/${postId}`,
+        method: 'DELETE',
       }),
     }),
   }),
@@ -41,4 +49,5 @@ export const {
   useCreatePostsDescriptionMutation,
   useCreatePostsImagesMutation,
   useGetsPostsByUsernameQuery,
+  useDeletePostMutation,
 } = postService

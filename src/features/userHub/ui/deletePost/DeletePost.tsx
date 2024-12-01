@@ -11,14 +11,23 @@ import {
   Typography,
   TypographyVariant,
 } from '@nikolajk2/lib-insta-leaders'
+import { useDeletePostMutation } from '@/features/userHub/api/post/postService'
 
 type Props = {
+  postId: number
   isOpen: boolean
   setIsOpen: (value: boolean) => void
 }
 
 export const DeletePost = (Props: Props) => {
+  const { postId } = Props
+  const [deletePost] = useDeletePostMutation()
+
   const { isOpen, setIsOpen } = Props
+
+  const deletePostHandler = async (postId: number) => {
+    deletePost(postId)
+  }
   return (
     <Modal open={isOpen} onOpenChange={setIsOpen}>
       <ModalContent className={'max-w-96'}>
@@ -35,7 +44,11 @@ export const DeletePost = (Props: Props) => {
             </Typography>
           </ModalDescription>
           <div className={'text-right'}>
-            <Button variant={'outline'} className={'mr-6'} onClick={() => alert('click')}>
+            <Button
+              variant={'outline'}
+              className={'mr-6'}
+              onClick={() => deletePostHandler(postId)}
+            >
               Yes
             </Button>
             <ModalClose asChild className={'bg-accent-500'}>

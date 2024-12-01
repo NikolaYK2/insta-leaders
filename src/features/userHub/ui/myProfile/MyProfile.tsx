@@ -18,9 +18,6 @@ export const MyProfile: NextPageWithLayout = () => {
   if (isLoading) {
     return <div>Loading...</div>
   }
-  const handlerClickRedirectSetting = () => {
-    router.push(`${ROUTES_APP.PROFILE}${ROUTES_APP.PROFILE_SETTING}`)
-  }
 
   if (isNaN(profileId)) {
     return <div>Invalid profile ID</div>
@@ -31,7 +28,7 @@ export const MyProfile: NextPageWithLayout = () => {
         titleMeta={'My Profile'}
         descriptionMeta={'View and edit your personal profile information'}
       >
-        <InfoProfile profile={data} isOwner={isOwner} onEdit={handlerClickRedirectSetting} />
+        <InfoProfile profile={data} isOwner={isOwner} />
 
         <PostsProfile userName={data.userName} />
       </Page>
