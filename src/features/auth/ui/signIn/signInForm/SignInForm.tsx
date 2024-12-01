@@ -25,8 +25,6 @@ export const SignInForm = () => {
 
   const onSubmit = handleSubmit(async data => {
     signIn(data)
-      .unwrap()
-      .catch(err => console.log(err))
   })
 
   return (
@@ -38,11 +36,6 @@ export const SignInForm = () => {
         label={'Password'}
         className={'mb-9'}
         password
-        errorMessage={
-          isError
-            ? 'The email or password are incorrect. Try again please'
-            : errors.password?.message
-        }
       />
       <div className={'flex mb-6 justify-end'}>
         <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>

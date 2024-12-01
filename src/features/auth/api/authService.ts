@@ -54,20 +54,29 @@ const authService = instaLeadersApi.injectEndpoints({
           method: 'POST',
         }
       },
-      async onQueryStarted(_, { queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
 
           if (!data || !data.accessToken) return
 
-          LocalStorageUtil.setValue('accessToken', data.accessToken)
           const payload = data.accessToken.split('.')[1]
           const id = JSON.parse(atob(payload)).userId
           LocalStorageUtil.setValue('userId', id)
+          LocalStorageUtil.setValue('accessToken', data.accessToken)
 
           await Router.push(ROUTES_APP.PROFILE + `/${id}`)
-        } catch (error) {
+          //   TODO: add error handling and error types
+        } catch (error: any) {
           console.error('Error during query fulfillment:', error)
+          if (error?.error?.data?.messages) {
+            dispatch(
+              showAlert({
+                message: `${error.error.data.messages}`,
+                variant: 'alertError',
+              })
+            )
+          }
         }
       },
     }),
