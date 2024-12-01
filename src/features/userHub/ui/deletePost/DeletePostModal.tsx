@@ -17,16 +17,18 @@ type Props = {
   postId: number
   isOpen: boolean
   setIsOpen: (value: boolean) => void
+  closeModal: () => void
 }
 
-export const DeletePost = (Props: Props) => {
-  const { postId } = Props
-  const [deletePost] = useDeletePostMutation()
+export const DeletePostModal = (Props: Props) => {
+  const { isOpen, setIsOpen, postId, closeModal } = Props
 
-  const { isOpen, setIsOpen } = Props
+  const [deletePost, { isLoading }] = useDeletePostMutation()
 
   const deletePostHandler = async (postId: number) => {
-    deletePost(postId)
+    await deletePost(postId)
+    setIsOpen(false)
+    closeModal()
   }
   return (
     <Modal open={isOpen} onOpenChange={setIsOpen}>
@@ -48,11 +50,14 @@ export const DeletePost = (Props: Props) => {
               variant={'outline'}
               className={'mr-6'}
               onClick={() => deletePostHandler(postId)}
+              disabled={isLoading}
             >
               Yes
             </Button>
             <ModalClose asChild className={'bg-accent-500'}>
-              <Button variant={'primary'}>No</Button>
+              <Button variant={'primary'} disabled={isLoading}>
+                No
+              </Button>
             </ModalClose>
           </div>
         </ModalContentItem>

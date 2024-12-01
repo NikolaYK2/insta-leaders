@@ -1,7 +1,6 @@
 import React from 'react'
 import { NextPageWithLayout } from '@/pages/_app'
 import { Page } from '@/common/components/page'
-import { ROUTES_APP } from '@/appRoot/routes/routes'
 import { useRouter } from 'next/router'
 import { PostsProfile } from '@/features/userHub/ui/myProfile/postsProfile/PostsProfile'
 import { InfoProfile } from '@/features/userHub/ui/myProfile/infoProfile/InfoProfile'

@@ -11,12 +11,13 @@ import {
   ModalTrigger,
 } from '@nikolajk2/lib-insta-leaders'
 import { PostItem } from '@/features/userHub/api/post/postServiceType'
-import { DeletePost } from '@/features/userHub/ui/deletePost/DeletePost'
+import { DeletePostModal } from '@/features/userHub/ui/deletePost/DeletePostModal'
 
 type Props = {
   userName: string
 }
 export const PostsProfile = ({ userName }: Props) => {
+  const [isOpen, setIsOpen] = useState(false)
   const [post, setPost] = useState<PostItem>({} as PostItem)
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
 
@@ -34,8 +35,8 @@ export const PostsProfile = ({ userName }: Props) => {
   if (isLoading) return <>Загрузка постов....</>
 
   return (
-    <Modal>
-      <div className={'flex flex-wrap gap-2'}>
+    <Modal open={isOpen} onOpenChange={setIsOpen}>
+      <div className={'flex flex-wrap gap-3'}>
         {data?.items
           ? data.items.map((item: PostItem) => (
               <ModalTrigger key={item.id} className={'flex-[0_1_234px] h-[228px]'}>
@@ -45,6 +46,7 @@ export const PostsProfile = ({ userName }: Props) => {
                   width={234}
                   height={228}
                   onClick={() => setPost(item)}
+                  className={'h-[100%]  object-cover object-center'}
                 />
               </ModalTrigger>
             ))
@@ -70,10 +72,11 @@ export const PostsProfile = ({ userName }: Props) => {
             </div>
             <div className={'flex  items-center'}>
               <DropDownMenu trigger={{ icon: 'MoreHorizontal' }} items={dropDownItems} />
-              <DeletePost
+              <DeletePostModal
                 isOpen={isOpenDeleteModal}
                 setIsOpen={setIsOpenDeleteModal}
                 postId={post.id}
+                closeModal={() => setIsOpen(false)}
               />
             </div>
           </ModalTitle>
