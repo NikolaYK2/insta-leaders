@@ -14,7 +14,14 @@ export const SignInForm = () => {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<LoginFields>({ resolver: zodResolver(LoginSchema) })
+  } = useForm<LoginFields>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onBlur',
+    resolver: zodResolver(LoginSchema),
+  })
 
   const onSubmit = handleSubmit(async data => {
     signIn(data)
