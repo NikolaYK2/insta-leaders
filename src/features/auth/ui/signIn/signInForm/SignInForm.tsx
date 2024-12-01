@@ -17,21 +17,6 @@ export const SignInForm = () => {
   } = useForm<LoginFields>({ resolver: zodResolver(LoginSchema) })
 
   const onSubmit = handleSubmit(async data => {
-    // try {
-    //   await signIn(data)
-    //     .unwrap()
-    //     .then(data => {
-    //       LocalStorageUtil.setValue('accessToken', data.data.accessToken)
-    //       LocalStorageUtil.setValue('userId', data.data.user.id)
-    //       // const id = data.data.user.id
-    //       const payload = data.data.accessToken.split('.')[1]
-    //       const id = JSON.parse(atob(payload)).userId
-    //       Router.push(ROUTES_APP.PROFILE + `/${id}`)
-    //     })
-    //     .catch(err => console.log(err.data.message))
-    // } catch (e) {
-    //   console.log(e)
-    // }
     signIn(data)
       .unwrap()
       .catch(err => console.log(err))
@@ -44,7 +29,7 @@ export const SignInForm = () => {
         name={'password'}
         control={control}
         label={'Password'}
-        className={'mb-6'}
+        className={'mb-9'}
         password
         errorMessage={
           isError
@@ -52,7 +37,7 @@ export const SignInForm = () => {
             : errors.password?.message
         }
       />
-      <div className={'flex pt-9 pb-6 justify-end'}>
+      <div className={'flex mb-6 justify-end'}>
         <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>
           <Typography
             className={'text-light-900 hover:text-light-100'}
