@@ -130,11 +130,10 @@ export const Publication = ({ onOpenChange }: Props) => {
     reset,
     valueKey: 'publicationForm',
     saveValue: value => {
-      LocalStorageUtil.setValue('publicationForm', value)
+      const { images, ...form } = value
+      LocalStorageUtil.setValue('publicationForm', form)
     },
-    getValue: () => ({
-      description: LocalStorageUtil.getValue('publicationForm') || '',
-    }),
+    getValue: () => LocalStorageUtil.getValue('publicationForm'),
   })
 
   return (

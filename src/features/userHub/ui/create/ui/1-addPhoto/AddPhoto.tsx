@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
+import { Button } from '@nikolajk2/lib-insta-leaders'
 import { ImageUploader } from '@/common/components/imageUpLoader'
 import { ErrorMessage } from '@/common/components/ErrorMessage/ErrorMessage'
 import { useModalAddPhoto } from '@/features/userHub/ui/myProfile/settingProfile/generalInformation/addProfileFoto/useModalAddPhoto'
@@ -28,9 +28,9 @@ export const AddPhoto = () => {
           <ImageUploader handleFileChange={handleFileChange} ref={fileInputRef} />
         </Button>
 
-        <Button variant={'outline'}>
-          <Typography variant={TypographyVariant.h3}>Open Draft</Typography>
-        </Button>
+        {/*<Button variant={'outline'}>*/}
+        {/*  <Typography variant={TypographyVariant.h3}>Open Draft</Typography>*/}
+        {/*</Button>*/}
       </div>
     </>
   )
