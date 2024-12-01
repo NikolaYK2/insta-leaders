@@ -12,9 +12,9 @@ import {
   SendLinkResponse,
 } from '@/features/auth/api/authService.types'
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
-import { ROUTES_APP } from '@/appRoot/routes/routes'
-import Router from 'next/router'
 import { showAlert } from '@/appRoot/app.slice'
+import Router from 'next/router'
+import { ROUTES_APP } from '@/appRoot/routes/routes'
 
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
@@ -49,25 +49,34 @@ const authService = instaLeadersApi.injectEndpoints({
     signIn: builder.mutation<LoginResponse, LoginArgs>({
       query: arg => {
         return {
+          body: arg,
           url: `${AUTH}/login`,
           method: 'POST',
-          body: arg,
         }
       },
-      async onQueryStarted(_, { queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
 
-          if (!data || !data.data.accessToken) return
+          if (!data || !data.accessToken) return
 
-          LocalStorageUtil.setValue('accessToken', data.data.accessToken)
-          LocalStorageUtil.setValue('userId', data.data.user.id)
-          const payload = data.data.accessToken.split('.')[1]
+          const payload = data.accessToken.split('.')[1]
           const id = JSON.parse(atob(payload)).userId
+          LocalStorageUtil.setValue('userId', id)
+          LocalStorageUtil.setValue('accessToken', data.accessToken)
 
           await Router.push(ROUTES_APP.PROFILE + `/${id}`)
-        } catch (error) {
+          //   TODO: add error handling and error types
+        } catch (error: any) {
           console.error('Error during query fulfillment:', error)
+          if (error?.error?.data?.messages) {
+            dispatch(
+              showAlert({
+                message: `${error.error.data.messages}`,
+                variant: 'alertError',
+              })
+            )
+          }
         }
       },
     }),
