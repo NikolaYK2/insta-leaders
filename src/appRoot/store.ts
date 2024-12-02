@@ -3,6 +3,7 @@ import { createWrapper } from 'next-redux-wrapper'
 import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import { appSlice } from '@/appRoot/app.slice'
 import { createPostReducer } from '@/features/userHub/model/createSlice/createSlice'
+import { postsReducer } from '@/features/userHub/model/postsSlice/postsSlice'
 
 const makeStore = () =>
   configureStore({
@@ -10,6 +11,7 @@ const makeStore = () =>
       [instaLeadersApi.reducerPath]: instaLeadersApi.reducer,
       alert: appSlice,
       create: createPostReducer,
+      posts: postsReducer,
     }),
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(instaLeadersApi.middleware),
 
