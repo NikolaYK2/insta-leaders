@@ -1,8 +1,10 @@
-export type RegistrationProps = {
-  userName: string
-  password: string
-  email: string
+export type RegistrationParams = {
+  userName: string;
+  email: string;
+  password: string;
+  baseUrl: string;
 }
+
 export type RegistrationResponse = {
   status: string
   code: number
@@ -48,6 +50,7 @@ export interface PasswordRecoveryParams {
   recaptcha: string;
   baseUrl: string;
 }
+
 export type SendLinkResponse = SendLinkResponseSuccess | SendLinkResponseError
 
 export type SendLinkResponseSuccess = {
@@ -88,4 +91,15 @@ export type MeRes = {
   userName: string
   email: string
   isBlocked: boolean
+}
+
+export type Messages = {
+  message: string;
+  field: string;
+}
+
+export type ResMessagesAuth = {
+  statusCode: number;
+  messages: Messages[];
+  error: string;
 }

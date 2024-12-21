@@ -1,34 +1,35 @@
-import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
+import {instaLeadersApi} from '@/appRoot/services/instaLeadersApi'
 import {
   AuthGoogleRes,
   ConfirmEmailResponse,
   LoginArgs,
   LoginResponse,
   LogOutResponse,
-  MeRes, PasswordRecoveryParams,
-  RegistrationProps,
-  RegistrationResponse,
+  MeRes,
+  PasswordRecoveryParams,
+  RegistrationParams,
+  ResMessagesAuth,
 } from '@/features/auth/api/authService.types'
-import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
-import { showAlert } from '@/appRoot/app.slice'
+import {LocalStorageUtil} from '@/common/utils/LocalStorageUtil'
+import {showAlert} from '@/appRoot/app.slice'
 import Router from 'next/router'
-import { ROUTES_APP } from '@/appRoot/routes/routes'
+import {ROUTES_APP} from '@/appRoot/routes/routes'
 
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
-    registration: builder.mutation<RegistrationResponse, RegistrationProps>({
+    registration: builder.mutation<ResMessagesAuth, RegistrationParams>({
       query: body => ({
         method: 'POST',
         url: `${AUTH}/registration`,
         body,
       }),
-      async onQueryStarted(_, { queryFulfilled }) {
-        const { data } = await queryFulfilled
-        const email = data.data.email
-        if (!email) return
-        LocalStorageUtil.setValue<string>('email', data.data.email)
-      },
+      // async onQueryStarted(_, { queryFulfilled }) {
+      //   const { data } = await queryFulfilled
+      //   const email = data.data.email
+      //   if (!email) return
+      //   LocalStorageUtil.setValue<string>('email', data.data.email)
+      // },
     }),
     confirmEmail: builder.mutation<ConfirmEmailResponse, string>({
       query: code => ({
