@@ -1,8 +1,8 @@
 type StorageKeys = {
   email: 'email'
-  latestCSRFToken: 'latestCSRFToken'
-  userDataGoggle: 'userDataGoggle'
-  userData: 'userData'
+  // latestCSRFToken: 'latestCSRFToken'
+  // userDataGoggle: 'userDataGoggle'
+  // userData: 'userData'
   accessToken: 'accessToken'
   userId: 'userId'
   profileForm: 'profileForm'
