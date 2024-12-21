@@ -5,11 +5,9 @@ import {
   LoginArgs,
   LoginResponse,
   LogOutResponse,
-  MeRes,
+  MeRes, PasswordRecoveryParams,
   RegistrationProps,
   RegistrationResponse,
-  SendLinkArgs,
-  SendLinkResponse,
 } from '@/features/auth/api/authService.types'
 import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 import { showAlert } from '@/appRoot/app.slice'
@@ -130,7 +128,7 @@ const authService = instaLeadersApi.injectEndpoints({
         body,
       }),
     }),
-    forgotPassword: builder.mutation<SendLinkResponse, SendLinkArgs>({
+    forgotPassword: builder.mutation<void, PasswordRecoveryParams>({
       query: body => ({
         method: 'POST',
         url: `${AUTH}/password-recovery`,

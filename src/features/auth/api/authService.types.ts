@@ -43,11 +43,11 @@ export type LogOutResponse = {
   data: null
 }
 
-export type SendLinkArgs = {
-  email: string
-  recaptchaValue: string
+export interface PasswordRecoveryParams {
+  email: string;
+  recaptcha: string;
+  baseUrl: string;
 }
-
 export type SendLinkResponse = SendLinkResponseSuccess | SendLinkResponseError
 
 export type SendLinkResponseSuccess = {
