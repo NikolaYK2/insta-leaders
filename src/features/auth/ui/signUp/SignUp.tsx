@@ -1,30 +1,22 @@
-import React, { ChangeEvent, useState } from 'react'
-import { AuthByGoogle } from '@/common/components'
-import { NextPageWithLayout } from '@/pages/_app'
-import {
-  Button,
-  Card,
-  DynamicIcon,
-  Typography,
-  TypographyVariant,
-} from '@nikolajk2/lib-insta-leaders'
+import React, {ChangeEvent, useState} from 'react'
+import {AuthByGoogle} from '@/common/components'
+import {NextPageWithLayout} from '@/pages/_app'
+import {Button, Card, Typography, TypographyVariant,} from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { SignUpFields, signUpSchema } from '@/features/auth/ui/signUp/validation'
-import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
-import { ROUTES_AUTH } from '@/appRoot/routes/routes'
-import { useRegistrationMutation } from '@/features/auth/api/authService'
-import { EmailSent } from '@/features/auth/ui'
-import { ControllerCheckbox } from '@/common/components/ControllerCheckbox'
-import { AuthByGithub } from '@/features/auth/ui/signIn/authByGithub/AuthByGithub'
-import { Page } from '@/common/components/page'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '@/appRoot/store'
+import {useForm} from 'react-hook-form'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {SignUpFields, signUpSchema} from '@/features/auth/ui/signUp/validation'
+import {FormInput} from '@/common/components/ControllerInput/ControllerInput'
+import {ROUTES_AUTH} from '@/appRoot/routes/routes'
+import {useRegistrationMutation} from '@/features/auth/api/authService'
+import {EmailSent} from '@/features/auth/ui'
+import {ControllerCheckbox} from '@/common/components/ControllerCheckbox'
+import {AuthByGithub} from '@/features/auth/ui/signIn/authByGithub/AuthByGithub'
+import {Page} from '@/common/components/page'
 
 export const SignUp: NextPageWithLayout = () => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
+  // const [showPassword, setShowPassword] = useState(false)
+  // const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
   const {
@@ -36,7 +28,7 @@ export const SignUp: NextPageWithLayout = () => {
     setValue,
     clearErrors,
     setError,
-    formState: { errors, isLoading, isValid },
+    formState: {errors, isLoading, isValid},
   } = useForm<SignUpFields>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -49,9 +41,9 @@ export const SignUp: NextPageWithLayout = () => {
   })
 
   const [signUp] = useRegistrationMutation()
-  const onSubmit = handleSubmit(async ({ userName, password, email, ...rest }) => {
+  const onSubmit = handleSubmit(async ({userName, password, email, ...rest}) => {
     try {
-      await signUp({ userName, password, email }).unwrap()
+      await signUp({userName, password, email, baseUrl: process.env.NEXT_PUBLIC_BASE_URL}).unwrap()
       setShowModal(true)
     } catch (e: any) {
       if (e.status === 400 && e.data.message === 'Email or username is already registered') {
@@ -90,8 +82,8 @@ export const SignUp: NextPageWithLayout = () => {
           Sign Up
         </Typography>
         <div className={'flex justify-center gap-x-[60px] mb-6 mt-3'}>
-          <AuthByGoogle />
-          <AuthByGithub />
+          <AuthByGoogle/>
+          <AuthByGithub/>
         </div>
 
         <form onSubmit={onSubmit}>
@@ -122,47 +114,51 @@ export const SignUp: NextPageWithLayout = () => {
           {/* USER PASSWORD*/}
           <div className={'mb-6'}>
             <FormInput
-              type={!showPassword ? 'password' : 'text'}
+              type={'password'}
+              // type={!showPassword ? 'password' : 'text'}
               name={'password'}
               label={'Password'}
               control={control}
               placeholder={'******************'}
               onBlur={() => trigger('password')}
               onChange={onChangeInput}
-              iconEnd={
-                <DynamicIcon
-                  onClick={() => setShowPassword(prevState => !prevState)}
-                  className={'cursor-pointer fill-light-100'}
-                  iconId={showPassword ? 'Eye' : 'EyeOff'}
-                />
-              }
+              password
+              // iconEnd={
+              //   <DynamicIcon
+              //     onClick={() => setShowPassword(prevState => !prevState)}
+              //     className={'cursor-pointer fill-light-100'}
+              //     iconId={showPassword ? 'Eye' : 'EyeOff'}
+              //   />
+              // }
             />
           </div>
 
           {/* USER PASSWORD CONFIRMATION*/}
           <div className={'mb-5'}>
             <FormInput
-              type={!showPasswordConfirmation ? 'password' : 'text'}
+              type={'password'}
+              // type={!showPasswordConfirmation ? 'password' : 'text'}
               name={'passwordConfirmation'}
               label={'Password confirmation'}
               control={control}
               placeholder={'******************'}
               onBlur={() => trigger('passwordConfirmation')}
               onChange={onChangeInput}
-              iconEnd={
-                <DynamicIcon
-                  onClick={() => setShowPasswordConfirmation(prevState => !prevState)}
-                  className={'cursor-pointer fill-light-100'}
-                  iconId={showPasswordConfirmation ? 'Eye' : 'EyeOff'}
-                />
-              }
+              password
+              // iconEnd={
+              //   <DynamicIcon
+              //     onClick={() => setShowPasswordConfirmation(prevState => !prevState)}
+              //     className={'cursor-pointer fill-light-100'}
+              //     iconId={showPasswordConfirmation ? 'Eye' : 'EyeOff'}
+              //   />
+              // }
             />
           </div>
 
           {/* Условия соглашения */}
           <div className={'flex flex-col space-y-5'}>
             <div className={'flex items-center justify-center text-center'}>
-              <ControllerCheckbox name={'agreesToTOS'} control={control} />
+              <ControllerCheckbox name={'agreesToTOS'} control={control}/>
               <Typography variant={TypographyVariant.small_text} className={'text-light-100'}>
                 I agree to the{' '}
                 <Link
