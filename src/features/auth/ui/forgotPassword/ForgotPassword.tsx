@@ -1,22 +1,22 @@
-import React, { useState } from 'react'
-import { NextPageWithLayout } from '@/pages/_app'
-import { Button, Card, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
-import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
-import { useForm } from 'react-hook-form'
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import React, {useState} from 'react'
+import {NextPageWithLayout} from '@/pages/_app'
+import {Button, Card, Typography, TypographyVariant} from '@nikolajk2/lib-insta-leaders'
+import {FormInput} from '@/common/components/ControllerInput/ControllerInput'
+import {useForm} from 'react-hook-form'
+import {useGoogleReCaptcha} from 'react-google-recaptcha-v3'
 import {
   ForgotPasswordZodSchema,
   ForgotPasswordZodSchemaFields,
 } from '@/features/auth/ui/forgotPassword/forgotPasswordZodSchema'
-import { zodResolver } from '@hookform/resolvers/zod'
+import {zodResolver} from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { ROUTES_AUTH } from '@/appRoot/routes/routes'
-import { useForgotPasswordMutation } from '@/features/auth/api/authService'
-import { SendLinkResponseError } from '@/features/auth/api/authService.types'
-import { Page } from '@/common/components/page'
+import {ROUTES_AUTH} from '@/appRoot/routes/routes'
+import {useForgotPasswordMutation} from '@/features/auth/api/authService'
+import {SendLinkResponseError} from '@/features/auth/api/authService.types'
+import {Page} from '@/common/components/page'
 
 export const ForgotPassword: NextPageWithLayout = () => {
-  const { handleSubmit, control, setError } = useForm<ForgotPasswordZodSchemaFields>({
+  const {handleSubmit, control, setError} = useForm<ForgotPasswordZodSchemaFields>({
     resolver: zodResolver(ForgotPasswordZodSchema),
   })
 
@@ -24,9 +24,9 @@ export const ForgotPassword: NextPageWithLayout = () => {
 
   const [sendLink] = useForgotPasswordMutation()
 
-  const { executeRecaptcha } = useGoogleReCaptcha() // reCAPTCHA v3 hook
+  const {executeRecaptcha} = useGoogleReCaptcha() // reCAPTCHA v3 hook
 
-  const onSubmit = handleSubmit(async ({ email }) => {
+  const onSubmit = handleSubmit(async ({email}) => {
     setSendLinkSuccess(false)
 
     if (!executeRecaptcha) {
@@ -39,12 +39,9 @@ export const ForgotPassword: NextPageWithLayout = () => {
       const recaptchaToken = await executeRecaptcha('forgot_password')
 
       // Call the API with the email and reCAPTCHA token
-      const res = await sendLink({ email, recaptchaValue: recaptchaToken }).unwrap()
+      await sendLink({email, recaptcha: recaptchaToken, baseUrl: process.env.NEXT_PUBLIC_BASE_URL}).unwrap()
 
-      // In case of success response
-      if (res.status === 'success') {
-        setSendLinkSuccess(true)
-      }
+      setSendLinkSuccess(true)
     } catch (e: SendLinkResponseError | any) {
       setError('email', {
         type: 'manual',
@@ -65,7 +62,7 @@ export const ForgotPassword: NextPageWithLayout = () => {
         </Typography>
 
         <form onSubmit={onSubmit} className={'mt-[37px] !w-330'}>
-          <FormInput name={'email'} label={'Email'} control={control} />
+          <FormInput name={'email'} label={'Email'} control={control}/>
 
           <Typography
             variant={TypographyVariant.regular_text_14}
@@ -82,7 +79,7 @@ export const ForgotPassword: NextPageWithLayout = () => {
               The link has been sent by email. If you don’t receive an email send link again
             </Typography>
           )}
-          <Button variant={'primary'} className={'mt-[17px] h-[36px]'} fullWidth type="submit">
+          <Button variant={'primary'} className={'mt-4 h-9'} fullWidth>
             {sendLinkSuccess ? 'Send Link Again' : 'Send Link'}
           </Button>
 
