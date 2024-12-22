@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react'
+import React, {useState} from 'react'
 import {AuthByGoogle} from '@/common/components'
 import {NextPageWithLayout} from '@/pages/_app'
 import {Button, Card, Typography, TypographyVariant,} from '@nikolajk2/lib-insta-leaders'
@@ -13,12 +13,13 @@ import {EmailSent} from '@/features/auth/ui'
 import {ControllerCheckbox} from '@/common/components/ControllerCheckbox'
 import {AuthByGithub} from '@/features/auth/ui/signIn/authByGithub/AuthByGithub'
 import {Page} from '@/common/components/page'
+import {useAppDispatch} from "@/appRoot/lib/hooks/hooksStore";
 
 export const SignUp: NextPageWithLayout = () => {
   // const [showPassword, setShowPassword] = useState(false)
   // const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
   const [showModal, setShowModal] = useState(false)
-
+  const dispatch = useAppDispatch()
   const {
     handleSubmit,
     control,
@@ -46,13 +47,9 @@ export const SignUp: NextPageWithLayout = () => {
       await signUp({userName, password, email, baseUrl: process.env.NEXT_PUBLIC_BASE_URL}).unwrap()
       setShowModal(true)
     } catch (e: any) {
-      if (e.status === 400 && e.data.message === 'Email or username is already registered') {
-        setError('email', {
-          message: e.data.message,
-        })
-      } else {
-        console.log(e)
-      }
+      setError(e.data.messages[0]?.field, {
+        message: e.data.messages[0]?.message || 'error registration',
+      })
     }
   })
   const handlerResetForm = () => {
@@ -63,14 +60,14 @@ export const SignUp: NextPageWithLayout = () => {
       passwordConfirmation: '',
     })
   }
-  const onChangeInput = async (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    const name = e.target.name as 'userName' | 'email' | 'password' | 'passwordConfirmation'
-    setValue(name, value)
-    if (!isValid) {
-      clearErrors(name)
-    }
-  }
+  // const onChangeInput = async (e: ChangeEvent<HTMLInputElement>) => {
+  //   const value = e.target.value
+  //   const name = e.target.name as 'userName' | 'email' | 'password' | 'passwordConfirmation'
+  //   setValue(name, value)
+  //   if (!isValid) {
+  //     clearErrors(name)
+  //   }
+  // }
 
   return (
     <Page titleMeta={'Sign Up'} descriptionMeta={'Create a new account by signing up'}>
@@ -94,8 +91,8 @@ export const SignUp: NextPageWithLayout = () => {
               label={'Username'}
               control={control}
               placeholder={'Epam11'}
-              onBlur={() => trigger('userName')}
-              onChange={onChangeInput}
+              // onBlur={() => trigger('userName')}
+              // onChange={onChangeInput}
             />
           </div>
 
@@ -106,8 +103,8 @@ export const SignUp: NextPageWithLayout = () => {
               label={'Email'}
               control={control}
               placeholder={'Epam@epam.com'}
-              onBlur={() => trigger('email')}
-              onChange={onChangeInput}
+              // onBlur={() => trigger('email')}
+              // onChange={onChangeInput}
             />
           </div>
 
@@ -120,8 +117,8 @@ export const SignUp: NextPageWithLayout = () => {
               label={'Password'}
               control={control}
               placeholder={'******************'}
-              onBlur={() => trigger('password')}
-              onChange={onChangeInput}
+              // onBlur={() => trigger('password')}
+              // onChange={onChangeInput}
               password
               // iconEnd={
               //   <DynamicIcon
@@ -142,8 +139,8 @@ export const SignUp: NextPageWithLayout = () => {
               label={'Password confirmation'}
               control={control}
               placeholder={'******************'}
-              onBlur={() => trigger('passwordConfirmation')}
-              onChange={onChangeInput}
+              // onBlur={() => trigger('passwordConfirmation')}
+              // onChange={onChangeInput}
               password
               // iconEnd={
               //   <DynamicIcon
@@ -181,7 +178,7 @@ export const SignUp: NextPageWithLayout = () => {
                 {errors.agreesToTOS.message}
               </Typography>
             )}
-            <Button disabled={isLoading || !isValid}>Sign Up</Button>
+            <Button disabled={isLoading}>Sign Up</Button>
           </div>
         </form>
 
