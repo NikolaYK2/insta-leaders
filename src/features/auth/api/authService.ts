@@ -1,13 +1,13 @@
 import {instaLeadersApi} from '@/appRoot/services/instaLeadersApi'
 import {
   AuthGoogleRes,
-  ConfirmEmailResponse,
   LoginArgs,
   LoginResponse,
   LogOutResponse,
   MeRes,
   PasswordRecoveryParams,
   RegistrationParams,
+  ResendEmailParams,
   ResMessagesAuth,
 } from '@/features/auth/api/authService.types'
 import {LocalStorageUtil} from '@/common/utils/LocalStorageUtil'
@@ -19,26 +19,25 @@ const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
   endpoints: builder => ({
     registration: builder.mutation<ResMessagesAuth, RegistrationParams>({
-      query: body => ({
+      query: body => {
+        LocalStorageUtil.setValue('email', body.email)
+
+        return {
+          method: 'POST',
+          url: `${AUTH}/registration`,
+          body,
+
+        }
+      },
+    }),
+    confirmEmail: builder.mutation<ResMessagesAuth, { confirmationCode: string }>({
+      query: ({confirmationCode}) => ({
         method: 'POST',
-        url: `${AUTH}/registration`,
-        body,
-      }),
-      // async onQueryStarted(_, { queryFulfilled }) {
-      //   const { data } = await queryFulfilled
-      //   const email = data.data.email
-      //   if (!email) return
-      //   LocalStorageUtil.setValue<string>('email', data.data.email)
-      // },
-    }),
-    confirmEmail: builder.mutation<ConfirmEmailResponse, string>({
-      query: code => ({
-        method: 'GET',
-        url: `${AUTH}/email-confirmation`,
-        params: { code },
+        url: `${AUTH}/registration-confirmation`,
+        body: {confirmationCode},
       }),
     }),
-    resendEmail: builder.mutation<ConfirmEmailResponse, { email: string }>({
+    resendEmail: builder.mutation<ResMessagesAuth, ResendEmailParams>({
       query: body => ({
         method: 'POST',
         url: `${AUTH}/registration-email-resending`,
@@ -53,9 +52,9 @@ const authService = instaLeadersApi.injectEndpoints({
           method: 'POST',
         }
       },
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, {dispatch, queryFulfilled}) {
         try {
-          const { data } = await queryFulfilled
+          const {data} = await queryFulfilled
 
           if (!data || !data.accessToken) return
 
@@ -94,9 +93,9 @@ const authService = instaLeadersApi.injectEndpoints({
       },
     }),
     authGoogle: builder.mutation<AuthGoogleRes, { code: string }>({
-      async onQueryStarted(_, { queryFulfilled, dispatch }) {
+      async onQueryStarted(_, {queryFulfilled, dispatch}) {
         try {
-          const { data } = await queryFulfilled
+          const {data} = await queryFulfilled
 
           LocalStorageUtil.setValue('accessToken', data.accessToken)
         } catch (error) {

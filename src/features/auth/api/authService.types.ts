@@ -5,6 +5,8 @@ export type RegistrationParams = {
   baseUrl: string;
 }
 
+export type ResendEmailParams= Omit<RegistrationParams, 'userName' | 'password'>
+
 export type RegistrationResponse = {
   status: string
   code: number
