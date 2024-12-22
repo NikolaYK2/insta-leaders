@@ -1,40 +1,48 @@
-import React, { useEffect } from 'react'
-import { HeadersMeta } from '@/common/components'
-import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
+import React, {useEffect} from 'react'
+import {Button, Typography, TypographyVariant} from '@nikolajk2/lib-insta-leaders'
 import img from '../../../../assets/images/signUp/bro.png'
 import Image from 'next/image'
-import { NextPageWithLayout } from '@/pages/_app'
+import {NextPageWithLayout} from '@/pages/_app'
 import Link from 'next/link'
-import { ROUTES_AUTH } from '@/appRoot/routes/routes'
-import { useRouter } from 'next/router'
-import { useConfirmEmailMutation } from '@/features/auth/api/authService'
+import {ROUTES_AUTH} from '@/appRoot/routes/routes'
+import {useRouter} from 'next/router'
+import {useConfirmEmailMutation} from '@/features/auth/api/authService'
+import {Page} from "@/common/components/page";
+import {useAppDispatch} from "@/appRoot/lib/hooks/hooksStore";
+import {showAlert} from "@/appRoot/app.slice";
 
 export const EmailConfirmation: NextPageWithLayout = () => {
   const router = useRouter()
-  const { code } = router.query
-  // const code = '389d6303-65e6-4c39-9849-9aad10eb8f04'
-  const [confirmEmail, { isError, isLoading, isSuccess }] = useConfirmEmailMutation()
+  const {code} = router.query
+  const dispatch = useAppDispatch()
+  console.log(code)
+  const [confirmEmail, {isError, isLoading, isSuccess}] = useConfirmEmailMutation()
+
+  const verifyEmail = async () => {
+    try {
+      if (code) {
+        await confirmEmail({confirmationCode: code as string})
+      }
+
+    } catch (e: any) {
+      dispatch(showAlert({variant: 'alertError', message: e.data.messages[0].message || 'verification failed!'}))
+      await router.push(ROUTES_AUTH.EMAIL_VERIFICATION)
+    }
+  }
 
   useEffect(() => {
-    if (code) {
-      confirmEmail(code as string)
-      return
-    }
-    router.push(ROUTES_AUTH.EMAIL_VERIFICATION)
-  }, [code, confirmEmail])
+    verifyEmail()
+  }, []);
 
-  if (isError) {
-    router.push(ROUTES_AUTH.EMAIL_VERIFICATION)
-    return null
-  }
+
   if (isLoading) {
-    return <h1>LOADING....</h1>
+    return <div>Loading...</div>
   }
 
   if (isSuccess) {
     return (
-      <section className={'flex flex-col items-center justify-center text-center'}>
-        <HeadersMeta title={'Email confirmation'} description={'Email confirmation'} />
+      <Page titleMeta={'Email confirmation'} descriptionMeta={'Email confirmation'}
+            className={'flex flex-col items-center justify-center text-center'}>
         <Typography variant={TypographyVariant.h1} className={'mb-5'}>
           Congratulations!
         </Typography>
@@ -44,8 +52,8 @@ export const EmailConfirmation: NextPageWithLayout = () => {
         <Button asChild className={'w-[182px] mb-[72px] hover:text-light-100'}>
           <Link href={ROUTES_AUTH.LOGIN}>Sign In</Link>
         </Button>
-        <Image src={img} alt={'Email confirmed'} width={432} height={300} />
-      </section>
+        <Image src={img} alt={'Email confirmed'} width={432} height={300}/>
+      </Page>
     )
   }
 }
