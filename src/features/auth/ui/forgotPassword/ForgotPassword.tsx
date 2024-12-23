@@ -1,9 +1,10 @@
+import ReCAPTCHA from 'react-google-recaptcha';
+
 import React, {useState} from 'react'
 import {NextPageWithLayout} from '@/pages/_app'
-import {Button, Card, Typography, TypographyVariant} from '@nikolajk2/lib-insta-leaders'
+import {Button, Card, Recaptcha, Typography, TypographyVariant} from '@nikolajk2/lib-insta-leaders'
 import {FormInput} from '@/common/components/ControllerInput/ControllerInput'
 import {useForm} from 'react-hook-form'
-import {useGoogleReCaptcha} from 'react-google-recaptcha-v3'
 import {
   ForgotPasswordZodSchema,
   ForgotPasswordZodSchemaFields,
@@ -16,31 +17,35 @@ import {SendLinkResponseError} from '@/features/auth/api/authService.types'
 import {Page} from '@/common/components/page'
 
 export const ForgotPassword: NextPageWithLayout = () => {
-  const {handleSubmit, control, setError} = useForm<ForgotPasswordZodSchemaFields>({
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [isExpired, setIsExpired] = useState(false); // Состояние для истечения токена
+  const [isErrorRecaptcha, setIsErrorRecaptcha] = useState(false);// Состояние для проверки на робота
+  const [sendLinkSuccess, setSendLinkSuccess] = useState(false)
+  const [sendLink] = useForgotPasswordMutation()
+
+  const {handleSubmit, control, setError, clearErrors} = useForm<ForgotPasswordZodSchemaFields>({
+    defaultValues: {
+      email: '',
+    },
     resolver: zodResolver(ForgotPasswordZodSchema),
   })
 
-  const [sendLinkSuccess, setSendLinkSuccess] = useState<boolean>(false)
-
-  const [sendLink] = useForgotPasswordMutation()
-
-  const {executeRecaptcha} = useGoogleReCaptcha() // reCAPTCHA v3 hook
+  const onRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+    setIsExpired(false);
+    setIsErrorRecaptcha(false)
+    clearErrors()
+  };
 
   const onSubmit = handleSubmit(async ({email}) => {
     setSendLinkSuccess(false)
 
-    if (!executeRecaptcha) {
-      console.log('reCAPTCHA has not been loaded yet')
-      return
+    if (!recaptchaToken || isExpired) {
+      setIsErrorRecaptcha(true)
+      return;
     }
-
     try {
-      // Execute reCAPTCHA and get the token
-      const recaptchaToken = await executeRecaptcha('forgot_password')
-
-      // Call the API with the email and reCAPTCHA token
       await sendLink({email, recaptcha: recaptchaToken, baseUrl: process.env.NEXT_PUBLIC_BASE_URL}).unwrap()
-
       setSendLinkSuccess(true)
     } catch (e: SendLinkResponseError | any) {
       setError('email', {
@@ -50,7 +55,9 @@ export const ForgotPassword: NextPageWithLayout = () => {
     }
   })
 
+  const isRecaptcha = Boolean(recaptchaToken) && !isExpired
   return (
+
     <Page
       titleMeta={'Forgot Password'}
       descriptionMeta={'Reset your password if you have forgotten it'}
@@ -88,8 +95,24 @@ export const ForgotPassword: NextPageWithLayout = () => {
               <Typography variant={TypographyVariant.h3}>Back to Sign In</Typography>
             </Link>
           </Button>
+
+          <div className={'relative flex flex-col w-full mt-6 px-7'}>
+            <ReCAPTCHA
+              className={'absolute inset-0 z-50 opacity-0 w-full h-full cursor-pointer'}
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_API_KEY || ''}
+              onChange={onRecaptchaChange}
+            />
+            {/*кастомный рекаптча так как от библиотеки не стилизуется*/}
+            <Recaptcha className={'flex items-center justify-between relative max-w-full w-full'}
+                       isVerified={isRecaptcha}
+                       expired={isExpired}
+                       error={isErrorRecaptcha}
+            />
+          </div>
         </form>
+
       </Card>
     </Page>
+
   )
 }
