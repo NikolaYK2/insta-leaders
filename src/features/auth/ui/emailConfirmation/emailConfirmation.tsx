@@ -15,7 +15,7 @@ export const EmailConfirmation: NextPageWithLayout = () => {
   const router = useRouter()
   const {code} = router.query
   const dispatch = useAppDispatch()
-  console.log(code)
+
   const [confirmEmail, {isError, isLoading, isSuccess}] = useConfirmEmailMutation()
 
   const verifyEmail = async () => {
