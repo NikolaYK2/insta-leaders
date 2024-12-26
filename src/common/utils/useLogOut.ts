@@ -16,9 +16,7 @@ export const useLogOut = () => {
       LocalStorageUtil.removeItem('userId')
       LocalStorageUtil.removeItem('email')
       await indexDBUtils.clearAllImages()
-      // LocalStorageUtil.removeItem('userDataGoggle')
-      // LocalStorageUtil.removeItem('userData')
-      router.push(ROUTES_AUTH.LOGIN)
+
     } catch (error) {
       console.error('Ошибка при выходе:', error)
     }
