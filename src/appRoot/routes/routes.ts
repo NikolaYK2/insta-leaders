@@ -1,4 +1,5 @@
 export const ROUTES_AUTH = {
+  HOME:'/homePublic',
   REGISTRATION: '/signUp',
   LOGIN: '/signIn',
   EMAIL_VERIFICATION: '/emailVerification',
