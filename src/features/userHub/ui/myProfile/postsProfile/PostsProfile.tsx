@@ -1,69 +1,78 @@
-import React, { useRef, useEffect, useState } from 'react'
-import Image from 'next/image'
-import { useGetsPostsByUsernameQuery } from '@/features/userHub/api/post/postService'
-import { PostItem, PostsByUsernameParams } from '@/features/userHub/api/post/postServiceType'
-import { useAppDispatch, useAppSelector } from '@/appRoot/lib/hooks/hooksStore'
-import { addPosts, clearPosts } from '@/features/userHub/model/postsSlice/postsSlice'
-import { allPostsSelected } from '@/features/userHub/model/postsSlice/postsSelectors'
+import React, { useRef, useEffect, useState } from "react";
+import Image from "next/image";
+import { useGetsPostsByUsernameQuery } from "@/features/userHub/api/post/postService";
+import {
+  PostItem,
+  PostsByUsernameParams,
+} from "@/features/userHub/api/post/postServiceType";
+import { useAppDispatch, useAppSelector } from "@/appRoot/lib/hooks/hooksStore";
+import {
+  addPosts,
+  clearPosts,
+} from "@/features/userHub/model/postsSlice/postsSlice";
+import { allPostsSelected } from "@/features/userHub/model/postsSlice/postsSelectors";
 
 type Props = {
-  username: string
-}
+  username: string;
+};
 
 export const PostsProfile = ({ username }: Props) => {
-  const [pageNumber, setPageNumber] = useState(1)
-  const loadMoreRef = useRef<HTMLDivElement | null>(null)
-  const observer = useRef<IntersectionObserver | null>(null)
+  const [pageNumber, setPageNumber] = useState(1);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
 
-  const posts = useAppSelector(allPostsSelected)
-  const dispatch = useAppDispatch()
+  const posts = useAppSelector(allPostsSelected);
+  const dispatch = useAppDispatch();
 
   const params: PostsByUsernameParams = {
     username,
     pageSize: 8,
     pageNumber,
-    sortBy: '',
-    sortDirection: 'desc',
-  }
+    sortBy: "",
+    sortDirection: "desc",
+  };
 
-  const { data, isLoading, isFetching, isError } = useGetsPostsByUsernameQuery(params, {
-    skip: !username,
-  })
+  const { data, isLoading, isFetching, isError } = useGetsPostsByUsernameQuery(
+    params,
+    {
+      skip: !username,
+    },
+  );
 
   // Загружаем посты в глобальный стейт
   useEffect(() => {
     if (data?.items) {
-      dispatch(addPosts(data.items))
+      dispatch(addPosts(data.items));
     }
-  }, [data, dispatch])
+  }, [data, dispatch]);
 
   // Очистка постов при смене пользователя
   useEffect(() => {
-    dispatch(clearPosts())
-    setPageNumber(1)
-  }, [username, dispatch])
+    dispatch(clearPosts());
+    setPageNumber(1);
+  }, [username, dispatch]);
 
   // Настройка IntersectionObserver
   useEffect(() => {
-    if (!loadMoreRef.current) return
+    if (!loadMoreRef.current) return;
 
     observer.current = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !isFetching && data?.items.length) {
-        setPageNumber(prev => prev + 1)
+        setPageNumber((prev) => prev + 1);
       }
-    })
+    });
 
-    observer.current.observe(loadMoreRef.current)
+    observer.current.observe(loadMoreRef.current);
 
     return () => {
       if (observer.current) {
-        observer.current.disconnect()
+        observer.current.disconnect();
       }
-    }
-  }, [isFetching, data?.items])
+    };
+  }, [isFetching, data?.items]);
 
-  if (isLoading && pageNumber === 1) return <>Загрузка постов....</>
-  if (isError) return <>Ошибка загрузки постов</>
+  if (isLoading && pageNumber === 1) return <>Загрузка постов....</>;
+  if (isError) return <>Ошибка загрузки постов</>;
 
   return (
     <section className="flex flex-wrap m-[-8px]">
@@ -78,9 +87,9 @@ export const PostsProfile = ({ username }: Props) => {
               height={228}
             />
           ))
-        : 'Нет постов'}
+        : "Нет постов"}
       {isFetching && <div>Загрузка еще...</div>}
       <div ref={loadMoreRef} className="w-full h-2"></div>
     </section>
-  )
-}
+  );
+};

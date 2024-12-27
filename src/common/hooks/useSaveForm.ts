@@ -1,14 +1,14 @@
-import { useEffect } from 'react'
-import { LocalStorageUtil, ParamsKey } from '@/common/utils/LocalStorageUtil'
+import { useEffect } from "react";
+import { LocalStorageUtil, ParamsKey } from "@/common/utils/LocalStorageUtil";
 
 type Params<T> = {
-  watch: (callback: (value: T) => void) => { unsubscribe: () => void } // Метод для подписки на изменения формы, возвращает функцию для отписки
-  reset: (data: Partial<T>) => void // Метод для сброса значений формы
-  saveValue: (value: T) => void // Метод для сохранения значений формы
-  getValue: () => Partial<T> | null // Метод для получения начальных значений формы из другого источника
-  valueKey: ParamsKey // Ключ для хранения значения в LocalStorage
-  dependencies?: unknown[] // Дополнительные зависимости, влияющие на сброс формы
-}
+  watch: (callback: (value: T) => void) => { unsubscribe: () => void }; // Метод для подписки на изменения формы, возвращает функцию для отписки
+  reset: (data: Partial<T>) => void; // Метод для сброса значений формы
+  saveValue: (value: T) => void; // Метод для сохранения значений формы
+  getValue: () => Partial<T> | null; // Метод для получения начальных значений формы из другого источника
+  valueKey: ParamsKey; // Ключ для хранения значения в LocalStorage
+  dependencies?: unknown[]; // Дополнительные зависимости, влияющие на сброс формы
+};
 
 export const useSaveForm = <T>({
   watch,
@@ -19,34 +19,34 @@ export const useSaveForm = <T>({
   dependencies = [],
 }: Params<T>) => {
   // Получение данных из LocalStorage при инициализации хука
-  const saveForm = LocalStorageUtil.getValue(valueKey)
+  const saveForm = LocalStorageUtil.getValue(valueKey);
 
   // Подписываемся на изменения формы и сохраняем значения в LocalStorage при изменениях
   useEffect(() => {
     // Подписка на изменения формы
     const subscription = watch((value: T) => {
       // Сохраняем текущее значение формы в LocalStorage
-      saveValue(value)
-    })
+      saveValue(value);
+    });
     // Отписываемся при размонтировании компонента
-    return () => subscription.unsubscribe()
-  }, [watch])
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   // Сбрасываем данные формы при инициализации или при изменении зависимостей
   useEffect(() => {
     if (saveForm) {
       // Если в LocalStorage есть сохраненные значения, сбрасываем форму с этими значениями
-      reset(saveForm)
+      reset(saveForm);
     } else {
       // Если в LocalStorage нет сохраненных значений, получаем начальные значения и сбрасываем форму
-      const defaultValue = getValue()
+      const defaultValue = getValue();
       if (defaultValue) {
-        reset(defaultValue)
+        reset(defaultValue);
       }
     }
     // Перезапускаем эффект при изменении зависимостей
-  }, [...dependencies])
-}
+  }, [...dependencies]);
+};
 
 /**
  * Подробные комментарии:

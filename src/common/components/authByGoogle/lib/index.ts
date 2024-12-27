@@ -1,1 +1,1 @@
-export * from './extractUserIdFromToken'
+export * from "./extractUserIdFromToken";

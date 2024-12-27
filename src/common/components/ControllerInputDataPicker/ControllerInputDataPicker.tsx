@@ -1,15 +1,23 @@
-import React from 'react'
-import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
-import { DataType, InputDataPicker, TextFieldProps } from '@nikolajk2/lib-insta-leaders'
-import { useDebounceValueHandler } from '@/common/hooks'
+import React from "react";
+import {
+  FieldValues,
+  useController,
+  UseControllerProps,
+} from "react-hook-form";
+import {
+  DataType,
+  InputDataPicker,
+  TextFieldProps,
+} from "@nikolajk2/lib-insta-leaders";
+import { useDebounceValueHandler } from "@/common/hooks";
 
 type ControllerInputDataPickerProps<TFieldValues extends FieldValues> =
   UseControllerProps<TFieldValues> &
-    Omit<TextFieldProps, 'id' | 'onChange' | 'value'> & {
-      error?: React.ReactNode
-      selected: DataType
-      label: string
-    }
+    Omit<TextFieldProps, "id" | "onChange" | "value"> & {
+      error?: React.ReactNode;
+      selected: DataType;
+      label: string;
+    };
 
 export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
   control,
@@ -25,13 +33,13 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
   } = useController({
     control,
     name,
-  })
+  });
 
   const { valueDebounce, handleSelect } = useDebounceValueHandler({
     initialValue: selected,
     onChange,
     delay: 500,
-  })
+  });
 
   return (
     <InputDataPicker
@@ -43,5 +51,5 @@ export const ControllerInputDataPicker = <TFieldValues extends FieldValues>({
       disabled={disabled}
       sideOffsetContent={-21}
     />
-  )
-}
+  );
+};

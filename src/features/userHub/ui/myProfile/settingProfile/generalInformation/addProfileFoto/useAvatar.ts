@@ -1,47 +1,47 @@
-import { useEffect, useState } from 'react'
-import { prepareImageForUpload } from './prepareImageForUpload'
+import { useEffect, useState } from "react";
+import { prepareImageForUpload } from "./prepareImageForUpload";
 import {
   useGetAvatarQuery,
   useUploadAvatarMutation,
-} from '@/features/userHub/api/profile/profileService'
+} from "@/features/userHub/api/profile/profileService";
 
 export const useAvatar = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const { data: avatarData, isLoading } = useGetAvatarQuery()
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: avatarData, isLoading } = useGetAvatarQuery();
 
-  const [uploadAvatar] = useUploadAvatarMutation()
+  const [uploadAvatar] = useUploadAvatarMutation();
 
   const [image, setImage] = useState<null | string>(
     avatarData?.data.avatarUrl && avatarData.data.avatarUrl.length > 0
       ? avatarData.data.avatarUrl
-      : null
-  )
+      : null,
+  );
 
   useEffect(() => {
     if (avatarData?.data.avatarUrl) {
-      setImage(avatarData.data.avatarUrl)
+      setImage(avatarData.data.avatarUrl);
     }
-  }, [avatarData])
+  }, [avatarData]);
 
   const handleSubmit = async (selectedImage: string | null) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
       if (selectedImage && selectedImage !== avatarData?.data.avatarUrl) {
-        const formData = prepareImageForUpload(selectedImage, 'avatarFile')
-        await uploadAvatar(formData).unwrap()
-        console.log('submit')
+        const formData = prepareImageForUpload(selectedImage, "avatarFile");
+        await uploadAvatar(formData).unwrap();
+        console.log("submit");
       }
     } catch (error) {
-      console.log('Error:', error)
+      console.log("Error:", error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleDeletePhoto = () => {
-    setImage(null)
-  }
+    setImage(null);
+  };
 
   return {
     handleDeletePhoto,
@@ -51,5 +51,5 @@ export const useAvatar = () => {
     handleSubmit,
     setImage,
     isOpen,
-  }
-}
+  };
+};

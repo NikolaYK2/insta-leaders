@@ -1,1 +1,1 @@
-export * from './CreatePrimitive'
+export * from "./CreatePrimitive";

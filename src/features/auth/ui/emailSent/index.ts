@@ -1,1 +1,1 @@
-export * from './EmailSent'
+export * from "./EmailSent";

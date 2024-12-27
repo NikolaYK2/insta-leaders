@@ -1,5 +1,5 @@
-import { SignUp } from '@/features/auth/ui'
-import { PublicLayout } from '@/common/components/Layout/PublicLayout'
+import { SignUp } from "@/features/auth/ui";
+import { PublicLayout } from "@/common/components/Layout/PublicLayout";
 
-SignUp.getLayout = PublicLayout
-export default SignUp
+SignUp.getLayout = PublicLayout;
+export default SignUp;

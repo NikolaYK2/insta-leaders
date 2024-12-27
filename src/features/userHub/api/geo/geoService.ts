@@ -1,10 +1,15 @@
-import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
-import { Citi, Cities, CitiesParams, Countries } from '@/features/userHub/api/geo/GeoServiceType'
-import { Res } from '@/features/userHub/api/profile/profileServiceType'
+import { instaLeadersApi } from "@/appRoot/services/instaLeadersApi";
+import {
+  Citi,
+  Cities,
+  CitiesParams,
+  Countries,
+} from "@/features/userHub/api/geo/GeoServiceType";
+import { Res } from "@/features/userHub/api/profile/profileServiceType";
 
-const GEO = 'v1/geo/countries'
+const GEO = "v1/geo/countries";
 const geoService = instaLeadersApi.injectEndpoints({
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getCountries: builder.query<Res<Countries>, void>({
       query: () => ({
         url: GEO,
@@ -22,6 +27,7 @@ const geoService = instaLeadersApi.injectEndpoints({
       }),
     }),
   }),
-})
+});
 
-export const { useGetCountriesQuery, useGeCitiesQuery, useGeCityQuery } = geoService
+export const { useGetCountriesQuery, useGeCitiesQuery, useGeCityQuery } =
+  geoService;

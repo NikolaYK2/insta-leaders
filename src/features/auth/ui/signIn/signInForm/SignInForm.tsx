@@ -1,14 +1,21 @@
-import { Button, Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { useSignInMutation } from '@/features/auth/api/authService'
-import { ROUTES_AUTH } from '@/appRoot/routes/routes'
-import Link from 'next/link'
-import { FormInput } from '@/common/components'
-import { LoginFields, LoginSchema } from '@/features/auth/ui/signIn/SignInForm/signInFormSchema'
+import {
+  Button,
+  Typography,
+  TypographyVariant,
+} from "@nikolajk2/lib-insta-leaders";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useSignInMutation } from "@/features/auth/api/authService";
+import { ROUTES_AUTH } from "@/appRoot/routes/routes";
+import Link from "next/link";
+import { FormInput } from "@/common/components";
+import {
+  LoginFields,
+  LoginSchema,
+} from "@/features/auth/ui/signIn/SignInForm/signInFormSchema";
 
 export const SignInForm = () => {
-  const [signIn, { data, isError, isLoading, error }] = useSignInMutation()
+  const [signIn, { data, isError, isLoading, error }] = useSignInMutation();
 
   const {
     handleSubmit,
@@ -16,31 +23,36 @@ export const SignInForm = () => {
     control,
   } = useForm<LoginFields>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
-    mode: 'onBlur',
+    mode: "onBlur",
     resolver: zodResolver(LoginSchema),
-  })
+  });
 
-  const onSubmit = handleSubmit(async data => {
-    signIn(data)
-  })
+  const onSubmit = handleSubmit(async (data) => {
+    signIn(data);
+  });
 
   return (
-    <form className={'text-left'} onSubmit={onSubmit}>
-      <FormInput name={'email'} control={control} label={'Email'} className={'mb-6'} />
+    <form className={"text-left"} onSubmit={onSubmit}>
       <FormInput
-        name={'password'}
+        name={"email"}
         control={control}
-        label={'Password'}
-        className={'mb-9'}
+        label={"Email"}
+        className={"mb-6"}
+      />
+      <FormInput
+        name={"password"}
+        control={control}
+        label={"Password"}
+        className={"mb-9"}
         password
       />
-      <div className={'flex mb-6 justify-end'}>
+      <div className={"flex mb-6 justify-end"}>
         <Link href={ROUTES_AUTH.FORGOT_PASSWORD}>
           <Typography
-            className={'text-light-900 hover:text-light-100'}
+            className={"text-light-900 hover:text-light-100"}
             variant={TypographyVariant.regular_text_14}
           >
             Forgot Password
@@ -52,5 +64,5 @@ export const SignInForm = () => {
         <Typography variant={TypographyVariant.h3}>Sign In</Typography>
       </Button>
     </form>
-  )
-}
+  );
+};

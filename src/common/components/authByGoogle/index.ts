@@ -1,2 +1,2 @@
-export * from './AuthByGoogle'
-export * from './lib'
+export * from "./AuthByGoogle";
+export * from "./lib";

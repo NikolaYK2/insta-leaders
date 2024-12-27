@@ -1,6 +1,6 @@
-import React, { PropsWithChildren, ReactElement } from 'react'
-import { BaseLayout, Sidebar } from '@/common/components'
-import { NextPage } from 'next'
+import React, { PropsWithChildren, ReactElement } from "react";
+import { BaseLayout, Sidebar } from "@/common/components";
+import { NextPage } from "next";
 
 const Layout: NextPage<PropsWithChildren> = ({ children }) => {
   return (
@@ -10,9 +10,9 @@ const Layout: NextPage<PropsWithChildren> = ({ children }) => {
         {children}
       </div>
     </BaseLayout>
-  )
-}
+  );
+};
 
 export const PrivateLayout = (page: ReactElement) => {
-  return <Layout>{page}</Layout>
-}
+  return <Layout>{page}</Layout>;
+};

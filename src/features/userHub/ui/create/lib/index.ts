@@ -1,2 +1,2 @@
-export * from './loadImages'
-export * from './getFilteredThumbnail'
+export * from "./loadImages";
+export * from "./getFilteredThumbnail";

@@ -1,4 +1,4 @@
-import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
+import { instaLeadersApi } from "@/appRoot/services/instaLeadersApi";
 import {
   Avatar,
   DeleteAvatartResponse,
@@ -6,46 +6,46 @@ import {
   PostsData,
   Res,
   ResProfile,
-} from '@/features/userHub/api/profile/profileServiceType'
+} from "@/features/userHub/api/profile/profileServiceType";
 
-const PROFILE = 'v1/users'
+const PROFILE = "v1/users";
 const profileService = instaLeadersApi.injectEndpoints({
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getProfile: builder.query<ResProfile, void>({
-      providesTags: ['Profile'],
+      providesTags: ["Profile"],
       query: () => ({
         url: `${PROFILE}/profile`,
       }),
     }),
     updateProfile: builder.mutation<void, ParamsProfile>({
-      query: body => ({
+      query: (body) => ({
         url: `${PROFILE}/profile`,
-        method: 'PUT',
+        method: "PUT",
         body,
       }),
-      invalidatesTags: ['Profile'],
+      invalidatesTags: ["Profile"],
     }),
     getAvatar: builder.query<Res<Avatar>, void>({
-      providesTags: ['Profile'],
+      providesTags: ["Profile"],
       query: () => ({
-        method: 'GET',
+        method: "GET",
         url: `${PROFILE}/me/avatar`,
       }),
     }),
     uploadAvatar: builder.mutation<Res<Avatar>, FormData>({
-      invalidatesTags: ['Profile'],
+      invalidatesTags: ["Profile"],
       query: (formData: FormData) => ({
         body: formData,
-        method: 'POST',
+        method: "POST",
         url: `${PROFILE}/me/avatar`,
       }),
     }),
     deleteAvatar: builder.mutation<DeleteAvatartResponse, void>({
       query: () => ({
-        method: 'DELETE',
+        method: "DELETE",
         url: `${PROFILE}/me/avatar`,
       }),
-      invalidatesTags: ['Profile'],
+      invalidatesTags: ["Profile"],
     }),
     getUsersPosts: builder.query<Res<PostsData>, void>({
       query: () => ({
@@ -53,7 +53,7 @@ const profileService = instaLeadersApi.injectEndpoints({
       }),
     }),
   }),
-})
+});
 
 export const {
   useGetProfileQuery,
@@ -61,4 +61,4 @@ export const {
   useGetAvatarQuery,
   useUploadAvatarMutation,
   useUpdateProfileMutation,
-} = profileService
+} = profileService;

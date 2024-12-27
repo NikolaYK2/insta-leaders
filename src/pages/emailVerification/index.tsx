@@ -1,5 +1,5 @@
-import { EmailVerification } from '@/features/auth/ui/emailVerification'
-import { PublicLayout } from '@/common/components/Layout/PublicLayout'
+import { EmailVerification } from "@/features/auth/ui/emailVerification";
+import { PublicLayout } from "@/common/components/Layout/PublicLayout";
 
-EmailVerification.getLayout = PublicLayout
-export default EmailVerification
+EmailVerification.getLayout = PublicLayout;
+export default EmailVerification;

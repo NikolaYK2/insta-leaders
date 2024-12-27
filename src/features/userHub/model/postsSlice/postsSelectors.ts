@@ -1,3 +1,3 @@
-import { AppState } from '@/appRoot/store'
+import { AppState } from "@/appRoot/store";
 
-export const allPostsSelected = (state: AppState) => state.posts.posts
+export const allPostsSelected = (state: AppState) => state.posts.posts;

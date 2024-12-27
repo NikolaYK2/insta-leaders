@@ -1,5 +1,5 @@
-import { Statistics } from '@/features/userHub/ui'
-import { PrivateLayout } from '@/common/components/Layout/PrivatLayout'
+import { Statistics } from "@/features/userHub/ui";
+import { PrivateLayout } from "@/common/components/Layout/PrivatLayout";
 
-Statistics.getLayout = PrivateLayout
-export default Statistics
+Statistics.getLayout = PrivateLayout;
+export default Statistics;
