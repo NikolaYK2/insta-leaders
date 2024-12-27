@@ -1,7 +1,7 @@
 import React from 'react'
 import { Typography, TypographyVariant } from '@nikolajk2/lib-insta-leaders'
 import { cn } from '@/common/utils/cn'
-import { useGetPublicUsersQuery } from '@/features/userHub/api/publicUser/publicUserServiceType'
+import {useGetPublicUsersQuery} from "@/features/userHub/api/publicUser/publicUserService";
 
 export const CounterSlot = () => {
   const { data: users, isLoading: loadUsers } = useGetPublicUsersQuery(undefined, {
