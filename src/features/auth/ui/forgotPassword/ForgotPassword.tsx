@@ -1,29 +1,35 @@
-import ReCAPTCHA from 'react-google-recaptcha';
+import ReCAPTCHA from 'react-google-recaptcha'
 
-import React, {useState} from 'react'
-import {NextPageWithLayout} from '@/pages/_app'
-import {Button, Card, Recaptcha, Typography, TypographyVariant} from '@nikolajk2/lib-insta-leaders'
-import {FormInput} from '@/common/components/ControllerInput/ControllerInput'
-import {useForm} from 'react-hook-form'
+import React, { useState } from 'react'
+import { NextPageWithLayout } from '@/pages/_app'
+import {
+  Button,
+  Card,
+  Recaptcha,
+  Typography,
+  TypographyVariant,
+} from '@nikolajk2/lib-insta-leaders'
+import { FormInput } from '@/common/components/ControllerInput/ControllerInput'
+import { useForm } from 'react-hook-form'
 import {
   ForgotPasswordZodSchema,
   ForgotPasswordZodSchemaFields,
 } from '@/features/auth/ui/forgotPassword/forgotPasswordZodSchema'
-import {zodResolver} from '@hookform/resolvers/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import {ROUTES_AUTH} from '@/appRoot/routes/routes'
-import {useForgotPasswordMutation} from '@/features/auth/api/authService'
-import {SendLinkResponseError} from '@/features/auth/api/authService.types'
-import {Page} from '@/common/components/page'
+import { ROUTES_AUTH } from '@/appRoot/routes/routes'
+import { useForgotPasswordMutation } from '@/features/auth/api/authService'
+import { SendLinkResponseError } from '@/features/auth/api/authService.types'
+import { Page } from '@/common/components/page'
 
 export const ForgotPassword: NextPageWithLayout = () => {
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const [isExpired, setIsExpired] = useState(false); // Состояние для истечения токена
-  const [isErrorRecaptcha, setIsErrorRecaptcha] = useState(false);// Состояние для проверки на робота
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null)
+  const [isExpired, setIsExpired] = useState(false) // Состояние для истечения токена
+  const [isErrorRecaptcha, setIsErrorRecaptcha] = useState(false) // Состояние для проверки на робота
   const [sendLinkSuccess, setSendLinkSuccess] = useState(false)
   const [sendLink] = useForgotPasswordMutation()
 
-  const {handleSubmit, control, setError, clearErrors} = useForm<ForgotPasswordZodSchemaFields>({
+  const { handleSubmit, control, setError, clearErrors } = useForm<ForgotPasswordZodSchemaFields>({
     defaultValues: {
       email: '',
     },
@@ -31,21 +37,25 @@ export const ForgotPassword: NextPageWithLayout = () => {
   })
 
   const onRecaptchaChange = (token: string | null) => {
-    setRecaptchaToken(token);
-    setIsExpired(false);
+    setRecaptchaToken(token)
+    setIsExpired(false)
     setIsErrorRecaptcha(false)
     clearErrors()
-  };
+  }
 
-  const onSubmit = handleSubmit(async ({email}) => {
+  const onSubmit = handleSubmit(async ({ email }) => {
     setSendLinkSuccess(false)
 
     if (!recaptchaToken || isExpired) {
       setIsErrorRecaptcha(true)
-      return;
+      return
     }
     try {
-      await sendLink({email, recaptcha: recaptchaToken, baseUrl: process.env.NEXT_PUBLIC_BASE_URL}).unwrap()
+      await sendLink({
+        email,
+        recaptcha: recaptchaToken,
+        baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+      }).unwrap()
       setSendLinkSuccess(true)
     } catch (e: SendLinkResponseError | any) {
       setError('email', {
@@ -57,7 +67,6 @@ export const ForgotPassword: NextPageWithLayout = () => {
 
   const isRecaptcha = Boolean(recaptchaToken) && !isExpired
   return (
-
     <Page
       titleMeta={'Forgot Password'}
       descriptionMeta={'Reset your password if you have forgotten it'}
@@ -69,7 +78,7 @@ export const ForgotPassword: NextPageWithLayout = () => {
         </Typography>
 
         <form onSubmit={onSubmit} className={'mt-[37px] !w-330'}>
-          <FormInput name={'email'} label={'Email'} control={control}/>
+          <FormInput name={'email'} label={'Email'} control={control} />
 
           <Typography
             variant={TypographyVariant.regular_text_14}
@@ -103,16 +112,15 @@ export const ForgotPassword: NextPageWithLayout = () => {
               onChange={onRecaptchaChange}
             />
             {/*кастомный рекаптча так как от библиотеки не стилизуется*/}
-            <Recaptcha className={'flex items-center justify-between relative max-w-full w-full'}
-                       isVerified={isRecaptcha}
-                       expired={isExpired}
-                       error={isErrorRecaptcha}
+            <Recaptcha
+              className={'flex items-center justify-between relative max-w-full w-full'}
+              isVerified={isRecaptcha}
+              expired={isExpired}
+              error={isErrorRecaptcha}
             />
           </div>
         </form>
-
       </Card>
     </Page>
-
   )
 }

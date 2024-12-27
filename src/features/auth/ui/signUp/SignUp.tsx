@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {AuthByGoogle} from '@/common/components'
 import {NextPageWithLayout} from '@/pages/_app'
-import {Button, Card, Typography, TypographyVariant,} from '@nikolajk2/lib-insta-leaders'
+import {Button, Card, Typography, TypographyVariant} from '@nikolajk2/lib-insta-leaders'
 import Link from 'next/link'
 import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
@@ -13,7 +13,7 @@ import {EmailSent} from '@/features/auth/ui'
 import {ControllerCheckbox} from '@/common/components/ControllerCheckbox'
 import {AuthByGithub} from '@/features/auth/ui/signIn/authByGithub/AuthByGithub'
 import {Page} from '@/common/components/page'
-import {useAppDispatch} from "@/appRoot/lib/hooks/hooksStore";
+import {useAppDispatch} from '@/appRoot/lib/hooks/hooksStore'
 
 export const SignUp: NextPageWithLayout = () => {
   // const [showPassword, setShowPassword] = useState(false)
@@ -29,7 +29,7 @@ export const SignUp: NextPageWithLayout = () => {
     setValue,
     clearErrors,
     setError,
-    formState: {errors, isLoading, isValid},
+    formState: { errors, isLoading, isValid },
   } = useForm<SignUpFields>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -42,9 +42,14 @@ export const SignUp: NextPageWithLayout = () => {
   })
 
   const [signUp] = useRegistrationMutation()
-  const onSubmit = handleSubmit(async ({userName, password, email, ...rest}) => {
+  const onSubmit = handleSubmit(async ({ userName, password, email, ...rest }) => {
     try {
-      await signUp({userName, password, email, baseUrl: process.env.NEXT_PUBLIC_BASE_URL}).unwrap()
+      await signUp({
+        userName,
+        password,
+        email,
+        baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+      }).unwrap()
       setShowModal(true)
     } catch (e: any) {
       setError(e.data.messages[0]?.field, {
@@ -79,8 +84,8 @@ export const SignUp: NextPageWithLayout = () => {
           Sign Up
         </Typography>
         <div className={'flex justify-center gap-x-[60px] mb-6 mt-3'}>
-          <AuthByGoogle/>
-          <AuthByGithub/>
+          <AuthByGoogle />
+          <AuthByGithub />
         </div>
 
         <form onSubmit={onSubmit}>
@@ -155,7 +160,7 @@ export const SignUp: NextPageWithLayout = () => {
           {/* Условия соглашения */}
           <div className={'flex flex-col space-y-5'}>
             <div className={'flex items-center justify-center text-center'}>
-              <ControllerCheckbox name={'agreesToTOS'} control={control}/>
+              <ControllerCheckbox name={'agreesToTOS'} control={control} />
               <Typography variant={TypographyVariant.small_text} className={'text-light-100'}>
                 I agree to the{' '}
                 <Link

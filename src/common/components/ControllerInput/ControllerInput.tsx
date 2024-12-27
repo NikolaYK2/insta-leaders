@@ -6,7 +6,8 @@ type Props<T extends FieldValues> = Omit<
   UseControllerProps<T>,
   'shouldUnregister' | 'rules' | 'control' | 'defaultValue'
 > &
-  Omit<ComponentPropsWithoutRef<'input'>, 'onChange' | 'value' | 'onBlur' | 'onTouch'> & TextFieldProps & {
+  Omit<ComponentPropsWithoutRef<'input'>, 'onChange' | 'value' | 'onBlur' | 'onTouch'> &
+  TextFieldProps & {
     control: Control<T>
   }
 

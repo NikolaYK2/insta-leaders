@@ -1,4 +1,4 @@
-import {instaLeadersApi} from '@/appRoot/services/instaLeadersApi'
+import { instaLeadersApi } from '@/appRoot/services/instaLeadersApi'
 import {
   AuthGoogleRes,
   LoginArgs,
@@ -10,10 +10,10 @@ import {
   ResendEmailParams,
   ResMessagesAuth,
 } from '@/features/auth/api/authService.types'
-import {LocalStorageUtil} from '@/common/utils/LocalStorageUtil'
-import {showAlert} from '@/appRoot/app.slice'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
+import { showAlert } from '@/appRoot/app.slice'
 import Router from 'next/router'
-import {ROUTES_APP} from '@/appRoot/routes/routes'
+import { ROUTES_APP } from '@/appRoot/routes/routes'
 
 const AUTH = 'v1/auth'
 const authService = instaLeadersApi.injectEndpoints({
@@ -26,15 +26,14 @@ const authService = instaLeadersApi.injectEndpoints({
           method: 'POST',
           url: `${AUTH}/registration`,
           body,
-
         }
       },
     }),
     confirmEmail: builder.mutation<ResMessagesAuth, { confirmationCode: string }>({
-      query: ({confirmationCode}) => ({
+      query: ({ confirmationCode }) => ({
         method: 'POST',
         url: `${AUTH}/registration-confirmation`,
-        body: {confirmationCode},
+        body: { confirmationCode },
       }),
     }),
     resendEmail: builder.mutation<ResMessagesAuth, ResendEmailParams>({
@@ -52,9 +51,9 @@ const authService = instaLeadersApi.injectEndpoints({
           method: 'POST',
         }
       },
-      async onQueryStarted(_, {dispatch, queryFulfilled}) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
-          const {data} = await queryFulfilled
+          const { data } = await queryFulfilled
 
           if (!data || !data.accessToken) return
 
@@ -93,9 +92,9 @@ const authService = instaLeadersApi.injectEndpoints({
       },
     }),
     authGoogle: builder.mutation<AuthGoogleRes, { code: string }>({
-      async onQueryStarted(_, {queryFulfilled, dispatch}) {
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
-          const {data} = await queryFulfilled
+          const { data } = await queryFulfilled
 
           LocalStorageUtil.setValue('accessToken', data.accessToken)
         } catch (error) {

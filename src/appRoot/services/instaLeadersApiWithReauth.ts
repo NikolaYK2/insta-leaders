@@ -1,9 +1,9 @@
-import {fetchBaseQuery} from '@reduxjs/toolkit/query'
-import type {BaseQueryFn, FetchArgs, FetchBaseQueryError} from '@reduxjs/toolkit/query'
-import {Mutex} from 'async-mutex'
-import {LocalStorageUtil} from '@/common/utils/LocalStorageUtil'
+import { fetchBaseQuery } from '@reduxjs/toolkit/query'
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import { Mutex } from 'async-mutex'
+import { LocalStorageUtil } from '@/common/utils/LocalStorageUtil'
 import Router from 'next/router'
-import {ROUTES_AUTH} from '@/appRoot/routes/routes'
+import { ROUTES_AUTH } from '@/appRoot/routes/routes'
 
 // create a new mutex
 const mutex = new Mutex()
@@ -36,7 +36,7 @@ export const baseQueryWithReauth: BaseQueryFn<
       const release = await mutex.acquire()
       try {
         const refreshResult = (await baseQuery(
-          {url: '/v1/auth/update-tokens', method: 'POST'},
+          { url: '/v1/auth/update-tokens', method: 'POST' },
           api,
           extraOptions
         )) as any

@@ -1,11 +1,11 @@
 export type RegistrationParams = {
-  userName: string;
-  email: string;
-  password: string;
-  baseUrl: string;
+  userName: string
+  email: string
+  password: string
+  baseUrl: string
 }
 
-export type ResendEmailParams= Omit<RegistrationParams, 'userName' | 'password'>
+export type ResendEmailParams = Omit<RegistrationParams, 'userName' | 'password'>
 
 export type RegistrationResponse = {
   status: string
@@ -48,9 +48,9 @@ export type LogOutResponse = {
 }
 
 export interface PasswordRecoveryParams {
-  email: string;
-  recaptcha: string;
-  baseUrl: string;
+  email: string
+  recaptcha: string
+  baseUrl: string
 }
 
 export type SendLinkResponse = SendLinkResponseSuccess | SendLinkResponseError
@@ -96,12 +96,12 @@ export type MeRes = {
 }
 
 export type Messages = {
-  message: string;
-  field: string;
+  message: string
+  field: string
 }
 
 export type ResMessagesAuth = {
-  statusCode: number;
-  messages: Messages[];
-  error: string;
+  statusCode: number
+  messages: Messages[]
+  error: string
 }
