@@ -1,11 +1,18 @@
-import { ComponentPropsWithoutRef } from 'react'
-import { Control, FieldPath, FieldValues, useController } from 'react-hook-form'
-import { Checkbox } from '@nikolajk2/lib-insta-leaders'
+import { ComponentPropsWithoutRef } from "react";
+import {
+  Control,
+  FieldPath,
+  FieldValues,
+  useController,
+} from "react-hook-form";
+import { Checkbox } from "@nikolajk2/lib-insta-leaders";
 
-type Props<T extends FieldValues> = ComponentPropsWithoutRef<typeof Checkbox> & {
-  control: Control<T>
-  name: FieldPath<T>
-}
+type Props<T extends FieldValues> = ComponentPropsWithoutRef<
+  typeof Checkbox
+> & {
+  control: Control<T>;
+  name: FieldPath<T>;
+};
 
 export const ControllerCheckbox = <T extends FieldValues>({
   control,
@@ -18,7 +25,14 @@ export const ControllerCheckbox = <T extends FieldValues>({
   } = useController({
     control,
     name,
-  })
+  });
 
-  return <Checkbox {...props} onCheckedChange={onChange} checked={Boolean(value)} {...field} />
-}
+  return (
+    <Checkbox
+      {...props}
+      onCheckedChange={onChange}
+      checked={Boolean(value)}
+      {...field}
+    />
+  );
+};

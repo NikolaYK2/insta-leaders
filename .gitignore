@@ -37,3 +37,5 @@ next-env.d.ts
 
 /.idea
 .env.local
+.env
+.env.production

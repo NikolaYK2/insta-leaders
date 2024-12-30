@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
-import { PrivacyPolicy } from '@/features/auth/ui/privacyPolicy/PrivacyPolicy'
+import { PrivacyPolicy } from "@/features/auth/ui/privacyPolicy/PrivacyPolicy";
+import { PublicLayout } from "@/common/components/Layout/PublicLayout";
 
-PrivacyPolicy.getLayout = getLayout
-export default PrivacyPolicy
+PrivacyPolicy.getLayout = PublicLayout;
+export default PrivacyPolicy;

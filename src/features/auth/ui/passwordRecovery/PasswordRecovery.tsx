@@ -1,15 +1,14 @@
-import React from 'react'
-import { HeadersMeta } from '@/common/components'
-import { NextPageWithLayout } from '@/pages/_app'
+import React from "react";
+import { NextPageWithLayout } from "@/pages/_app";
+import { Page } from "@/common/components/page";
 
 export const PasswordRecovery: NextPageWithLayout = () => {
   return (
-    <div>
-      <HeadersMeta
-        title={'Password Recovery'}
-        description={'Recover your account by resetting your password'}
-      />
+    <Page
+      titleMeta={"Password Recovery"}
+      descriptionMeta={"Recover your account by resetting your password"}
+    >
       <h2>Password recovery</h2>
-    </div>
-  )
-}
+    </Page>
+  );
+};

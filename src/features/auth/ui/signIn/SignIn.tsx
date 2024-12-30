@@ -1,49 +1,46 @@
-import { HeadersMeta } from '@/common/components'
-import { NextPageWithLayout } from '@/pages/_app'
+import { AuthByGoogle } from "@/common/components";
+import { NextPageWithLayout } from "@/pages/_app";
 import {
   Button,
   Card,
-  DynamicIcon,
   Typography,
   TypographyVariant,
-} from '@nikolajk2/lib-insta-leaders'
-import Link from 'next/link'
-import { ROUTES_AUTH } from '@/appRoot/routes/routes'
-import { SignInForm } from './signInForm/SignInForm'
-import { AuthByGithub } from './authByGithub/AuthByGithub'
+} from "@nikolajk2/lib-insta-leaders";
+import Link from "next/link";
+import { ROUTES_AUTH } from "@/appRoot/routes/routes";
+import { SignInForm } from "./signInForm/SignInForm";
+import { AuthByGithub } from "./authByGithub/AuthByGithub";
+import { Page } from "@/common/components/page";
 
 export const SignIn: NextPageWithLayout = () => {
-  const client_id = '792546249106-u5of55jk4hus635kpd936g5968b62a1c.apps.googleusercontent.com'
-  const redirect_uri = 'http://localhost:3000/google'
-  const state = '50c45fc5314190fc5d117c09dc9ebadf'
-  const linkToGoogleLogin = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${client_id}&response_type=code&scope=email profile&redirect_uri=${redirect_uri}&state=${state}`
-
   return (
-    <>
-      <HeadersMeta title={'Sign In'} description={'Access your account by signing in'} />
-      <div className={'max-w-[378px]  mx-auto'}>
-        <Card className={'text-center p-6'}>
+    <Page
+      titleMeta={"Sign In"}
+      descriptionMeta={"Access your account by signing in"}
+    >
+      <div className={"max-w-[378px] w-full mx-auto"}>
+        <Card className={"text-center p-6"}>
           <Typography variant={TypographyVariant.h1} asChild>
             <h1>Sign In</h1>
           </Typography>
-
-          <div className={'w-[132px] m-auto mb-6 mt-3 flex justify-between'}>
-            <Link className={'flex items-center'} href={linkToGoogleLogin}>
-              <DynamicIcon iconId={'GoogleSvgrepoCom1'} width={36} height={36} />
-            </Link>
+          <div className={"w-[132px] m-auto mb-6 mt-3 flex justify-between"}>
+            <AuthByGoogle />
             <AuthByGithub />
           </div>
           <SignInForm />
-          <Typography variant={TypographyVariant.regular_text_16} className={'mt-[18px] mb-2'}>
+          <Typography
+            variant={TypographyVariant.regular_text_16}
+            className={"mt-[18px] mb-1.5"}
+          >
             Don’t have an account?
           </Typography>
-          <Button variant={'text'} asChild>
+          <Button variant={"text"} asChild>
             <Link href={ROUTES_AUTH.REGISTRATION}>
               <Typography variant={TypographyVariant.h3}>Sign Up</Typography>
             </Link>
           </Button>
         </Card>
       </div>
-    </>
-  )
-}
+    </Page>
+  );
+};

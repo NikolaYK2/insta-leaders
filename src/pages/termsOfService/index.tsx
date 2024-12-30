@@ -1,5 +1,5 @@
-import { TermsOfService } from '@/features/auth/ui'
-import { getLayout } from '@/common/components'
+import { TermsOfService } from "@/features/auth/ui";
+import { PublicLayout } from "@/common/components/Layout/PublicLayout";
 
-TermsOfService.getLayout = getLayout
-export default TermsOfService
+TermsOfService.getLayout = PublicLayout;
+export default TermsOfService;

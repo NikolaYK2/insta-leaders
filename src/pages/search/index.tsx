@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
-import { Search } from '@/features/userHub/ui'
+import { Search } from "@/features/userHub/ui";
+import { PrivateLayout } from "@/common/components/Layout/PrivatLayout";
 
-Search.getLayout = getLayout
-export default Search
+Search.getLayout = PrivateLayout;
+export default Search;

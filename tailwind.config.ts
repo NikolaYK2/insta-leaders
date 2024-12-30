@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type {Config} from 'tailwindcss'
 
 const config: Config = {
   content: [
@@ -9,6 +9,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        slot: {
+          '0%': {transform: 'translateY(100%)'},
+          '50%': {transform: 'translateY(-10%)'},
+          '100%': {transform: 'translateY(0%)'},
+        },
+      },
+      animation: {
+        slot: 'slot 0.5s ease-in-out',
+      },
       colors: {
         accent: {
           100: '#73A5FF',
@@ -54,12 +64,21 @@ const config: Config = {
         },
       },
       screens: {
-        mobile: '22.5rem', // 360px
+        mobile: {max: '22.5rem'}, // 360px
+        notePad: {max: '48rem'}, // 768px
         desktop: '80rem', // 1280px
       },
       width: {
         '330': '330px',
         '378': '378px',
+      },
+      visibility: {
+        visible: 'visible',
+        invisible: 'hidden',
+      },
+      opacity: {
+        0: '0',
+        100: '1',
       },
     },
   },

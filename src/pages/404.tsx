@@ -1,7 +1,7 @@
-import { getLayout } from '@/common/components'
-import { NextPageWithLayout } from '@/pages/_app'
+import { NextPageWithLayout } from "@/pages/_app";
+import { PublicLayout } from "@/common/components/Layout/PublicLayout";
 
-const NotFound: NextPageWithLayout = () => <div>404 Not Found!</div>
+const NotFound: NextPageWithLayout = () => <div>404 Not Found!</div>;
 
-NotFound.getLayout = getLayout
-export default NotFound
+NotFound.getLayout = PublicLayout;
+export default NotFound;

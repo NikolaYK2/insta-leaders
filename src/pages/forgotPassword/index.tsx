@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
-import { ForgotPassword } from '@/features/auth/ui'
+import { ForgotPassword } from "@/features/auth/ui";
+import { PublicLayout } from "@/common/components/Layout/PublicLayout";
 
-ForgotPassword.getLayout = getLayout
-export default ForgotPassword
+ForgotPassword.getLayout = PublicLayout;
+export default ForgotPassword;

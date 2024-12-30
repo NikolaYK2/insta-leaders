@@ -1,5 +1,5 @@
-import { getLayout } from '@/common/components'
-import { Favorites } from '@/features/userHub/ui'
+import { Favorites } from "@/features/userHub/ui";
+import { PrivateLayout } from "@/common/components/Layout/PrivatLayout";
 
-Favorites.getLayout = getLayout
-export default Favorites
+Favorites.getLayout = PrivateLayout;
+export default Favorites;
