@@ -22,18 +22,20 @@ export default function MyApp({ Component, ...rest }: AppPropsWithLayout) {
   // Используйте макет, определенный на уровне страницы, если он доступен
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_API_KEY;
-  // const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
-
-  if (!GOOGLE_CLIENT_ID) {
-    throw new Error(
-      "Missing environment variables: GOOGLE_CLIENT_ID or RECAPTCHA_KEY",
-    );
-  }
+  // const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_API_KEY;
+  // // const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
+  //
+  // if (!GOOGLE_CLIENT_ID) {
+  //   throw new Error(
+  //     "Missing environment variables: GOOGLE_CLIENT_ID or RECAPTCHA_KEY",
+  //   );
+  // }
 
   return (
     <Provider store={store}>
-      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <GoogleOAuthProvider
+        clientId={process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_API_KEY}
+      >
         {getLayout(<Component {...props.pageProps} />)}
       </GoogleOAuthProvider>
     </Provider>
