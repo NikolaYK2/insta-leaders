@@ -123,7 +123,9 @@ export const ForgotPassword: NextPageWithLayout = () => {
               className={
                 "absolute inset-0 z-50 opacity-0 w-full h-full cursor-pointer"
               }
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY || ""}
+              sitekey={
+                process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_API_KEY || ""
+              }
               onChange={onRecaptchaChange}
             />
             {/*кастомный рекаптча так как от библиотеки не стилизуется*/}
