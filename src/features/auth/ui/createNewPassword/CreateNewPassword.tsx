@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { NextPageWithLayout } from "@/pages/_app";
 import {
   Button,
   Card,
-  DynamicIcon,
   Typography,
   TypographyVariant,
 } from "@nikolajk2/lib-insta-leaders";
-import { useController, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormInput } from "@/common/components/ControllerInput/ControllerInput";
 import { z } from "zod";
@@ -15,61 +14,44 @@ import { useCreateNewPasswordMutation } from "../../api/authService";
 import { useRouter } from "next/router";
 import { ROUTES_AUTH } from "@/appRoot/routes/routes";
 import { Page } from "@/common/components/page";
+import { passwordSchema } from "@/features/auth/ui/createNewPassword/validation";
+import { showAlert } from "@/appRoot/app.slice";
+import { useAppDispatch } from "@/appRoot/lib/hooks/hooksStore";
+
+type PasswordFields = z.infer<typeof passwordSchema>;
 
 export const CreateNewPassword: NextPageWithLayout = () => {
-  const passwordSchema = z
-    .object({
-      password: z
-        .string()
-        .min(6, "Minimum number of characters 6")
-        .max(20, "Maximum number of characters 20"),
-      passwordConfirmation: z.string(),
-    })
-    .refine((value) => value.password === value.passwordConfirmation, {
-      message: "Passwords must match",
-      path: ["passwordConfirmation"],
-    });
-
-  type PasswordFields = z.infer<typeof passwordSchema>;
-  const { handleSubmit, control } = useForm<PasswordFields>({
-    resolver: zodResolver(passwordSchema),
-  });
-
-  const {
-    field: {
-      onChange: onChangePassword,
-      value: passwordValue,
-      ...passwordField
-    },
-    formState: { errors: passwordErrors },
-  } = useController({ name: "password", control });
-
-  const {
-    field: {
-      onChange: onChangePasswordConfirmation,
-      value: passwordConfirmationValue,
-      ...passwordConfirmationField
-    },
-    formState: { errors: passwordConfirmationErrors },
-  } = useController({ name: "passwordConfirmation", control });
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirmation, setShowPasswordConfirmation] =
-    useState(false);
   const [createNewPassword, { isLoading, isError, error }] =
     useCreateNewPasswordMutation();
   const router = useRouter();
-  const { recoveryCode } = router.query;
+  const dispatch = useAppDispatch();
+  const { code } = router.query;
+
+  const { handleSubmit, control } = useForm<PasswordFields>({
+    defaultValues: {
+      password: "",
+      passwordConfirmation: "",
+    },
+    resolver: zodResolver(passwordSchema),
+  });
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const response = await createNewPassword({
+      await createNewPassword({
         newPassword: data.password,
-        recoveryCode: recoveryCode as string,
+        recoveryCode: code as string,
       }).unwrap();
-      console.log("Password created successfully:", response);
-      router.push(ROUTES_AUTH.LOGIN);
-    } catch (err) {
-      console.error("Failed to create new password:", err);
+
+      await router.push(ROUTES_AUTH.LOGIN);
+    } catch (err: any) {
+      console.log(err);
+      dispatch(
+        showAlert({
+          variant: "alertError",
+          message:
+            err?.data.messages[0].message || "Failed to create new password:",
+        }),
+      );
     }
   });
 
@@ -79,7 +61,10 @@ export const CreateNewPassword: NextPageWithLayout = () => {
       descriptionMeta={"Create a new account by signing up"}
     >
       <Card className={"max-w-[378px] mx-auto p-6 flex flex-col"}>
-        <Typography className={"text-center"} variant={TypographyVariant.h1}>
+        <Typography
+          className={"text-center mb-[37px]"}
+          variant={TypographyVariant.h1}
+        >
           Create New Password
         </Typography>
 
@@ -87,46 +72,35 @@ export const CreateNewPassword: NextPageWithLayout = () => {
           {/* USER PASSWORD*/}
           <div className={"mb-6"}>
             <FormInput
-              type={showPassword ? "password" : "text"}
-              onClick={() => setShowPassword((prevState) => !prevState)}
+              type={"password"}
               name={"password"}
               label={"Password"}
               control={control}
               placeholder={"******************"}
-              iconEnd={
-                <DynamicIcon
-                  className={"cursor-pointer"}
-                  iconId={showPassword ? "Eye" : "EyeOff"}
-                />
-              }
+              password
             />
           </div>
 
           {/* USER PASSWORD CONFIRMATION*/}
           <div className={"mb-5"}>
             <FormInput
-              type={showPasswordConfirmation ? "password" : "text"}
-              onClick={() =>
-                setShowPasswordConfirmation((prevState) => !prevState)
-              }
+              type={"password"}
               name={"passwordConfirmation"}
               label={"Password confirmation"}
               control={control}
               placeholder={"******************"}
-              iconEnd={
-                <DynamicIcon
-                  className={"cursor-pointer"}
-                  iconId={showPasswordConfirmation ? "Eye" : "EyeOff"}
-                />
-              }
+              password
             />
           </div>
-          <div className={"flex flex-col  space-y-5"}>
-            <Button
-              className={" font-semibold text-base"}
-              type="submit"
-              disabled={isLoading}
-            >
+
+          <Typography
+            className={"text-light-900"}
+            variant={TypographyVariant.regular_text_14}
+          >
+            Your password must be between 6 and 20 characters
+          </Typography>
+          <div className={"flex flex-col  space-y-5 mt-10"}>
+            <Button className={" font-semibold text-base"} disabled={isLoading}>
               Create New Password
             </Button>
           </div>
