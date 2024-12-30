@@ -68,7 +68,7 @@ export const HomePublic: NextPageWithLayout = () => {
         {publicPosts?.items.map((item) => (
           <div
             className={
-              "relative max-w-[234px] w-full mx-[6px] border-[1px] border-red-600 max-h-[391px] pb-[150px]"
+              "relative max-w-[234px] w-full mx-[6px]  max-h-[391px] pb-[150px]"
             }
             key={item.id}
           >
