@@ -23,9 +23,9 @@ export default function MyApp({ Component, ...rest }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-  const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_API_KEY;
+  // const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
 
-  if (!GOOGLE_CLIENT_ID || !RECAPTCHA_KEY) {
+  if (!GOOGLE_CLIENT_ID) {
     throw new Error(
       "Missing environment variables: GOOGLE_CLIENT_ID or RECAPTCHA_KEY",
     );
