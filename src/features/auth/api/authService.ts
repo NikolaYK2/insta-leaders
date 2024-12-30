@@ -124,7 +124,7 @@ const authService = instaLeadersApi.injectEndpoints({
       }),
     }),
     createNewPassword: builder.mutation<
-      any,
+      void,
       { newPassword: string; recoveryCode: string }
     >({
       query: (body) => ({
