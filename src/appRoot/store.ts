@@ -33,4 +33,5 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   unknown,
   Action
 >;
+
 export const wrapper = createWrapper<AppStore>(makeStore);
