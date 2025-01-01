@@ -7,7 +7,7 @@ import {
   ResPostsImage,
 } from "@/features/userHub/api/post/postServiceType";
 
-const POSTS = "v1/posts";
+const POSTS = "api/v1/posts";
 const postService = instaLeadersApi.injectEndpoints({
   endpoints: (builder) => ({
     createPostsDescription: builder.mutation<PostItem, ParamPosts>({

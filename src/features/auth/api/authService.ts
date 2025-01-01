@@ -15,7 +15,7 @@ import { showAlert } from "@/appRoot/app.slice";
 import Router from "next/router";
 import { ROUTES_APP } from "@/appRoot/routes/routes";
 
-const AUTH = "v1/auth";
+const AUTH = "api/v1/auth";
 const authService = instaLeadersApi.injectEndpoints({
   endpoints: (builder) => ({
     registration: builder.mutation<ResMessagesAuth, RegistrationParams>({
