@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NextPageWithLayout } from "@/pages/_app";
 import { CounterSlot } from "@/common/components/counterSlot";
 import { Page } from "@/common/components/page";
@@ -12,20 +12,6 @@ import { timeAgo } from "@/common/utils/timeAge";
 import { CarouselBtn } from "@/features/userHub/ui/create/ui/carouselBtn";
 import Image from "next/image";
 import { cn } from "@/common/utils/cn";
-
-// // массив с классами для ваших цветов:
-// const customColors = [
-//   'bg-accent-500',
-//   'bg-success-500',
-//   'bg-danger-500',
-//   'bg-warning-500',
-//   'bg-dark-500',
-//   'bg-light-500',
-// ]
-// //Функция для выбора случайного класса:
-// const getRandomCustomColorClass = () => {
-//   return customColors[Math.floor(Math.random() * customColors.length)]
-// }
 
 const maxLengthDescriptionHide = 83;
 const maxLengthDescriptionShow = 235;
