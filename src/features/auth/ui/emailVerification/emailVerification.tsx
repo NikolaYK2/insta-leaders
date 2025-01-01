@@ -21,7 +21,7 @@ export const EmailVerification: NextPageWithLayout = () => {
       if (email) {
         await resendEmail({
           email,
-          baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+          baseUrl: process.env.NEXT_PUBLIC_MAIL_URL,
         }).unwrap();
       }
     } catch (e) {

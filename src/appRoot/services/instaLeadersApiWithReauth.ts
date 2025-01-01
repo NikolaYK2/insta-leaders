@@ -13,7 +13,7 @@ import { ROUTES_AUTH } from "@/appRoot/routes/routes";
 const mutex = new Mutex();
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL,
+  baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
   credentials: "include",
   prepareHeaders: (headers) => {
     const token = LocalStorageUtil.getValue("accessToken");
@@ -40,7 +40,7 @@ export const baseQueryWithReauth: BaseQueryFn<
       const release = await mutex.acquire();
       try {
         const refreshResult = (await baseQuery(
-          { url: "/v1/auth/update-tokens", method: "POST" },
+          { url: "api/v1/auth/update-tokens", method: "POST" },
           api,
           extraOptions,
         )) as any;

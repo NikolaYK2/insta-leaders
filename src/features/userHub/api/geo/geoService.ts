@@ -7,7 +7,7 @@ import {
 } from "@/features/userHub/api/geo/GeoServiceType";
 import { Res } from "@/features/userHub/api/profile/profileServiceType";
 
-const GEO = "v1/geo/countries";
+const GEO = "api/v1/geo/countries";
 const geoService = instaLeadersApi.injectEndpoints({
   endpoints: (builder) => ({
     getCountries: builder.query<Res<Countries>, void>({

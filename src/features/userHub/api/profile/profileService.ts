@@ -8,7 +8,7 @@ import {
   ResProfile,
 } from "@/features/userHub/api/profile/profileServiceType";
 
-const PROFILE = "v1/users";
+const PROFILE = "api/v1/users";
 const profileService = instaLeadersApi.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query<ResProfile, void>({

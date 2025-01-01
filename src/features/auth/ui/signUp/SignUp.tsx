@@ -50,7 +50,7 @@ export const SignUp: NextPageWithLayout = () => {
           userName,
           password,
           email,
-          baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+          baseUrl: process.env.NEXT_PUBLIC_MAIL_URL,
         }).unwrap();
         setShowModal(true);
       } catch (e: any) {
