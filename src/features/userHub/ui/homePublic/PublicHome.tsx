@@ -16,6 +16,11 @@ import { cn } from "@/common/utils/cn";
 const maxLengthDescriptionHide = 83;
 const maxLengthDescriptionShow = 235;
 
+console.log(process.env.NEXT_PUBLIC_BASE_URL);
+console.log(process.env.NEXT_PUBLIC_MAIL_URL);
+console.log(process.env.NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_API_KEY, "recaptcha");
+console.log(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID, "google");
+console.log(process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID);
 export const HomePublic: NextPageWithLayout = () => {
   const [showDescription, setShowDescription] = useState(false);
   const { data: publicPosts, isLoading: loadPublicPosts } =
