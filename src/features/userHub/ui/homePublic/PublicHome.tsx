@@ -12,6 +12,8 @@ import { timeAgo } from "@/common/utils/timeAge";
 import { CarouselBtn } from "@/features/userHub/ui/create/ui/carouselBtn";
 import Image from "next/image";
 import { cn } from "@/common/utils/cn";
+import Link from "next/link";
+import { ROUTES_AUTH } from "@/appRoot/routes/routes";
 
 const maxLengthDescriptionHide = 83;
 const maxLengthDescriptionShow = 235;
@@ -20,7 +22,7 @@ export const HomePublic: NextPageWithLayout = () => {
   const [showDescription, setShowDescription] = useState(false);
   const { data: publicPosts, isLoading: loadPublicPosts } =
     useGetPublicPostsQuery(
-      { endCursorPostId: 200, pageSize: 4 },
+      { endCursorPostId: 4, pageSize: 4 },
       {
         pollingInterval: 6000000,
       },
@@ -81,20 +83,24 @@ export const HomePublic: NextPageWithLayout = () => {
                   callback={(newIndex) => handleSetPostIndex(item.id, newIndex)}
                 />
               </div>
-              {/*DESCRIPTION ---------------*/}
+              {/*ITEMS ---------------*/}
               <div
                 className={cn(
                   "absolute bottom-0 pt-3 min-h-[150px] max-h-[138px] w-full bg-dark-700 overflow-hidden transition-[max-height] duration-1500 ease-in",
                   showDescription && "max-h-full",
                 )}
               >
-                <div className={"flex items-center"}>
+                <Link
+                  className={"flex items-center"}
+                  href={`${ROUTES_AUTH.USER_PUBLIC}/${item.ownerId}`}
+                >
                   <div
                     className={cn(
                       "flex items-center justify-center rounded-full w-9 h-9 mr-3",
                       !item.avatarOwner && "bg-accent-300",
                     )}
                   >
+                    {/*AVATARS ---------------------*/}
                     {item.avatarOwner ? (
                       <Image
                         className={"rounded-full"}
@@ -112,7 +118,8 @@ export const HomePublic: NextPageWithLayout = () => {
                   <Typography variant={TypographyVariant.h3} asChild>
                     <h3>{item.userName}</h3>
                   </Typography>
-                </div>
+                </Link>
+                {/*//DESCRIPTION -------------------------*/}
                 <div className={"mt-3"}>
                   <Typography
                     className={"text-light-900"}

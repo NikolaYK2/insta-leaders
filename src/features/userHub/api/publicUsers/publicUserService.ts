@@ -1,4 +1,5 @@
 import { instaLeadersApi } from "@/appRoot/services/instaLeadersApi";
+import { ResPublicProfile } from "@/features/userHub/api/publicUsers/publicUserServiceType";
 
 const PUBLIC_USER = "api/v1/public-user";
 const publicUserService = instaLeadersApi.injectEndpoints({
@@ -8,7 +9,16 @@ const publicUserService = instaLeadersApi.injectEndpoints({
         url: PUBLIC_USER,
       }),
     }),
+    getPublicUserProfile: builder.query<
+      ResPublicProfile,
+      { profileId: string }
+    >({
+      query: ({ profileId }) => ({
+        url: `${PUBLIC_USER}/profile/${profileId}`,
+      }),
+    }),
   }),
 });
 
-export const { useGetPublicUsersQuery } = publicUserService;
+export const { useGetPublicUsersQuery, useGetPublicUserProfileQuery } =
+  publicUserService;

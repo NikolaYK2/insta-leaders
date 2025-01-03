@@ -1,5 +1,6 @@
 import { instaLeadersApi } from "@/appRoot/services/instaLeadersApi";
 import {
+  ItemsPublicPosts,
   PublicPostsParams,
   ResAllPublicPosts,
 } from "@/features/userHub/api/publicPosts/publicPostsServiceType";
@@ -13,7 +14,13 @@ const publicPostsService = instaLeadersApi.injectEndpoints({
         params: params,
       }),
     }),
+    getPublicPost: builder.query<ItemsPublicPosts, { postld: string }>({
+      query: ({ postld }) => ({
+        url: `${PUBLIC_POSTS}/${postld}`,
+      }),
+    }),
   }),
 });
 
-export const { useGetPublicPostsQuery } = publicPostsService;
+export const { useGetPublicPostsQuery, useGetPublicPostQuery } =
+  publicPostsService;
