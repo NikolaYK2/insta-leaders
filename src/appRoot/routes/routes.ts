@@ -9,6 +9,7 @@ export const ROUTES_AUTH = {
   CREATE_NEW_PASSWORD: "/createNewPassword",
   TERMS_OF_SERVICE: "/termsOfService",
   PRIVACY_POLICY: "/privacyPolicy",
+  USER_PUBLIC: "/homePublic",
 };
 
 export const ROUTES_APP = {
