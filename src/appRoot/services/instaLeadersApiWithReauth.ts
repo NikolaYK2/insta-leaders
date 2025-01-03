@@ -52,7 +52,7 @@ export const baseQueryWithReauth: BaseQueryFn<
           // retry the initial query
           result = await baseQuery(args, api, extraOptions);
         } else {
-          await Router.push(ROUTES_AUTH.HOME);
+          // await Router.push(ROUTES_AUTH.HOME);
         }
       } finally {
         // release must be called once the mutex should be released again.
